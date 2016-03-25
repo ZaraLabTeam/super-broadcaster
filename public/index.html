@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Control Panel</title>
+	<link rel="stylesheet" type="text/css" href="/public/styles/style.css">
+</head>
+
+<body>
+	<h1>Control Panel</h1>
+	<h3>Log</h3>
+	<div id="messages">
+	</div>
+
+	<h3>Config</h3>
+	<form accept-charset="utf-8">
+		<fieldset>
+			<legend>Broadcast configuration</legend>
+
+			<label for="config">
+				Select Quality
+			</label>
+			<select id="config">
+				<option value="slow">Slow</option>
+				<option value="medium" selected="selected">Medium</option>
+				<option value="fast">Fast</option>
+				<option value="advanced">Advanced</option>
+			</select> 
+
+			<div id="toggle" class="hidden">
+				<textarea id="advanced-config" 
+				placeholder="Paste your json config here"
+				spellcheck="false">
+
+				</textarea>
+				<button id="apply-advanced">Apply Config</button>
+			</div>
+
+			<button id="start">Start</button>
+			<button id="stop">Stop</button>
+		</fieldset>
+	</form>
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/public/scripts/main.js"></script>
+</body>
+</html>

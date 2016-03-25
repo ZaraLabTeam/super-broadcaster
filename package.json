@@ -1,0 +1,18 @@
+{
+  "name": "super-broadcaster",
+  "version": "0.0.1",
+  "description": "Broadcast video to youtube on demand",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodejs server.js"
+  },
+  "author": "ZaraLab",
+  "license": "MIT",
+  "dependencies": {
+    "asynquence": "^0.9.0",
+    "node-static": "^0.7.7",
+    "socket.io": "^1.4.5",
+    "terminate": "^1.0.8"
+  }
+}
