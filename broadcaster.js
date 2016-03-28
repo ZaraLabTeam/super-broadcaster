@@ -100,28 +100,54 @@ function test(cfg) {
 
 function createSream(cfg) {
 
+	// stream = avconv([
+	// 	'-s', cfg.inRes,
+	// 	'-f', 'h264', // 'video4linux2',
+	// 	'-i', cfg.video,
+	// 	'-filter:v', 'yadif',
+	// 	'-r', cfg.fps,
+	// 	'-f', 's16le', // 'alsa',
+	// 	'-ac', 2,
+	// 	'-i', cfg.audio,
+	// 	'-vcodec', cfg.vcodec,
+	// 	'-s', cfg.outRes,
+	// 	'-b:v', cfg.videoBitrate,
+	// 	'-acodec', cfg.acodec,
+	// 	'-ar', 44100,
+	// 	'-threads', 'auto', // 4,
+	// 	'-qscale', cfg.qscale,
+	// 	'-b:a', cfg.audioBitrate,
+	// 	// '-bufsize', cfg.buffer,
+	// 	'-metadata', cfg.title ? formatString('title="{{title}}"', {
+	// 		title: cfg.title
+	// 	}) : 'title="Live Broadcast"',
+	// 	'-g', cfg.fps * 2,
+	// 	'-strict', 'experimental',
+	// 	'-v', cfg.verbosity,
+	// 	'-f', cfg.format,
+	// 	'-y', formatString('{{output}}/{{key}}', {
+	// 		output: cfg.output,
+	// 		key: cfg.key
+	// 	})
+	// ]);
+
 	stream = avconv([
-		'-f', 'video4linux2',
-		'-s', cfg.inRes,
-		'-i', cfg.video,
-		'-filter:v', 'yadif',
-		'-r', cfg.fps,
-		'-g', cfg.fps * 2,
-		'-f', 'alsa',
-		'-ac', 2,
-		'-i', cfg.audio,
-		'-vcodec', cfg.vcodec,
-		'-s', cfg.outRes,
-		'-b:v', cfg.videoBitrate,
-		'-acodec', cfg.acodec,
 		'-ar', 44100,
-		'-threads', 'auto', // 4,
-		'-qscale', cfg.qscale,
+		'-f', 'alsa',
+		'-i', cfg.audio,
+		'-f', 'video4linux2',
+		'-framerate', cfg.fps,
+		'-video_size', cfg.resolution,
+		'-i', '/dev/video0',
+		'-vcodec', 'libx264',
+		// '-profile:v', 'main', 
+		'-preset', 'ultrafast', // superfast, veryfast, faster, fast, medium (default), slow and veryslow
+		'-crf', cfg.quality,
+		'-acodec', 'aac',
 		'-b:a', cfg.audioBitrate,
-		'-bufsize', cfg.buffer,
-		'-metadata', cfg.title ? formatString('title="{{title}}"', {
-			title: cfg.title
-		}) : 'title="Live Broadcast"',
+		'-strict', 'experimental',
+		'-b:v', cfg.videoBitrate,
+		'-threads', 'auto',
 		'-v', cfg.verbosity,
 		'-f', cfg.format,
 		'-y', formatString('{{output}}/{{key}}', {
@@ -137,29 +163,44 @@ function createSream(cfg) {
 
 function createTestStream(cfg) {
 
-	// No audio
+	// // No audio
+	// stream = avconv([
+	// 	'-f', 'h264',
+	// 	'-framerate', cfg.fps,
+	// 	'-video_size', cfg.inRes,
+	// 	'-i', cfg.video,
+	// 	// '-f', 'alsa',
+	// 	// '-ac', 2,
+	// 	// '-i', cfg.audio,
+	// 	'-vcodec', 'libvpx', // cfg.vcodec,
+	// 	'-s', cfg.outRes,
+	// 	'-b:v', cfg.videoBitrate,
+	// 	// '-acodec', 'libvorbis', // cfg.acodec,
+	// 	// '-ar', 44100,
+	// 	'-threads', 'auto', // 4,
+	// 	'-qscale', cfg.qscale,
+	// 	// '-b:a', cfg.audioBitrate,
+	// 	'-bufsize', cfg.buffer,
+	// 	'-metadata', cfg.title ? formatString('title="{{title}}"', {
+	// 		title: cfg.title
+	// 	}) : 'title="Live Broadcast"',
+	// 	'-v', cfg.verbosity,
+	// 	'-f', 'webm', // cfg.format,
+	// 	'-y', 'pipe:1'
+	// ]);
+
 	stream = avconv([
 		'-f', 'video4linux2',
-		'-s', cfg.inRes,
-		'-i', cfg.video,
-		'-r', cfg.fps,
-		// '-f', 'alsa',
-		// '-ac', 2,
-		// '-i', cfg.audio,
-		'-vcodec', 'vp8', // cfg.vcodec,
-		'-s', cfg.outRes,
+		'-framerate', cfg.fps,
+		'-video_size', cfg.resolution,
+		'-i', '/dev/video0',
+		'-strict', 'experimental',
 		'-b:v', cfg.videoBitrate,
-		// '-acodec', 'libvorbis', // cfg.acodec,
-		// '-ar', 44100,
-		'-threads', 'auto', // 4,
-		'-qscale', cfg.qscale,
-		// '-b:a', cfg.audioBitrate,
-		'-bufsize', cfg.buffer,
-		'-metadata', cfg.title ? formatString('title="{{title}}"', {
-			title: cfg.title
-		}) : 'title="Live Broadcast"',
+		'-crf', cfg.quality,
+		'-threads', 'auto',
 		'-v', cfg.verbosity,
-		'-f', 'webm', // cfg.format,
+		'-an',
+		'-f', 'webm',
 		'-y', 'pipe:1'
 	]);
 

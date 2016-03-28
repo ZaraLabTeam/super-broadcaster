@@ -2,15 +2,14 @@
 
 var VIDEO_IN = "/dev/video0";
 var AUDIO_IN = "pulse"; // 'hw:0'; 
-var IN_RES = "640x480";
-var OUT_RES = "640x480";
+var VIDEO_RES = "640x480";
 var FPS = 30; // Reduce to free resources
 var V_BITRATE = '512k'; // Reduce to free resources
 var A_BITRATE = '128k'; // Reduce to free resources
-var QSCALE = 8; // QulaityScale? // Increase to free resources // Decrease for better quality
+var QUALITY = 25;  // Constant Rate Factor 0 to 51 use values between 19 and 26, 19 is higher quality than 26
 var BUFFER = '512k';
 var VCODEC = 'libx264';
-var ACODEC = 'libmp3lame';
+var ACODEC = 'aac'; // 'pcm_s16le'; // 'libmp3lame';
 var FORMAT = 'flv';
 var OUTPUT = "rtmp://a.rtmp.youtube.com/live2";
 var VERBOSITY = 'verbose'; // 'quiet';  // 'info';
@@ -72,36 +71,18 @@ Object.defineProperties(BroadcastConfiguration.prototype, {
 		enumerable: true
 	},
 
-	inRes: {
+	resolution: {
 		get: function() {
-			if (!this._inRes) {
-				return IN_RES;
+			if (!this._resolution) {
+				return VIDEO_RES;
 			}
 
-			return this._inRes;
+			return this._resolution;
 		},
 
 		set: function(value) {
-			validateResolution(value, 'inRes');
-			this._inRes = value;
-		},
-
-		configurable: false,
-		enumerable: true
-	},
-
-	outRes: {
-		get: function() {
-			if (!this._outRes) {
-				return OUT_RES;
-			}
-
-			return this._outRes;
-		},
-
-		set: function(value) {
-			validateResolution(value, 'outRes');
-			this._outRes = value;
+			validateResolution(value, 'resolution');
+			this._resolution = value;
 		},
 
 		configurable: false,
@@ -162,18 +143,18 @@ Object.defineProperties(BroadcastConfiguration.prototype, {
 		enumerable: true
 	},
 
-	qscale: {
+	quality: {
 		get: function () {
-			if (!this._qscale) {
-				return QSCALE;
+			if (!this._quality) {
+				return QUALITY;
 			}
 
-			return this._qscale;
+			return this._quality;
 		},
 	
 		set: function (value) {
-			validateScale(value);
-			this._qscale = value;
+			validateQuality(value);
+			this._quality = value;
 		},
 	
 		configurable: false,
@@ -371,19 +352,19 @@ function factory(cfg, key) {
 
 function getSlowConfig() {
 	return new BroadcastConfiguration({
-		outRes: '480x240',
-		videoBitrate: '128k',
-		qscale: 30,
+		resolution: '432x240',
+		videoBitrate: '256k',
+		quality: 40,
 		fps: 16
 	});
 }
 
 function getFastConfig() {
 	return new BroadcastConfiguration({
-		outRes: '1280x768',
-		videoBitrate: '2000k',
+		resolution: '1280x768',
+		videoBitrate: '2560k',
 		buffer: '4096k',
-		qscale: '3'
+		quality: 18
 	});
 }
 
@@ -401,9 +382,9 @@ function validateResolution(resString, propName) {
 	validateRegex(resString, /^\d{3,4}x\d{3,4}$/, propName);
 }
 
-function validateScale(scale) {
-	if (!validateNumberRange(+scale, 1, 32)) {
-		raiseError(scale, 'qscale');
+function validateQuality(scale) {
+	if (!validateNumberRange(+scale, 0, 51)) {
+		raiseError(scale, 'quality');
 	}
 }
 
