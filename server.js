@@ -7,6 +7,7 @@ var socketIo = require('socket.io');
 // Project modules
 var httpHandler = require('./http/httpHandler');
 var ioHandler = require('./socket/ioHandler');
+var logger = require('./logger');
 
 // Configs
 var serverConfig = require('./config/server-config');
@@ -22,7 +23,7 @@ var http_serv = http.createServer(httpHandler.handle)
 var io = socketIo.listen(http_serv);
 // ioConfig.config(io);
 
-ioHandler.handle(io);
+ioHandler.handle(io);	
 
 console.log('running on port -> ' + serverConfig.port);
 

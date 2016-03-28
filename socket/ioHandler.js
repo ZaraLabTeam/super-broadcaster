@@ -2,72 +2,60 @@
 
 // Project modules
 var broadcaster = require('../broadcaster');
-var broadcasterConfigurator = require('../config/broadcaster-config');
+var logger = require('../logger');
 
 // Configs
-var broadcastConfig = null;
 var secret = require('../secret');
 
 // ================================================================
 
 // ================ IMPLEMENTATION =============================
 
-// Constants
-var BROADCAST_STARTED_MSG = 'Broadcasting with the following configuration: \n';
-
-// Todo: secure connection && video preview on page
-
+// Todo: more secure connection
 
 function handleIO(io) {
-	console.log('client connected');
+	logger.log('Client connected');
 
-	io.on('connection', function(socket) {
+	io
+		.of(secret.serverPass)
+		.on('connection', function(socket) {
 
-		socket.on('broadcast-config', bcConfig);
+			socket.on('broadcast-start', broadcaster.broadcast);
 
-		socket.on('broadcast-start', broadcast);
+			socket.on('broadcast-stop', broadcaster.stop);
 
-		socket.on('broadcast-stop', stop);
+			socket.on('broadcast-test', test);
 
-		socket.on('disconnect', disconnect);
+			socket.on('disconnect', disconnect);
 
-		function disconnect() {
-			console.log('client disconnected');
-		}
+			socket.on('error', function(err) {
+				logger.log(err.toString());
+			});
 
-		function broadcast() {
-			if (!broadcastConfig) {
-				broadcastConfig = broadcasterConfigurator.configure('medium', secret.youtubeKey);
+			logger.on('message', function(msg) {
+				socket.emit('message', msg);
+			});
+
+			logger.on('stream-log', function(msg) {
+				socket.emit('stream-log', msg);
+			});
+
+			function disconnect() {
+				logger.log('Client Disconnected');
 			}
 
-			stop();
-
-			running = broadcaster.broadcast(broadcastConfig);
-			console.log('=============== Davat te po TV ===============');
-			console.log(BROADCAST_STARTED_MSG, broadcastConfig.toString());
-			socket.emit('message', BROADCAST_STARTED_MSG + broadcastConfig.toString());
-		}
-
-		function stop() {
-			if (broadcaster.isRunning()) {
-				console.log('=============== Broadcast Stopped ===============');
-				broadcaster.stop();
+			function test(cfg) {
+				var testStream = broadcaster.test(cfg);
+				if (testStream) {
+					testStream.on('data', function(data) {
+						socket.emit('video', data);
+					});
+				} 
+				else {
+					logger.log('Sto tai prais -> niama testStream');
+				}
 			}
-		}
-
-		function bcConfig(cfg, key) {
-
-			if (cfg.key) {
-				key = cfg.key;
-			}
-
-			if (!key) {
-				key = secret.youtubeKey;
-			}
-
-			broadcastConfig = broadcasterConfigurator.configure(cfg, key);
-		}
-	});
+		});
 }
 
 // ================================================================

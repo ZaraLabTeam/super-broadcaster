@@ -1,5 +1,5 @@
 #messages {
-	height: 200px;
+	height: 300px;
 	overflow-y: scroll;
 	background-color: black;
 }
@@ -8,6 +8,22 @@
 	height: 200px;
 	width: 100%;
 	overflow-y: scroll;
+}
+
+#stream-logging {
+	margin-top: 2px;
+	height: 40px;
+	background-color: black;
+	overflow: hidden;
+}
+
+#stream-logging p {
+	margin: 0 5px;
+	width: 100%;
+}
+
+#player {
+	width: 60%;
 }
 
 .hidden {
@@ -25,4 +41,21 @@
 .standard {
 	color: purple;
 	font-style: italic;
+}
+
+.container {
+	float: left;
+	width: 50%;
+	min-width: 400px; 	
+}
+
+.wrapper {
+	width: 96%;
+	margin: 1% auto;
+}
+
+.wrapper:after {
+	content:"";
+	display:table;
+	clear:both;
 }

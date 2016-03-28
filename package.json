@@ -1,6 +1,6 @@
 {
   "name": "super-broadcaster",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "Broadcast video to youtube on demand",
   "main": "server.js",
   "scripts": {
@@ -10,9 +10,17 @@
   "author": "ZaraLab",
   "license": "MIT",
   "dependencies": {
-    "asynquence": "^0.9.0",
+    "avconv": "^3.0.2",
     "node-static": "^0.7.7",
-    "socket.io": "^1.4.5",
-    "terminate": "^1.0.8"
-  }
+    "socket.io": "^1.4.5"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZaraLabTeam/super-broadcaster.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ZaraLabTeam/super-broadcaster/issues"
+  },
+  "homepage": "https://github.com/ZaraLabTeam/super-broadcaster#readme"
 }
