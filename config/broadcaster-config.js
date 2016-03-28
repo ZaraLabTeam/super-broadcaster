@@ -1,7 +1,7 @@
 // ================ DEFAULT VALUES ==============================
 
 var VIDEO_IN = "/dev/video0";
-var AUDIO_IN = 'hw:0'; // "pulse";
+var AUDIO_IN = "pulse"; // 'hw:0'; 
 var IN_RES = "640x480";
 var OUT_RES = "640x480";
 var FPS = 30; // Reduce to free resources

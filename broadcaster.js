@@ -56,6 +56,7 @@ function prepareForBroadcast(cfg) {
 	} else {
 		logger.log('No key in configuration, using default key!');
 		key = secret.youtubeKey;
+		cfg.key = secret.youtubeKey;
 	}
 
 	try {
@@ -103,9 +104,9 @@ function createSream(cfg) {
 		'-f', 'video4linux2',
 		'-s', cfg.inRes,
 		'-i', cfg.video,
-		// '-filter:v', 'yadif',
+		'-filter:v', 'yadif',
 		'-r', cfg.fps,
-		// '-g', cfg.fps * 2,
+		'-g', cfg.fps * 2,
 		'-f', 'alsa',
 		'-ac', 2,
 		'-i', cfg.audio,
