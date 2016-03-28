@@ -18,7 +18,7 @@ var ioConfig = require('./config/io-config');
 // ================ IMPLEMENTATION ==============================
 
 var http_serv = http.createServer(httpHandler.handle)
-	.listen(serverConfig.port, serverConfig.host);
+	.listen(serverConfig.port); // .listen(serverConfig.port, serverConfig.host);
 
 var io = socketIo.listen(http_serv);
 // ioConfig.config(io);
