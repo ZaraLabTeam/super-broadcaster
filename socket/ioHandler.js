@@ -2,6 +2,7 @@
 
 // Project modules
 var broadcaster = require('../broadcaster');
+var bcConfigurator = require('../config/broadcaster-config');
 var logger = require('../logger');
 
 // Configs
@@ -24,7 +25,15 @@ function handleIO(io) {
 
 			socket.on('broadcast-stop', broadcaster.stop);
 
-			socket.on('broadcast-test', test);
+			socket.on('broadcast-setConfig', bcConfigurator.setActiveConfig);
+
+			socket.on('broadcast-addConfig', bcConfigurator.saveConfig);
+
+			socket.on('broadcast-removeConfig', bcConfigurator.removeConfig);
+
+			socket.on('broadcast-getConfigs', getConfigs);
+
+			socket.on('broadcast-getActiveConfig', getActive);
 
 			socket.on('disconnect', disconnect);
 
@@ -44,16 +53,14 @@ function handleIO(io) {
 				logger.log('Client Disconnected');
 			}
 
-			function test(cfg) {
-				var testStream = broadcaster.test(cfg);
-				if (testStream) {
-					testStream.on('data', function(data) {
-						socket.emit('video', data);
-					});
-				} 
-				else {
-					logger.log('Sto tai prais -> niama testStream');
-				}
+			function getConfigs(callback) {
+				var configs = bcConfigurator.getSavedConfigs();
+				callback(configs);
+			}
+
+			function getActive(callback) {
+				var active = bcConfigurator.getActiveConfig();
+				callback(active);
 			}
 		});
 }

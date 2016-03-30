@@ -12,16 +12,15 @@
 	var streamLogging = document.getElementById('stream-logging');
 	var configSelect = document.getElementById('config');
 	var toggleable = document.getElementById('toggle');
-	var advancedConfig = document.getElementById('advanced-config');
+	var createConfigText = document.getElementById('advanced-config');
 	var videoPlayer = document.getElementById('player');
 
 	var btnApplyAdvanced = document.getElementById('apply-advanced');
 	var btnStart = document.getElementById('start');
 	var btnStop = document.getElementById('stop');
-	var btnTest = document.getElementById('test');
+	var btnSetConfig = document.getElementById('set-config');
+	var btnSaveConfig = document.getElementById('save-config');
 	var btnClear = document.getElementById('clear');
-
-	advancedConfig.value = getAdvancedConfigInitialValue();
 
 	// ================================================================
 
@@ -42,39 +41,43 @@
 	// On Start
 	btnStart.addEventListener('click', function(evt) {
 		evt.preventDefault();
-		var config = getSelectedConfiguration();
-		socket.emit('broadcast-start', config);
+		socket.emit('broadcast-start');
 
 		btnStart.disabled = true;
 	}, false);
 
-	// On Test
-	btnTest.addEventListener('click', function(evt) {
+	// On SetConfig
+	btnSetConfig.addEventListener('click', function(evt) {
 		evt.preventDefault();
-		var config = getSelectedConfiguration();
-		socket.emit('broadcast-test', config);
-		window.startVideo();
+		var name = getSelectedConfiguration();
 
-		btnTest.disabled = true;
-		changeCssClass(videoPlayer, '');
-
+		socket.emit('broadcast-setConfig', name);
 	}, false);
+
+	// On SaveConfig
+	btnSaveConfig.addEventListener('click', function(evt) {
+		evt.preventDefault();
+		try {
+			var config = JSON.parse(createConfigText.value);
+			socket.emit('broadcast-addConfig', config.name, config.command, config.output);
+		}
+		catch (err) {
+			alert('Error with parsing the config to Json format');
+		}
+	});
 
 	// On Stop
 	btnStop.addEventListener('click', function(evt) {
 		evt.preventDefault();
 		socket.emit('broadcast-stop');
 
-		btnTest.disabled = false;
 		btnStart.disabled = false;
-		videoPlayer.src = '';
-		changeCssClass(videoPlayer, 'hidden');
 	}, false);
 
 	// On Config Select
 	configSelect.addEventListener('change', function() {
 		var selected = this.value;
-		if (selected === 'advanced') {
+		if (selected === 'create') {
 			changeCssClass(toggleable, '');
 		} else {
 			changeCssClass(toggleable, 'hidden');
@@ -92,6 +95,29 @@
 	// ============================================================
 
 	// ================ HELPERS ===================================
+
+	function setupSelectMenu() {
+		socket.emit('broadcast-getConfigs', function(configs) {
+			var docFragment = document.createDocumentFragment();
+
+			console.log(configs);
+
+			configs.forEach(function(item) {
+				var option = document.createElement('option');
+				option.value = item;
+				option.innerText = item;
+				docFragment.appendChild(option);
+			});
+
+			configSelect.appendChild(docFragment);
+		});
+	}
+
+	function getActiveConfig() {
+		socket.emit('broadcast-getActiveConfig', function(data) {
+			createConfigText.value = JSON.stringify(data, null, '\t');
+		});
+	}
 
 	function printMessage(msg, cssClass) {
 		if (!cssClass) {
@@ -113,6 +139,8 @@
 
 	function connected() {
 		printMessage('Connected!', 'good');
+		setupSelectMenu();
+		getActiveConfig();
 	}
 
 	function disconnected() {
@@ -121,10 +149,9 @@
 
 	function getSelectedConfiguration() {
 		var selected = configSelect.value;
+
 		if (selected === 'advanced') {
-			// Store config to ls before using it
-			window.localStorage.setItem('advancedConfig', advancedConfig.value);
-			return JSON.parse(advancedConfig.value);
+			return "default";
 		} else {
 			return selected;
 		} 
@@ -159,35 +186,6 @@
 
 		console.log(socket);
 		return socket;
-	}
-
-	function getAdvancedConfigInitialValue() {
-		var value = window.localStorage.getItem('advancedConfig');
-
-		if (!value) {
-			value = JSON.stringify({
-				// "key": "Please add your key",
-				"inRes": "640x420",
-				"video": "/dev/video0",
-				"fps": 30,
-				"audio": "hw:0",
-				"vcodec": "libx264",
-				"outRes": "640x360",
-				"videoBitrate": "512k",
-				"acodec": "libmp3lame",
-				"qscale": 8,
-				"audioBitrate": "512k",
-				"buffer": "512k",
-				"title": "Zaralab Live",
-				"verbosity": "verbose",
-				"format": "flv",
-				"output": "rtmp://a.rtmp.youtube.com/live2"
-			}, null, '\t');
-
-			window.localStorage.setItem('advancedConfig', value);
-		}
-
-		return value;
 	}
 
 	// ================================================================

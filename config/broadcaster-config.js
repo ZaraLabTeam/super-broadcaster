@@ -1,379 +1,75 @@
-// ================ DEFAULT VALUES ==============================
+// ================ DEPENDENCIES =============================
 
-var VIDEO_IN = "/dev/video0";
-var AUDIO_IN = "pulse"; // 'hw:0'; 
-var VIDEO_RES = "640x480";
-var FPS = 30; // Reduce to free resources
-var V_BITRATE = '512k'; // Reduce to free resources
-var A_BITRATE = '128k'; // Reduce to free resources
-var QUALITY = 25;  // Constant Rate Factor 0 to 51 use values between 19 and 26, 19 is higher quality than 26
-var BUFFER = '512k';
-var VCODEC = 'libx264';
-var ACODEC = 'aac'; // 'pcm_s16le'; // 'libmp3lame';
-var FORMAT = 'flv';
-var OUTPUT = "rtmp://a.rtmp.youtube.com/live2";
-var VERBOSITY = 'verbose'; // 'quiet';  // 'info';
+var presets = require('./presets');
+var logger = require('../logger');
 
-// ==============================================================
+// ================================================================
 
-// ================ CONFIGURATION MODEL =========================
+// ================ IMPLEMENTATION =============================
 
-/**
-* Configuration for the broadcast, accepts a configuration object with 
-* string or number properties, because these properties will be 
-* used on the shell they are sanitazed and an errow is thrown on invalid data
-* the error contains the property that failed to be set and the given value
-*/
-function BroadcastConfiguration(cfg) {
-	for (var prop in cfg) {
-		var val = cfg[prop];
+var activeConfig = presets.default;
 
-		if (val && cfg.hasOwnProperty(prop)) {
-			this[prop] = val;
-		}
+function saveConfig(name, command, output) {
+	validateConfig(name, command, output);
+	
+	presets[name] = {
+		"name": name,
+		"command": command,
+		"output": output || "default"
+	};
+
+	logger.log('Config "{{name}}" saved successfully!'.formatPV({name: name}));
+}
+
+function setActiveConfig(name) {
+	var config = presets[name];
+	if (config) {
+		activeConfig = config;
+		logger.log('Active config set to: "{{name}}"'.formatPV({name: name}));
+	} 
+	else {
+		logger.log(
+			'Could not set config to "{{name}}", no configuration by that name, using previous config: "{{prev}}"'
+				.formatPV({name: name, prev: activeConfig.name}));
 	}
 }
 
-Object.defineProperties(BroadcastConfiguration.prototype, {
-	video: {
-		get: function() {
-			if (!this._video) {
-				return VIDEO_IN;
-			}
-
-			return this._video;
-		},
-
-		set: function(value) {
-			validateString(value, 'video');
-			this._video = value;
-		},
-
-		configurable: false,
-		enumerable: true
-	},
-
-	audio: {
-		get: function() {
-			if (!this._audio) {
-				return AUDIO_IN;
-			}
-
-			return this._audio;
-		},
-
-		set: function(value) {
-			validateString(value, 'audio');
-			this._audio = value;
-		},
-
-		configurable: false,
-		enumerable: true
-	},
-
-	resolution: {
-		get: function() {
-			if (!this._resolution) {
-				return VIDEO_RES;
-			}
-
-			return this._resolution;
-		},
-
-		set: function(value) {
-			validateResolution(value, 'resolution');
-			this._resolution = value;
-		},
-
-		configurable: false,
-		enumerable: true
-	},
-
-	fps: {
-		get: function() {
-			if (!this._fps) {
-				return FPS;
-			}
-
-			return this._fps;
-		},
-
-		set: function(value) {
-			validateFps(value);
-			this._fps = value;
-		},
-
-		configurable: false,
-		enumerable: true
-	},
-
-	videoBitrate: {
-		get: function() {
-			if (!this._videoBitrate) {
-				return V_BITRATE;
-			}
-
-			return this._videoBitrate;
-		},
-
-		set: function(value) {
-			validateBytes(value, 'videoBitrate');
-			this._videoBitrate = value;
-		},
-
-		configurable: false,
-		enumerable: true
-	},
-
-	audioBitrate: {
-		get: function () {
-			if (!this._audioBitrate) {
-				return A_BITRATE;
-			}
-
-			return this._audioBitrate;
-		},
-	
-		set: function (value) {
-			validateBytes(value, 'audioBitrate');
-			this._audioBitrate = value;
-		},
-	
-		configurable: false,
-		enumerable: true
-	},
-
-	quality: {
-		get: function () {
-			if (!this._quality) {
-				return QUALITY;
-			}
-
-			return this._quality;
-		},
-	
-		set: function (value) {
-			validateQuality(value);
-			this._quality = value;
-		},
-	
-		configurable: false,
-		enumerable: true
-	},
-
-	buffer: {
-		get: function () {
-			if (!this._buffer) {
-				return BUFFER;
-			}
-
-			return this._buffer;
-		},
-	
-		set: function (value) {
-			validateBytes(value, 'buffer');
-			this._buffer = value;
-		},
-	
-		configurable: false,
-		enumerable: true
-	},
-
-	// Output video codec
-	vcodec: {
-		get: function () {
-			if (!this._vcodec) {
-				return VCODEC;
-			}
-
-			return this._vcodec;
-		},
-	
-		set: function (value) {
-			validateString(value, 'vcodec');
-			this._vcodec = value;
-		},
-	
-		configurable: false,
-		enumerable: true
-	},
-
-	// Output audio codec
-	acodec: {
-		get: function () {
-			if (!this._acodec) {
-				return ACODEC;
-			}
-
-			return this._acodec;
-		},
-	
-		set: function (value) {
-			validateString(value, 'acodec');
-			this._acodec = value;
-		},
-	
-		configurable: false,
-		enumerable: true
-	},
-
-	format: {
-		get: function () {
-			if (!this._format) {
-				return FORMAT;
-			}
-
-			return this._format;
-		},
-	
-		set: function (value) {
-			validateString(value, 'format');
-			this._format = value;
-		},
-	
-		configurable: false,
-		enumerable: true
-	},
-
-	output: {
-		get: function() {
-			if (!this._output) {
-				return OUTPUT;
-			}
-
-			return this._output;
-		},
-
-		set: function(value) {
-			validateString(value, 'output');
-			this._output = value;
-		},
-
-		configurable: false,
-		enumerable: true
-	},
-
-	verbosity: {
-		get: function () {
-			if (!this._verbosity) {
-				return VERBOSITY;
-			}
-
-			return this._verbosity;
-		},
-	
-		set: function (value) {
-			validateString(value);
-			this._verbosity = value;
-		},
-	
-		configurable: false,
-		enumerable: true
-	},
-
-	title: {
-		get: function () {
-			return this._title;
-		},
-	
-		set: function (value) {
-			validateString(value, 'title');
-			this._title = value;
-		},
-	
-		configurable: false,
-		enumerable: true
-	},
-
-	key: {
-		get: function() {
-			return this._key;
-		},
-
-		set: function(value) {
-			validateString(value, 'key');
-			this._key = value;
-		},
-
-		configurable: false,
-		enumerable: true
-	},
-});
-
-BroadcastConfiguration.prototype.toString = function() {
-	var result = '\n';
-
-	for (var prop in this) {
-		if (prop && prop[0] != '_' && typeof(this[prop]) !== 'function' && prop !== 'key') {
-			result += '\t' + prop + ' = ' + this[prop] + '\n';
-		}	
-	}
-
-	return result;
-};
-
-// ==============================================================
-
-// ================ CONFIGURATION PRESETS =======================
-
-function factory(cfg, key) {
-	var result = {};
-
-	if (typeof(cfg) === 'string') {
-
-		console.log('Config --> ', cfg);
-
-		validateString(key);
-		cfg = cfg.toLowerCase();
-
-		switch (cfg) {
-			case 'medium':
-			case 'default':
-				result = new BroadcastConfiguration();
-				break;
-			case 'slow':
-				result = getSlowConfig();
-				break;
-			case 'fast':
-				result = getFastConfig();
-				break;
-			default: 
-				throw new Error('Invalid configuration word -> ' + cfg);
-		}
-
-		result.key = key;
+function removeConfig(name) {
+	var config = presets[name];
+	if (config) {
+		presets[name] = null;
+		logger.log('Removed "{{name}}" from configurations');
 	}
 	else {
-		result = new BroadcastConfiguration(cfg);
+		logger.log('No such config "{{name}}"');
 	}
+}
+
+function getSavedConfigs() {
+	var result = Object.keys(presets);
 
 	return result;
 }
 
-function getSlowConfig() {
-	return new BroadcastConfiguration({
-		resolution: '432x240',
-		videoBitrate: '256k',
-		quality: 40,
-		fps: 16
-	});
+function getActiveConfig() {
+	return {
+		name: activeConfig.name,
+		command: activeConfig.command,
+		output: activeConfig.output
+	};
 }
 
-function getFastConfig() {
-	return new BroadcastConfiguration({
-		resolution: '1280x768',
-		videoBitrate: '2560k',
-		buffer: '4096k',
-		quality: 18
-	});
-}
-
-// ===============================================================
+// ================================================================
 
 // ================ VALIDATION ===================================
 
+function validateConfig(name, command, output) {
+	if (!name) throw new Error('A configuration must have a name to be uniquely identified!');
+	if (!command) throw new Error('A configuration must have a command property!');
+}
+
 function validateString(str, propName) {
-	if (!str || str.indexOf(' ') !== -1) {
+	if (str !== null && (!str || str.indexOf(' ') !== -1)) {
 		raiseError(str, propName);
 	}
 }
@@ -384,7 +80,7 @@ function validateResolution(resString, propName) {
 
 function validateQuality(scale) {
 	if (!validateNumberRange(+scale, 0, 51)) {
-		raiseError(scale, 'quality');
+		raiseError(scale, 'crf');
 	}
 }
 
@@ -395,7 +91,9 @@ function validateFps(fpsString) {
 }
 
 function validateBytes(bytes, propName) {
-	validateRegex(bytes, /^\d+[km]+$/, propName);
+	if (isNaN(+bytes)) {
+		raiseError(bytes, propName);
+	}
 }
 
 function validateRegex(str, regex, propName) {
@@ -420,6 +118,12 @@ function raiseError(value, propName) {
 
 // ================ EXPORTS ======================================
 
-module.exports.factory = factory;
+module.exports = {
+	saveConfig: saveConfig,
+	setActiveConfig: setActiveConfig,
+	removeConfig: removeConfig,
+	getSavedConfigs: getSavedConfigs,
+	getActiveConfig: getActiveConfig
+};
 
 // ===============================================================

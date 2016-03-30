@@ -6,26 +6,26 @@
 		streamLogging.innerHTML = msg;
 	}
 
-	function video() {
-		var mimeCodec = 'video/webm; codecs="vp8, vorbis"';
-		console.log('Is supported codec: ', MediaSource.isTypeSupported(mimeCodec));
+	function video(src) {
+		// var mimeCodec = 'video/webm; codecs="vp8, vorbis"';
+		//console.log('Is supported codec: ', MediaSource.isTypeSupported(mimeCodec));
 
-		var mediaSource = new MediaSource();
-		videoPlayer.src = window.URL.createObjectURL(mediaSource);
+		// var mediaSource = new MediaSource();
+		videoPlayer.src =  'rtp:/127.0.0.1:8003/test';// window.URL.createObjectURL(src);
 
-		mediaSource.addEventListener('sourceopen', function(e) {
-			var started = false;
-			var buffer = mediaSource.addSourceBuffer(mimeCodec);
+		// mediaSource.addEventListener('sourceopen', function(e) {
+		// 	var started = false;
+		// 	var buffer = mediaSource.addSourceBuffer(mimeCodec);
 
-			window.socket.on('video', function(data) {
-				try {
-					buffer.appendBuffer(data);
-				}
-				catch (err) {
-					console.log('Mnogo si barz');
-				}
-			});
-		});
+		// 	window.socket.on('video', function(data) {
+		// 		try {
+		// 			buffer.appendBuffer(data);
+		// 		}
+		// 		catch (err) {
+		// 			console.log('Mnogo si barz');
+		// 		}
+		// 	});
+		// });
 
 		// mediaSource.addEventListener('sourceopen', function(e) {
 		// 	var started = false;

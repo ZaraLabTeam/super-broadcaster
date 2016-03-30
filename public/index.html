@@ -10,8 +10,8 @@
 	<h1>Control Panel</h1>
 
 	<div class="wrapper">
-		<div class="container">
-			<h3>Log</h3>
+    	<div class="container">
+			  <h3>Log</h3>
 			<div id="messages"></div>
 		</div>
 
@@ -24,21 +24,19 @@
 					<label for="config">Select Quality</label>
 
 					<select id="config">
-						<option value="slow">Slow</option>
-						<option value="medium" selected="selected">Medium</option>
-						<option value="fast">Fast</option>
-						<option value="advanced">Advanced</option>
+						<option value="create">Create New</option>
 					</select> 
 
+					<button id="set-config">Set Config</button>
 					<button id="start">Start</button>
 					<button id="stop">Stop</button>
-					<button id="test">Test</button>
 					<button id="clear">Clear</button>
 
 					<div id="toggle" class="hidden">
 						<textarea id="advanced-config" 
-							placeholder="Paste your json config here"
-							spellcheck="false"></textarea>
+						placeholder="Paste your json config here"
+						spellcheck="false"></textarea>
+						<button id="save-config">Save Config</button>
 					</div>
 					
 				</fieldset>
@@ -47,7 +45,8 @@
 	</div>
 
 	<div class="wrapper">
-		<video id="player" controls autoplay muted="true" class="hidden">
+		<video id="player" controls autoplay muted="true" class="hidden"
+			src="rtp:/127.0.0.1:8003/test">
 			Sorry ne bachka!
 		</video>
 		<div id="stream-logging">Stream Logging</div>
@@ -55,6 +54,6 @@
 
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="/public/scripts/main.js"></script>
-	<script src="/public/scripts/video-preview.js"></script>
+	<!-- <script src="/public/scripts/video-preview.js"></script> -->
 </body>
 </html>

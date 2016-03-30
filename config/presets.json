@@ -1,0 +1,31 @@
+{
+	"default": {
+		"name": "Default",
+		"command": "-f video4linux2 -framerate 25 -g 50 -video_size vga -i /dev/video0 -f alsa -i pulse -ar 44100 -b:a 128k -acodec libmp3lame -f flv -vcodec libx264 -crf 23 -tune zerolatency ",
+		"output": "default"
+	},
+
+	"low": {
+		"name": "Low Quality",
+		"command": "-f video4linux2 -framerate 10 -g 20 -video_size qvga -i /dev/video0 -tune zerolatency -f alsa -i pulse -ar 44100 -b:a 128k -acodec libmp3lame -f flv -vcodec libx264 -crf 28 -preset ultrafast ",
+		"output": "default"
+	},
+
+	"high": {
+		"name": "High Quality",
+		"command": "-f video4linux2 -framerate 30 -g 60 -video_size hd720 -i /dev/video0 -f alsa -i pulse -ar 44100 -b: a 128 k -acodec libmp3lame -f flv -vcodec libx264 -crf 19 -preset slow -tune zerolatency ",
+		"output": "default"
+	},
+
+	"test": {
+		"name": "Local Test",
+		"command": "-f video4linux2 -framerate 30 -g 60 -video_size hd720 -i /dev/video0 -f alsa -i pulse -ar 44100 -b: a 128 k -acodec libmp3lame -f flv -vcodec libx264 -crf 19 -preset slow -tune zerolatency ",
+		"output": "rtp://127.0.0.1:8004/test"
+	},
+
+	"testNoSound": {
+		"name": "No Sound Test",
+		"command": "-f video4linux2 -framerate 30 -g 60 -video_size hd720 -i /dev/video0 -an -f flv -vcodec libx264 -crf 19 -preset slow -tune zerolatency ",
+		"output": "rtp://127.0.0.1:8004/test"
+	}
+}
