@@ -1,43 +1,60 @@
 {
-	"default": {
-		"name": "Default",
-		"command": "-f video4linux2 -framerate 25 -g 50 -video_size vga -i /dev/video0 -f alsa -i pulse -ar 44100 -b:a 128k -acodec libmp3lame -vcodec libx264 -crf 23 -tune zerolatency -f flv ",
+	"default264": {
+		"name": "default264",
+		"command": "-f video4linux2 -i /dev/video0 -f alsa -i pulse -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -async 1 -acodec libmp3lame -ab 24k -ar 22050 -maxrate 750k -bufsize 5000k -f flv ",
 		"output": "default"
 	},
 
-	"yt": {
-		"name": "Default",
-		"command": "-f video4linux2 -framerate 15 -video_size qvga -i /dev/video0 -f alsa -i default:CARD=U0x46d0x825 -ar 44100 -b:a 128k -acodec libmp3lame -f flv -vcodec libx264 -crf 23 -tune zerolatency ",
+	"default264New": {
+		"name": "default264New",
+		"command": "-f video4linux2 -i /dev/video0 -f alsa -i pulse -vcodec libx264 -preset slow -tune zerolatency -r 25 -acodec libmp3lame -ab 128k -ar 44100 -maxrate 4500k -bufsize 9000k -f flv ",
 		"output": "default"
 	},
 
-	"yt2": {
-		"name": "Default",
-		"command": "-f video4linux2 -framerate 15 -video_size qvga -i /dev/video0 -f alsa -i default:CARD=U0x46d0x825 -ar 44100 -b:a 128k -acodec libmp3lame -vcodec libx264 -crf 23 -tune zerolatency -f flv ",
+	"raspberry_UsbCamLow": {
+		"name": "raspberry_UsbCamLow",
+		"command": "-f video4linux2 -s qvga -i /dev/video0 -f alsa -i default:CARD=U0x46d0x825 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -async 1 -acodec libmp3lame -ab 24k -ar 22050 -maxrate 750k -bufsize 5000k -f flv ",
+	},
+
+	"raspberry_UsbCamMed": {
+		"name": "raspberry_UsbCamMed",
+		"command": "-f video4linux2 -i /dev/video0 -f alsa -i default:CARD=U0x46d0x825 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -async 1 -acodec libmp3lame -ab 128k -ar 44100 -maxrate 1000k -bufsize 5000k -f flv ",
 		"output": "default"
 	},
 
-	"low": {
-		"name": "Low Quality",
-		"command": "-f video4linux2 -framerate 10 -video_size qvga -i /dev/video0 -f alsa -i default:CARD=U0x46d0x825 -ar 44100 -b:a 128k -acodec libmp3lame -f flv -vcodec libx264 -crf 24 -profile baseline -preset ultrafast -tune zerolatency ",
+	"raspberry_UsbCamMed_25fps": {
+		"name": "raspberry_UsbCamMed_25fps",
+		"command": "-f video4linux2 -i /dev/video0 -f alsa -i default:CARD=U0x46d0x825 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -async 1 -acodec libmp3lame -ab 128k -ar 44100 -maxrate 1000k -bufsize 5000k -f flv ",
 		"output": "default"
 	},
 
-	"high": {
-		"name": "High Quality",
-		"command": "-f video4linux2 -framerate 30 -g 60 -video_size hd720 -i /dev/video0 -f alsa -i pulse -ar 44100 -b:a 128 k -acodec libmp3lame -f flv -vcodec libx264 -crf 19 -preset slow -tune zerolatency ",
+	"raspberry_UsbCamHigh": {
+		"name": "raspberry_UsbCamHigh",
+		"command": "-f video4linux2 -s hd720 -i /dev/video0 -f alsa -i default:CARD=U0x46d0x825 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -async 1 -acodec libmp3lame -ab 128k -ar 44100 -maxrate 4000k -bufsize 8000k -f flv ",
+		"output": "default"
+	},
+
+	"raspberry_UsbCamHigh_25fps": {
+		"name": "raspberry_UsbCamHigh_25fps",
+		"command": "-f video4linux2 -s hd720 -i /dev/video0 -f alsa -i default:CARD=U0x46d0x825 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -async 1 -acodec libmp3lame -ab 128k -ar 44100 -maxrate 4000k -bufsize 8000k -f flv ",
 		"output": "default"
 	},
 
 	"test": {
-		"name": "Local Test",
-		"command": "-f video4linux2 -framerate 30 -g 60 -video_size hd720 -i /dev/video0 -f alsa -i pulse -ar 44100 -b:a 128 k -acodec libmp3lame -f flv -vcodec libx264 -crf 19 -preset slow -tune zerolatency ",
+		"name": "test",
+		"command": "-f video4linux2 -i /dev/video0 -f alsa -i pulse -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -async 1 -acodec libmp3lame -ab 24k -ar 22050 -maxrate 750k -bufsize 5000k -f rtp ",
+		"output": "rtp://127.0.0.1:8004/test"
+	},
+
+	"test_raspberry": {
+		"name": "test_raspberry",
+		"command": "-f video4linux2 -i /dev/video0 -f alsa -i default:CARD=U0x46d0x825 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -async 1 -acodec libmp3lame -ab 24k -ar 22050 -maxrate 750k -bufsize 5000k -f rtp ",
 		"output": "rtp://127.0.0.1:8004/test"
 	},
 
 	"testNoSound": {
 		"name": "No Sound Test",
-		"command": "-f video4linux2 -framerate 30 -g 60 -video_size hd720 -i /dev/video0 -an -f flv -vcodec libx264 -crf 19 -preset slow -tune zerolatency ",
+		"command": "-f video4linux2 -i /dev/video0 -i pulse -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -maxrate 750k -bufsize 5000k -f rtp ",
 		"output": "rtp://127.0.0.1:8004/test"
 	}
 }

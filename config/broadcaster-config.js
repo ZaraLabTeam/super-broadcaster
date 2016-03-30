@@ -7,7 +7,7 @@ var logger = require('../logger');
 
 // ================ IMPLEMENTATION =============================
 
-var activeConfig = presets.default;
+var activeConfig = presets.default264;
 
 function saveConfig(name, command, output) {
 	validateConfig(name, command, output);
