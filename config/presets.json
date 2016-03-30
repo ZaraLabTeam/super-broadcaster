@@ -7,19 +7,19 @@
 
 	"low": {
 		"name": "Low Quality",
-		"command": "-f video4linux2 -framerate 10 -g 20 -video_size qvga -i /dev/video0 -tune zerolatency -f alsa -i pulse -ar 44100 -b:a 128k -acodec libmp3lame -f flv -vcodec libx264 -crf 28 -preset ultrafast ",
+		"command": "-f video4linux2 -framerate 10 -video_size qvga -i /dev/video0 -tune zerolatency -f alsa -i default:CARD=U0x46d0x825 -ar 44100 -b:a 128k -acodec libmp3lame -f flv -vcodec libx264 -crf 24 -profile baseline -preset ultrafast ",
 		"output": "default"
 	},
 
 	"high": {
 		"name": "High Quality",
-		"command": "-f video4linux2 -framerate 30 -g 60 -video_size hd720 -i /dev/video0 -f alsa -i pulse -ar 44100 -b: a 128 k -acodec libmp3lame -f flv -vcodec libx264 -crf 19 -preset slow -tune zerolatency ",
+		"command": "-f video4linux2 -framerate 30 -g 60 -video_size hd720 -i /dev/video0 -f alsa -i pulse -ar 44100 -b:a 128 k -acodec libmp3lame -f flv -vcodec libx264 -crf 19 -preset slow -tune zerolatency ",
 		"output": "default"
 	},
 
 	"test": {
 		"name": "Local Test",
-		"command": "-f video4linux2 -framerate 30 -g 60 -video_size hd720 -i /dev/video0 -f alsa -i pulse -ar 44100 -b: a 128 k -acodec libmp3lame -f flv -vcodec libx264 -crf 19 -preset slow -tune zerolatency ",
+		"command": "-f video4linux2 -framerate 30 -g 60 -video_size hd720 -i /dev/video0 -f alsa -i pulse -ar 44100 -b:a 128 k -acodec libmp3lame -f flv -vcodec libx264 -crf 19 -preset slow -tune zerolatency ",
 		"output": "rtp://127.0.0.1:8004/test"
 	},
 
