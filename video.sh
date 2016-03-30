@@ -1,1 +1,0 @@
-avconv -f video4linux2 -framerate 15 -g 30 -video_size qvga -i /dev/video0 -f alsa -i pulse -ar 44100 -b:a 128k -acodec libmp3lame -f flv -vcodec libx264 -crf 18 -y rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04

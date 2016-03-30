@@ -4,7 +4,7 @@
 var avconv = require('avconv');
 
 // Project modules
-var bcConfigurator = require('./config/broadcaster-config');
+var presetsManager = require('./presets/presets-manager');
 var logger = require('./logger');
 var secret = require('./secret');
 
@@ -42,7 +42,7 @@ function stopPreviousBroadcast() {
 }
 
 function prepareForBroadcast() {
-	var broadcastConfig = bcConfigurator.getActiveConfig();
+	var broadcastConfig = presetsManager.getActivePreset();
 
 	broadcastConfig.command += (broadcastConfig.output === 'default' ? secret.output : broadcastConfig.output);
 

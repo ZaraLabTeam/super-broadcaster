@@ -14,6 +14,7 @@
 	"raspberry_UsbCamLow": {
 		"name": "raspberry_UsbCamLow",
 		"command": "-f video4linux2 -s qvga -i /dev/video0 -f alsa -i default:CARD=U0x46d0x825 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -async 1 -acodec libmp3lame -ab 24k -ar 22050 -maxrate 750k -bufsize 5000k -f flv ",
+		"output": "default"
 	},
 
 	"raspberry_UsbCamMed": {

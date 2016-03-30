@@ -1,5 +1,6 @@
 // ================ DEPENDENCIES =============================
 
+var fs = require('fs');
 var presets = require('./presets');
 var logger = require('../logger');
 
@@ -7,51 +8,93 @@ var logger = require('../logger');
 
 // ================ IMPLEMENTATION =============================
 
+var PRESETS_PATH = __dirname + '/presets.json';
 var activeConfig = presets.default264;
 
-function saveConfig(name, command, output) {
-	validateConfig(name, command, output);
-	
+function savePreset(name, command, output, callback) {
+	try {
+		validateConfig(name, command, output);
+	}
+	catch (err) {
+		logger.log(err.toString());
+		return;
+	}
+
 	presets[name] = {
 		"name": name,
 		"command": command,
 		"output": output || "default"
 	};
 
-	logger.log('Config "{{name}}" saved successfully!'.formatPV({name: name}));
+	var stringifiedPresets = JSON.stringify(presets, null, '\t');
+
+	fs.writeFile(PRESETS_PATH, stringifiedPresets, null, function(err) {
+		if (err) {
+			logger.log('Error saving "{{name}}" preset'.formatPV({
+				name: name
+			}));
+			return;
+		}
+
+		logger.log('Config "{{name}}" saved successfully!'.formatPV({
+			name: name
+		}));
+
+		if (callback) {
+			callback(name);
+		}
+	});
 }
 
-function setActiveConfig(name) {
+function setActivePreset(name) {
 	var config = presets[name];
 	if (config) {
 		activeConfig = config;
-		logger.log('Active config set to: "{{name}}"'.formatPV({name: name}));
-	} 
-	else {
+		logger.log('Active config set to: "{{name}}"'.formatPV({
+			name: name
+		}));
+	} else {
 		logger.log(
 			'Could not set config to "{{name}}", no configuration by that name, using previous config: "{{prev}}"'
-				.formatPV({name: name, prev: activeConfig.name}));
+			.formatPV({
+				name: name,
+				prev: activeConfig.name
+			}));
 	}
 }
 
-function removeConfig(name) {
+function removePreset(name, callback) {
 	var config = presets[name];
 	if (config) {
-		presets[name] = null;
-		logger.log('Removed "{{name}}" from configurations');
-	}
-	else {
+		delete presets[name];
+		var stringifiedPresets = JSON.stringify(presets, null, '\t');
+
+		fs.fs.writeFile(PRESETS_PATH, stringifiedPresets, null, function(err) {
+			if (err) {
+				logger.log('Failed to remove {{name}} from presets'.formatPV({
+					name: name
+				}));
+				return;
+			}
+
+			logger.log('Removed "{{name}}" from configurations');
+
+			if (callback) {
+				callback(name);
+			}
+		});
+	} else {
 		logger.log('No such config "{{name}}"');
 	}
 }
 
-function getSavedConfigs() {
+function getSavedPresets() {
 	var result = Object.keys(presets);
 
 	return result;
 }
 
-function getActiveConfig() {
+function getActivePreset() {
 	return {
 		name: activeConfig.name,
 		command: activeConfig.command,
@@ -66,10 +109,17 @@ function getActiveConfig() {
 function validateConfig(name, command, output) {
 	if (!name) throw new Error('A configuration must have a name to be uniquely identified!');
 	if (!command) throw new Error('A configuration must have a command property!');
+
+	sanitizeContent(command);
+	sanitizeContent(output);
+}
+
+function sanitizeContent(command) {
+
 }
 
 function validateString(str, propName) {
-	if (str !== null && (!str || str.indexOf(' ') !== -1)) {
+	if (!str || str.indexOf(' ') !== -1) {
 		raiseError(str, propName);
 	}
 }
@@ -119,11 +169,11 @@ function raiseError(value, propName) {
 // ================ EXPORTS ======================================
 
 module.exports = {
-	saveConfig: saveConfig,
-	setActiveConfig: setActiveConfig,
-	removeConfig: removeConfig,
-	getSavedConfigs: getSavedConfigs,
-	getActiveConfig: getActiveConfig
+	savePreset: savePreset,
+	setActivePreset: setActivePreset,
+	removePreset: removePreset,
+	getSavedPresets: getSavedPresets,
+	getActivePreset: getActivePreset
 };
 
 // ===============================================================

@@ -60,8 +60,7 @@
 		try {
 			var config = JSON.parse(createConfigText.value);
 			socket.emit('broadcast-addConfig', config.name, config.command, config.output);
-		}
-		catch (err) {
+		} catch (err) {
 			alert('Error with parsing the config to Json format');
 		}
 	});
@@ -154,7 +153,7 @@
 			return "default";
 		} else {
 			return selected;
-		} 
+		}
 	}
 
 	function getPassword() {

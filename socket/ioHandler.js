@@ -2,7 +2,7 @@
 
 // Project modules
 var broadcaster = require('../broadcaster');
-var bcConfigurator = require('../config/broadcaster-config');
+var presetsManager = require('../presets/presets-manager');
 var logger = require('../logger');
 
 // Configs
@@ -25,11 +25,11 @@ function handleIO(io) {
 
 			socket.on('broadcast-stop', broadcaster.stop);
 
-			socket.on('broadcast-setConfig', bcConfigurator.setActiveConfig);
+			socket.on('broadcast-setConfig', presetsManager.setActivePreset);
 
-			socket.on('broadcast-addConfig', bcConfigurator.saveConfig);
+			socket.on('broadcast-addConfig', presetsManager.savePreset);
 
-			socket.on('broadcast-removeConfig', bcConfigurator.removeConfig);
+			socket.on('broadcast-removeConfig', presetsManager.removePreset);
 
 			socket.on('broadcast-getConfigs', getConfigs);
 
@@ -54,12 +54,12 @@ function handleIO(io) {
 			}
 
 			function getConfigs(callback) {
-				var configs = bcConfigurator.getSavedConfigs();
+				var configs = presetsManager.getSavedPresets();
 				callback(configs);
 			}
 
 			function getActive(callback) {
-				var active = bcConfigurator.getActiveConfig();
+				var active = presetsManager.getActivePreset();
 				callback(active);
 			}
 		});
