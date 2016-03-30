@@ -44,7 +44,7 @@ function stopPreviousBroadcast() {
 function prepareForBroadcast() {
 	var broadcastConfig = bcConfigurator.getActiveConfig();
 
-	broadcastConfig.command += '-y ' + (broadcastConfig.output === 'default' ? secret.output : broadcastConfig.output);
+	broadcastConfig.command += (broadcastConfig.output === 'default' ? secret.output : broadcastConfig.output);
 
 	var params = broadcastConfig.command;
 

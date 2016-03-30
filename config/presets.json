@@ -1,13 +1,25 @@
 {
 	"default": {
 		"name": "Default",
-		"command": "-f video4linux2 -framerate 25 -g 50 -video_size vga -i /dev/video0 -f alsa -i pulse -ar 44100 -b:a 128k -acodec libmp3lame -f flv -vcodec libx264 -crf 23 -tune zerolatency ",
+		"command": "-f video4linux2 -framerate 25 -g 50 -video_size vga -i /dev/video0 -f alsa -i pulse -ar 44100 -b:a 128k -acodec libmp3lame -vcodec libx264 -crf 23 -tune zerolatency -f flv ",
+		"output": "default"
+	},
+
+	"yt": {
+		"name": "Default",
+		"command": "-f video4linux2 -framerate 15 -video_size qvga -i /dev/video0 -f alsa -i default:CARD=U0x46d0x825 -ar 44100 -b:a 128k -acodec libmp3lame -f flv -vcodec libx264 -crf 23 -tune zerolatency ",
+		"output": "default"
+	},
+
+	"yt2": {
+		"name": "Default",
+		"command": "-f video4linux2 -framerate 15 -video_size qvga -i /dev/video0 -f alsa -i default:CARD=U0x46d0x825 -ar 44100 -b:a 128k -acodec libmp3lame -vcodec libx264 -crf 23 -tune zerolatency -f flv ",
 		"output": "default"
 	},
 
 	"low": {
 		"name": "Low Quality",
-		"command": "-f video4linux2 -framerate 10 -video_size qvga -i /dev/video0 -tune zerolatency -f alsa -i default:CARD=U0x46d0x825 -ar 44100 -b:a 128k -acodec libmp3lame -f flv -vcodec libx264 -crf 24 -profile baseline -preset ultrafast ",
+		"command": "-f video4linux2 -framerate 10 -video_size qvga -i /dev/video0 -f alsa -i default:CARD=U0x46d0x825 -ar 44100 -b:a 128k -acodec libmp3lame -f flv -vcodec libx264 -crf 24 -profile baseline -preset ultrafast -tune zerolatency ",
 		"output": "default"
 	},
 
