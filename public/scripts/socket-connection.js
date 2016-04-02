@@ -74,6 +74,7 @@ window.socketConnection = (function() {
 		msg = msg.replace(RegExp('\n', 'g'), '<br />');
 
 		messageBox.innerHTML += '<p class="' + cssClass + '">' + msg + '</p>\n';
+		messageBox.scrollTop = messageBox.scrollHeight;
 	}
 
 	function printLog(msg) {
