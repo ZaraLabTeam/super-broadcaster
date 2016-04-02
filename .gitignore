@@ -1,6 +1,9 @@
 # key and pass
 secret.json
 
+# temp files
+presets/active.json
+
 # Logs
 logs
 *.log
