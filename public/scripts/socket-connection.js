@@ -5,6 +5,7 @@ window.socketConnection = (function() {
 
 	var messageBox = document.getElementById('messages');
 	var streamLogging = document.getElementById('stream-logging');
+	var cpuLogging = document.getElementById('cpu-log-value');
 
 	var connectedSocket = {};
 	var connectionPromise = new Promise(establishConnection);
@@ -33,6 +34,8 @@ window.socketConnection = (function() {
 			this.on('message', printMessage);
 
 			this.on('stream-log', printLog);
+
+			this.on('cpu-log', printCpu);
 
 			connectedSocket = this;
 
@@ -77,6 +80,19 @@ window.socketConnection = (function() {
 		streamLogging.innerHTML = '<p class="good">' + msg + '</p>';
 	}
 
+	function printCpu(percent) {
+		var cssClass = '';
+		if (percent < 40) {
+			cssClass = 'good';
+		} else if (percent < 75) {
+			cssClass = 'warning';
+		} else {
+			cssClass = 'bad';
+		}
+
+		cpuLogging.innerHTML = '<p class="' + cssClass + '">' + percent + '%</p>';
+	}
+
 	function clear() {
 		messageBox.innerHTML = '';
 		streamLogging.innerHTML = '';
@@ -90,6 +106,8 @@ window.socketConnection = (function() {
 		connectedSocket.emit.apply(connectedSocket, arguments);
 	}
 
+	// ================ EXPORTS =============================
+	
 	return {
 		establishConnection: function() {
 			return connectionPromise;
@@ -101,5 +119,6 @@ window.socketConnection = (function() {
 
 		emit: emit
 	};
-
+	
+	// ================================================================
 })();

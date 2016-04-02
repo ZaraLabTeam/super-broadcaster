@@ -5,7 +5,7 @@ var avconv = require('avconv');
 
 // Project modules
 var presetsManager = require('./presets/presets-manager');
-var logger = require('./logger');
+var logger = require('./logging/logger');
 var secret = require('./secret');
 
 // The stream process object will be stored here

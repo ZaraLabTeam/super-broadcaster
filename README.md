@@ -14,7 +14,7 @@ The other steps are easier just run `npm install` in the project root
 then create a file screts.json use this as example
 ```json
 {
-	"youtubeKey": "the key from you channel",
+	"output": "the key from you channel",
 	"serverPass": "set a pass to control the server"
 }
 ``` 
@@ -22,3 +22,9 @@ then create a file screts.json use this as example
 Next run `npm start` 
 to start broadcasting access [localhost:8002](localhost:8002);
 and pick a configuration from the menu and click on the start button
+
+## Avconv Settings 
+
+You must set a default output in the secrets.json, but it can be overriden in the preset configuration by setting an  output different from 'default'
+
+If you are using **libx264** codec start with -vcodec libx264 -preset **ultrafast** this is the least stresfull preset then superfast, fast and so on until superslow, each step adds twice as much demand on the cpu 

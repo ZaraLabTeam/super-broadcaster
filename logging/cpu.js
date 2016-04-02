@@ -30,23 +30,4 @@ function cpuAverage() {
   };
 }
 
-//Grab first CPU Measure
-var startMeasure = cpuAverage();
-
-//Set delay for second Measure
-setTimeout(function() {
-
-  //Grab second Measure
-  var endMeasure = cpuAverage();
-
-  //Calculate the difference in idle and total time between the measures
-  var idleDifference = endMeasure.idle - startMeasure.idle;
-  var totalDifference = endMeasure.total - startMeasure.total;
-
-  //Calculate the average percentage CPU usage
-  var percentageCPU = 100 - ~~(100 * idleDifference / totalDifference);
-
-  //Output result to console
-  console.log(percentageCPU + "% CPU Usage.");
-
-}, 100);
+module.exports.cpuAverage = cpuAverage;

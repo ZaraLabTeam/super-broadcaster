@@ -26,6 +26,18 @@
 	width: 60%;
 }
 
+#cpu-log {
+	width: 100px;
+
+	position: fixed;
+	right: 2rem;
+	top: 1rem;
+
+	background-color: black;
+	color: white;
+	text-align: center;
+}
+
 .hidden {
 	display: none;
 }
@@ -36,6 +48,10 @@
 
 .bad {
 	color: red;
+}
+
+.warning {
+	color: orange	;
 }
 
 .standard {
@@ -50,6 +66,7 @@
 }
 
 .wrapper {
+	position: relative;
 	width: 96%;
 	margin: 1% auto;
 }

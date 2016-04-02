@@ -2,7 +2,7 @@
 
 var fs = require('fs');
 var presets = require('./presets');
-var logger = require('../logger');
+var logger = require('../logging/logger');
 
 // ================================================================
 

@@ -20,6 +20,7 @@
 	var toggleable = document.getElementById('toggle');
 	var presetDataText = document.getElementById('preset-data');
 	var videoPlayer = document.getElementById('player');
+	var cpuLog = document.getElementById('cpu-log');
 
 	var btnBlock = document.getElementsByClassName('btn-block')[0];
 	var btnStart = document.getElementById('start');
@@ -28,6 +29,7 @@
 	var btnDeleteConfig = document.getElementById('delete-config');
 	var btnSaveConfig = document.getElementById('save-config');
 	var btnClear = document.getElementById('clear');
+	var cbCpuLog = document.getElementById('toggle-cpu-log');
 
 	// ================================================================
 
@@ -52,12 +54,16 @@
 		} else {
 			console.log('Else');
 		}
+
 	}, false);
 
 	// On Config Select
 	configSelect.addEventListener('change', function() {
 		setPresetData();
 	}, false);
+
+	// On Cpu Log Check
+	cbCpuLog.addEventListener('click', toggleCpuLogging, false);
 
 	// On Start
 	function start() {
@@ -126,6 +132,17 @@
 		window.socketConnection.clearLog();
 	}
 
+	// On Cpu Log
+	function toggleCpuLogging() {
+		socket.emit('log-cpu');
+		console.log(cbCpuLog);
+
+		if (cbCpuLog.checked) {
+			changeCssClass(cpuLog, '');	
+		} else {
+			changeCssClass(cpuLog, 'hidden');
+		}
+	}
 
 	// ============================================================
 

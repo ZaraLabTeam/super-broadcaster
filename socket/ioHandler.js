@@ -3,7 +3,7 @@
 // Project modules
 var broadcaster = require('../broadcaster');
 var presetsManager = require('../presets/presets-manager');
-var logger = require('../logger');
+var logger = require('../logging/logger');
 
 // Configs
 var secret = require('../secret');
@@ -35,6 +35,8 @@ function handleIO(io) {
 
 			socket.on('preset-getByName', getPreset);
 
+			socket.on('log-cpu', logger.toggleCpuLogging.bind(logger));
+
 			socket.on('disconnect', disconnect);
 
 			socket.on('error', function(err) {
@@ -47,6 +49,10 @@ function handleIO(io) {
 
 			logger.on('stream-log', function(msg) {
 				socket.emit('stream-log', msg);
+			});
+
+			logger.on('cpu-log', function(percentage) {
+				socket.emit('cpu-log', percentage);
 			});
 
 			function disconnect() {

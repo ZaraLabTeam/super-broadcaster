@@ -48,5 +48,10 @@
 		"name": "testNoSound",
 		"command": "-f video4linux2 -i /dev/video0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -maxrate 750k -bufsize 5000k -f rtp ",
 		"output": "rtp://127.0.0.1:8004/test"
+	},
+	"logitechYT": {
+		"name": "logitechYT",
+		"command": "-f video4linux2 -s hd720 -i /dev/video0 -f alsa -i pulse -vcodec libx264 -preset superfast -tune zerolatency -r 25 -acodec libmp3lame -ab 128k -ar 44100 -maxrate 4500k -bufsize 9000k -f flv ",
+		"output": "default"
 	}
 }
