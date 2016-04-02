@@ -1,190 +1,191 @@
-(function() {
+(function(socket) {
 	'use strict';
 
 	// Todo: auto scroll logger window
 
 	// ================ INITIALIZATION =============================
+
+	var DEFAULT_CONFIG_NAME = 'default264';
+
 	polyfills();
+	socket.establishConnection()
+		.then(setupSelectMenu)
+		.then(setPresetData)
+		.catch(function(err) {
+			console.log(err);
+			console.log(socket);
+		});
 
-	window.socket = establishConnection();
-
-	var messageBox = document.getElementById('messages');
-	var streamLogging = document.getElementById('stream-logging');
 	var configSelect = document.getElementById('config');
 	var toggleable = document.getElementById('toggle');
-	var createConfigText = document.getElementById('advanced-config');
+	var presetDataText = document.getElementById('preset-data');
 	var videoPlayer = document.getElementById('player');
 
-	var btnApplyAdvanced = document.getElementById('apply-advanced');
+	var btnBlock = document.getElementsByClassName('btn-block')[0];
 	var btnStart = document.getElementById('start');
 	var btnStop = document.getElementById('stop');
 	var btnSetConfig = document.getElementById('set-config');
+	var btnDeleteConfig = document.getElementById('delete-config');
 	var btnSaveConfig = document.getElementById('save-config');
 	var btnClear = document.getElementById('clear');
 
 	// ================================================================
 
-	// ================ SOCKET EVENTS =============================
-
-	socket.on('connect', connected);
-
-	socket.on('disconnect', disconnected);
-
-	socket.on('message', printMessage);
-
-	socket.on('stream-log', printLog);
-
-	// ============================================================
-
 	// ================ UI EVENTS =================================
 
-	// On Start
-	btnStart.addEventListener('click', function(evt) {
+	btnBlock.addEventListener('click', function(evt) {
 		evt.preventDefault();
-		socket.emit('broadcast-start');
+		var target = evt.target;
 
-		btnStart.disabled = true;
-	}, false);
-
-	// On SetConfig
-	btnSetConfig.addEventListener('click', function(evt) {
-		evt.preventDefault();
-		var name = getSelectedConfiguration();
-
-		socket.emit('broadcast-setConfig', name);
-	}, false);
-
-	// On SaveConfig
-	btnSaveConfig.addEventListener('click', function(evt) {
-		evt.preventDefault();
-		try {
-			var config = JSON.parse(createConfigText.value);
-			socket.emit('broadcast-addConfig', config.name, config.command, config.output);
-		} catch (err) {
-			alert('Error with parsing the config to Json format');
+		if (target === btnStart) {
+			start();
+		} else if (target === btnStop) {
+			stop();
+		} else if (target === btnSetConfig) {
+			setConfig();
+		} else if (target === btnSaveConfig) {
+			save();
+		} else if (target === btnDeleteConfig) {
+			destroy();
+		} else if (target === btnClear) {
+			clear();
+		} else {
+			console.log('Else');
 		}
-	});
-
-	// On Stop
-	btnStop.addEventListener('click', function(evt) {
-		evt.preventDefault();
-		socket.emit('broadcast-stop');
-
-		btnStart.disabled = false;
 	}, false);
 
 	// On Config Select
 	configSelect.addEventListener('change', function() {
-		var selected = this.value;
-		if (selected === 'create') {
-			changeCssClass(toggleable, '');
-		} else {
-			changeCssClass(toggleable, 'hidden');
+		setPresetData();
+	}, false);
+
+	// On Start
+	function start() {
+		socket.emit('broadcast-start');
+		btnStart.disabled = true;
+	}
+
+	// On Stop
+	function stop() {
+		socket.emit('broadcast-stop');
+		btnStart.disabled = false;
+	}
+
+	// On SetConfig
+	function setConfig() {
+		var name = getSelectedPreset();
+		socket.emit('broadcast-setConfig', name);
+	}
+
+	// On SaveConfig
+	function save() {
+		try {
+			var config = JSON.parse(presetDataText.value);
+			socket.emit('preset-add', config.name, config.command, config.output, function(err, name) {
+				if (err) {
+					alert(err.toString());
+					return;
+				}
+
+				addOption(name, configSelect);
+				configSelect.selectedIndex = configSelect.options.length - 1;
+			});
+		} catch (err) {
+			alert('Error with parsing the config to Json format');
+		}
+	}
+
+	// On Delete
+	function destroy() {
+		var selectedConfig = getSelectedPreset();
+
+		if (selectedConfig === DEFAULT_CONFIG_NAME) {
+			alert('You cannot delete the default config');
+			return;
 		}
 
-	}, false);
+		var remove = confirm('Delete "' + selectedConfig + '" preset ?');
+
+		if (remove) {
+			socket.emit('preset-remove', selectedConfig, function(err, name) {
+				if (err) {
+					alert(err);
+					return;
+				}
+
+				var toBeDeleted = configSelect.querySelector('option[value="' + name + '"]');
+				configSelect.removeChild(toBeDeleted);
+
+				setPresetData();
+			});
+		}
+	}
 
 	// On Clear
-	btnClear.addEventListener('click', function(evt) {
-		evt.preventDefault();
-		messageBox.innerHTML = '';
-		streamLogging.innerHTML = '';
-	}, false);
+	function clear() {
+		window.socketConnection.clearLog();
+	}
+
 
 	// ============================================================
 
 	// ================ HELPERS ===================================
 
 	function setupSelectMenu() {
-		socket.emit('broadcast-getConfigs', function(configs) {
-			var docFragment = document.createDocumentFragment();
+		console.log('setup Menu');
+		var promise = new Promise(function(resolve, reject) {
 
-			console.log(configs);
+			socket.emit('broadcast-getConfigs', function(configs) {
+				var docFragment = document.createDocumentFragment();
 
-			configs.forEach(function(item) {
-				var option = document.createElement('option');
-				option.value = item;
-				option.innerText = item;
-				docFragment.appendChild(option);
+				console.log(configs);
+
+				configs.forEach(function(item) {
+					addOption(item, docFragment);
+				});
+
+				configSelect.appendChild(docFragment);
+
+				resolve();
 			});
-
-			configSelect.appendChild(docFragment);
 		});
+
+		return promise;
 	}
 
-	function getActiveConfig() {
-		socket.emit('broadcast-getActiveConfig', function(data) {
-			createConfigText.value = JSON.stringify(data, null, '\t');
-		});
+	function addOption(name, parentElement) {
+		var option = document.createElement('option');
+		option.innerText = name;
+		option.value = name;
+
+		parentElement.appendChild(option);
+
+		return option;
 	}
 
-	function printMessage(msg, cssClass) {
-		if (!cssClass) {
-			cssClass = 'standard';
-		}
-
-		msg = msg.replace(RegExp('\n', 'g'), '<br />');
-
-		messageBox.innerHTML += '<p class="' + cssClass + '">' + msg + '</p>\n';
-	}
-
-	function printLog(msg) {
-		streamLogging.innerHTML = '<p class="good">' + msg + '</p>';
+	function getSelectedPreset() {
+		return configSelect.value;
 	}
 
 	function changeCssClass(element, cls) {
 		element.className = cls;
 	}
 
-	function connected() {
-		printMessage('Connected!', 'good');
-		setupSelectMenu();
-		getActiveConfig();
+	function setDataText(json) {
+		presetDataText.value = JSON.stringify(json, null, '\t');
 	}
 
-	function disconnected() {
-		printMessage('Disconnected!', 'bad');
-	}
+	function setPresetData() {
+		var name = getSelectedPreset();
 
-	function getSelectedConfiguration() {
-		var selected = configSelect.value;
+		socket.emit('preset-getByName', name, function(err, preset) {
+			if (err) {
+				alert(err);
+				return;
+			}
 
-		if (selected === 'advanced') {
-			return "default";
-		} else {
-			return selected;
-		}
-	}
-
-	function getPassword() {
-		while (!localStorage.getItem('pass')) {
-			localStorage.setItem('pass', prompt('Enter the server password to connect!'));
-		}
-
-		var localPass = localStorage.getItem('pass');
-
-		return localPass;
-	}
-
-	function establishConnection() {
-		var pass = getPassword();
-		var socket;
-
-		// Todo: fix - this logic is invalid
-		try {
-			console.log(pass);
-			socket = io.connect('/' + pass, {
-				'connect timeout': 3000,
-				'reconnect': false
-			});
-		} catch (err) {
-			console.log(err);
-			localStorage.setItem('pass', '');
-			socket = establishConnection();
-		}
-
-		console.log(socket);
-		return socket;
+			setDataText(preset);
+		});
 	}
 
 	// ================================================================
@@ -219,4 +220,4 @@
 	}
 
 	// ================================================================	
-})();
+})(window.socketConnection);

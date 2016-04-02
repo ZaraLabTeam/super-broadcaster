@@ -14,8 +14,7 @@ var activeConfig = presets.default264;
 function savePreset(name, command, output, callback) {
 	try {
 		validateConfig(name, command, output);
-	}
-	catch (err) {
+	} catch (err) {
 		logger.log(err.toString());
 		return;
 	}
@@ -33,15 +32,17 @@ function savePreset(name, command, output, callback) {
 			logger.log('Error saving "{{name}}" preset'.formatPV({
 				name: name
 			}));
-			return;
+			return callback(err);
 		}
 
 		logger.log('Config "{{name}}" saved successfully!'.formatPV({
 			name: name
 		}));
 
+		setActivePreset(name);
+
 		if (callback) {
-			callback(name);
+			callback(null, name);
 		}
 	});
 }
@@ -65,26 +66,30 @@ function setActivePreset(name) {
 
 function removePreset(name, callback) {
 	var config = presets[name];
+	var message = '';
+
 	if (config) {
 		delete presets[name];
 		var stringifiedPresets = JSON.stringify(presets, null, '\t');
 
-		fs.fs.writeFile(PRESETS_PATH, stringifiedPresets, null, function(err) {
+		fs.writeFile(PRESETS_PATH, stringifiedPresets, null, function(err) {
 			if (err) {
-				logger.log('Failed to remove {{name}} from presets'.formatPV({
-					name: name
-				}));
-				return;
+				message = 'Failed to remove {{name}} from presets'.formatPV({ name: name });
+
+				logger.log(err.toString());
+				return callback(message);
 			}
 
-			logger.log('Removed "{{name}}" from configurations');
+			logger.log('Removed "{{name}}" from configurations'.formatPV({name: name}));
 
 			if (callback) {
-				callback(name);
+				callback(null, name);
 			}
 		});
 	} else {
-		logger.log('No such config "{{name}}"');
+		message = 'No such config "{{name}}"'.formatPV({name: name});
+		logger.log(message);
+		callback(message);
 	}
 }
 
@@ -102,6 +107,19 @@ function getActivePreset() {
 	};
 }
 
+function getPreset(name) {
+	var preset = presets[name];
+	if (preset) {
+		return {
+			name: preset.name,
+			command: preset.command,
+			output: preset.output
+		};
+	} else {
+		return null;
+	}
+}
+
 // ================================================================
 
 // ================ VALIDATION ===================================
@@ -114,6 +132,7 @@ function validateConfig(name, command, output) {
 	sanitizeContent(output);
 }
 
+// Todo: method body
 function sanitizeContent(command) {
 
 }
@@ -173,7 +192,8 @@ module.exports = {
 	setActivePreset: setActivePreset,
 	removePreset: removePreset,
 	getSavedPresets: getSavedPresets,
-	getActivePreset: getActivePreset
+	getActivePreset: getActivePreset,
+	getPreset: getPreset
 };
 
 // ===============================================================

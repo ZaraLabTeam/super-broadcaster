@@ -1,5 +1,10 @@
 // ================ DEPENDENCIES ================================
 
+// Configs
+require('./config/extension-methods');
+var serverConfig = require('./config/server-config');
+var ioConfig = require('./config/io-config');
+
 // NPM modules
 var http = require('http');
 var socketIo = require('socket.io');
@@ -8,10 +13,6 @@ var socketIo = require('socket.io');
 var httpHandler = require('./http/httpHandler');
 var ioHandler = require('./socket/ioHandler');
 var logger = require('./logger');
-
-// Configs
-var serverConfig = require('./config/server-config');
-var ioConfig = require('./config/io-config');
 
 // ==============================================================
 

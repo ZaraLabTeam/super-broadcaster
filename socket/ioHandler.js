@@ -27,13 +27,13 @@ function handleIO(io) {
 
 			socket.on('broadcast-setConfig', presetsManager.setActivePreset);
 
-			socket.on('broadcast-addConfig', presetsManager.savePreset);
+			socket.on('preset-add', presetsManager.savePreset);
 
-			socket.on('broadcast-removeConfig', presetsManager.removePreset);
+			socket.on('preset-remove', presetsManager.removePreset);
 
 			socket.on('broadcast-getConfigs', getConfigs);
 
-			socket.on('broadcast-getActiveConfig', getActive);
+			socket.on('preset-getByName', getPreset);
 
 			socket.on('disconnect', disconnect);
 
@@ -58,9 +58,14 @@ function handleIO(io) {
 				callback(configs);
 			}
 
-			function getActive(callback) {
-				var active = presetsManager.getActivePreset();
-				callback(active);
+			function getPreset(name, callback) {
+				var preset = presetsManager.getPreset(name);
+
+				if (preset) {
+					callback(null, preset);
+				} else {
+					callback('Preset was not present on the server');
+				}
 			}
 		});
 }
