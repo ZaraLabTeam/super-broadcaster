@@ -118,7 +118,9 @@ window.socketConnection = (function() {
 
 		on: addEvent,
 
-		emit: emit
+		emit: emit,
+
+		socket: connectedSocket
 	};
 	
 	// ================================================================

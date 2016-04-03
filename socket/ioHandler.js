@@ -1,7 +1,11 @@
 // ================ DEPENEDENCIES =============================
 
+// NPM modules
+var ss = require('socket.io-stream');
+
 // Project modules
 var broadcaster = require('../broadcaster');
+var audioHandler = require('../audio/audio-handler');
 var presetsManager = require('../presets/presets-manager');
 var logger = require('../logging/logger');
 
@@ -20,6 +24,8 @@ function handleIO(io) {
 	io
 		.of(secret.serverPass)
 		.on('connection', function(socket) {
+
+			// ss(socket).on('audio-stream', audioHandler.handle);
 
 			socket.on('broadcast-start', broadcaster.broadcast);
 

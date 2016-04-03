@@ -53,5 +53,10 @@
 		"name": "logitechYT",
 		"command": "-f video4linux2 -s hd720 -i /dev/video0 -f alsa -i pulse -vcodec libx264 -preset superfast -tune zerolatency -r 25 -acodec libmp3lame -ab 128k -ar 44100 -maxrate 4500k -bufsize 9000k -f flv ",
 		"output": "default"
+	},
+	"raspberry_UsbCamMed000": {
+		"name": "raspberry_UsbCamMed000",
+		"command": "-f video4linux2 -i /dev/video0 -f alsa -i hw:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -async 1 -acodec libmp3lame -ab 128k -ar 44100 -maxrate 1000k -bufsize 5000k -f flv ",
+		"output": "default"
 	}
 }

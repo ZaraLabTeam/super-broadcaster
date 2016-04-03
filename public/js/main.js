@@ -135,7 +135,6 @@
 	// On Cpu Log
 	function toggleCpuLogging() {
 		socket.emit('log-cpu');
-		console.log(cbCpuLog);
 
 		if (cbCpuLog.checked) {
 			changeCssClass(cpuLog, '');	
@@ -220,7 +219,11 @@
 				};
 		})();
 
-		window.navigator.getWebcam = (function() {
+		window.navigator.getUserMedia = (function() {
+			// if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+			// 	return navigator.mediaDevices.getUserMedia;
+			// }
+
 			return window.navigator.getUserMedia ||
 				window.navigator.webkitGetUserMedia ||
 				window.navigator.mozGetUserMedia ||
@@ -233,6 +236,10 @@
 
 		window.MediaSource = (function() {
 			return window.MediaSource || window.WebKitMediaSource;
+		})();
+
+		window.AudioContext = (function() {
+			return window.AudioContext || window.webkitAudioContext;
 		})();
 	}
 

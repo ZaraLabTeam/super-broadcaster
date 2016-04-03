@@ -50,8 +50,10 @@ function savePreset(name, command, output, callback) {
 
 function setActivePreset(name) {
 	var config = presets[name];
+
 	if (config) {
 		activeConfig = config;
+		
 		var stringifiedPreset = stringify(config);
 		fs.writeFile(ACTIVE_PRESET_PATH, stringifiedPreset, null, function(err) {
 			if (err) {
@@ -121,7 +123,7 @@ function getActivePreset() {
 			activeConfig = JSON.parse(saved);
 		} catch (err) {
 			logger.log(err.toString());
-			activeConfig = getPreset('default264');
+			setActivePreset('default264');
 		}
 	}
 
