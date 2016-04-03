@@ -6,7 +6,7 @@
 		canvas = document.getElementById("canvas"),
 		btnStartRec = document.getElementById('start-rec-btn'),
 		btnStopRec = document.getElementById('stop-rec-btn'),
-		contextSampleRate = (new AudioContext()).sampleRate,
+		contextSampleRate = 48000, // (new AudioContext()).sampleRate,
 		resampleRate = contextSampleRate * 2,
 		worker = new Worker('public/js/worker/resampler-worker.js');
 
