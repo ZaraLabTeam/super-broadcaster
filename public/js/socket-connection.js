@@ -107,6 +107,10 @@ window.socketConnection = (function() {
 		connectedSocket.emit.apply(connectedSocket, arguments);
 	}
 
+	function getSocket() {
+		return connectedSocket;
+	}
+
 	// ================ EXPORTS =============================
 	
 	return {
@@ -120,7 +124,7 @@ window.socketConnection = (function() {
 
 		emit: emit,
 
-		socket: connectedSocket
+		socket: getSocket
 	};
 	
 	// ================================================================

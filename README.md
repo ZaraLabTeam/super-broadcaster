@@ -30,3 +30,7 @@ pick a configuration from the menu and click on the start button
 You must set a default output in the secrets.json, but it can be overriden in the preset configuration by setting an  output different from 'default'
 
 If you are using **libx264** codec start with -vcodec libx264 -preset **ultrafast** this is the least stresfull preset then superfast, fast and so on until superslow, each step adds twice as much demand on the cpu 
+
+You can stream audio to the nodejs server from the webApp and then merge it with the video stream
+	* using **pulse audio**: To check you input/output source use `pactl list sources | grep Name` to stream your speakers audio use the `alsa_output ... .monitor` source and `-f pulse` option
+	* using **jack** create a jack and use as an input 

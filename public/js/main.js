@@ -93,6 +93,7 @@
 					return;
 				}
 
+				// Bug: saving existing preset appends it again to the dropdown menu
 				addOption(name, configSelect);
 				configSelect.selectedIndex = configSelect.options.length - 1;
 			});

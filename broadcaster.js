@@ -9,7 +9,7 @@ var logger = require('./logging/logger');
 var secret = require('./secret');
 
 // The stream process object will be stored here
-var stream = null;
+var broadcastStream = null;
 
 // ==============================================================
 
@@ -26,16 +26,16 @@ function broadcast() {
 	var commandParams = prepareForBroadcast();
 	if (!commandParams) return;
 
-	stream = avconv(commandParams.split(' '));
-	logStreamData(stream);
+	broadcastStream = avconv(commandParams.split(' '));
+	logStreamData(broadcastStream);
 
 	logger.log(BROADCAST_STARTED_MSG);
 }
 
 function stopPreviousBroadcast() {
-	if (stream) {
-		stream.kill();
-		stream = null;
+	if (broadcastStream) {
+		broadcastStream.kill();
+		broadcastStream = null;
 
 		logger.log(BROADCAST_ENDED_MSG);
 	}
@@ -59,11 +59,17 @@ function prepareForBroadcast() {
 }
 
 function isRunning() {
-	if (stream) {
+	if (broadcastStream) {
 		return true;
 	}
 
 	return false;
+}
+
+function addAudioStream(stream) {
+	if (broadcastStream) {
+		stream.pipe(broadcastStream);
+	}
 }
 
 // ================ EXPORTS =====================================
@@ -71,7 +77,8 @@ function isRunning() {
 module.exports = {
 	broadcast: broadcast,
 	stop: stopPreviousBroadcast,
-	isRunning: isRunning
+	isRunning: isRunning,
+	addAudioStream: addAudioStream
 };
 
 // ==============================================================

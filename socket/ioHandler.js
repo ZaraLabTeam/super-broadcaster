@@ -25,7 +25,7 @@ function handleIO(io) {
 		.of(secret.serverPass)
 		.on('connection', function(socket) {
 
-			// ss(socket).on('audio-stream', audioHandler.handle);
+			ss(socket).on('audio-stream', audioHandler.handle);
 
 			socket.on('broadcast-start', broadcaster.broadcast);
 

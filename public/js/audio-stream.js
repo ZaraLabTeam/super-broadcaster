@@ -1,4 +1,4 @@
-(function(ss, socket) {
+(function(ss, socketConnection) {
 	var client,
 		recorder,
 		context,
@@ -7,7 +7,7 @@
 		btnStartRec = document.getElementById('start-rec-btn'),
 		btnStopRec = document.getElementById('stop-rec-btn'),
 		contextSampleRate = (new AudioContext()).sampleRate,
-		resampleRate = 96000,
+		resampleRate = contextSampleRate * 2,
 		worker = new Worker('public/js/worker/resampler-worker.js');
 
 	worker.postMessage({
@@ -19,18 +19,20 @@
 	worker.addEventListener('message', function(e) {
 
 		if (bStream && bStream.writable)
-		bStream.write(convertFloat32ToInt16(e.data.buffer));
+		bStream.write(new ss.Buffer(convertFloat32ToInt16(e.data.buffer)));
 	}, false);
 
 	btnStartRec.addEventListener('click', function(evt) {
 		evt.preventDefault();
 
-		client = new BinaryClient('ws://localhost:8003');
-		client.on('open', function() {
-			bStream = client.createStream({
-				sampleRate: resampleRate
-			});
-		});
+		bStream = ss.createStream();
+		ss(socketConnection.socket()).emit('audio-stream', bStream, {sampleRate: resampleRate});
+		// client = new BinaryClient('ws://localhost:8003');
+		// client.on('open', function() {
+		// 	bStream = client.createStream({
+		// 		sampleRate: resampleRate
+		// 	});
+		// });
 
 		if (context) {
 			recorder.connect(context.destination);
@@ -44,6 +46,7 @@
 
 		navigator.getUserMedia(session, function(stream) {
 			console.log(stream);
+
 			context = new AudioContext();
 			var audioInput = context.createMediaStreamSource(stream);
 			var bufferSize = 0; // let implementation decide
@@ -57,13 +60,13 @@
 			recorder.connect(context.destination);
 
 		}, function(e) {
-
+			console.log('Ne bachka!');
 		});
 	});
 
 	function onAudio(e) {
 		var left = e.inputBuffer.getChannelData(0);
-
+		
 		worker.postMessage({
 			cmd: "resample",
 			buffer: left
@@ -106,6 +109,7 @@
 
 	btnStopRec.addEventListener('click', function() {
 		recorder.disconnect();
-		client.close();
+		bStream.exit();
+		// client.close();
 	});
 })(window.ss, window.socketConnection);
