@@ -3,7 +3,7 @@
 		recorder,
 		context,
 		bStream,
-		canvas = document.getElementById("canvas"),
+		canvas = document.getElementById('audioCanvas'),
 		btnStartRec = document.getElementById('start-rec-btn'),
 		btnStopRec = document.getElementById('stop-rec-btn'),
 		contextSampleRate = 48000, // (new AudioContext()).sampleRate,
