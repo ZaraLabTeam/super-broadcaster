@@ -38,6 +38,13 @@
 	text-align: center;
 }
 
+#videoCanvas {
+	/* Always stretch the canvas to 640x480, regardless of its
+	internal size. */
+	width: 640px;
+	height: 480px;
+}
+
 .hidden {
 	display: none;
 }

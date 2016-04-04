@@ -12,8 +12,8 @@ var socketServer = new (require('ws').Server)({port: PORT});
 var logger = require('../logging/logger');
 var broadcaster = require('../broadcaster');
 
-var width = 320;
-var height = 240;
+var width = 640;
+var height = 480;
 
 // ================================================================
 
@@ -39,8 +39,10 @@ socketServer.on('connection', function(socket) {
 });
 
 socketServer.broadcast = function(data, opts) {
+	console.log('BC');
 	for(var i in this.clients) {
 		if (this.clients[i].readyState === 1) {
+			console.log('Client Ready');
 			this.clients[i].send(data, opts);
 		} else {
 			logger.log('Error: Client ({{number}}) not connected.'

@@ -7,7 +7,8 @@
 
 	function play() {
 		var player = new jsmpeg(client, {
-			canvas: canvas
+			canvas: canvas,
+			autoplay: true
 		});
 	}
 
