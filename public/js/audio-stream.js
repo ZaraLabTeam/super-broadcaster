@@ -27,7 +27,8 @@
 
 		bStream = ss.createStream();
 		ss(socketConnection.socket()).emit('audio-stream', bStream, {sampleRate: resampleRate});
-		// client = new BinaryClient('ws://localhost:8003');
+		var hostname = window.location.hostname;
+		// client = new BinaryClient('ws://' + hostname + ':8003');
 		// client.on('open', function() {
 		// 	bStream = client.createStream({
 		// 		sampleRate: resampleRate
