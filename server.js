@@ -13,6 +13,7 @@ var socketIo = require('socket.io');
 var httpHandler = require('./http/httpHandler');
 var ioHandler = require('./socket/ioHandler');
 var logger = require('./logging/logger');
+require('./socket/socket-server');
 
 // ==============================================================
 

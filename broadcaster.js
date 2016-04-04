@@ -2,6 +2,7 @@
 
 // NPM Dependencies
 var avconv = require('avconv');
+var EventEmitter = require('events').EventEmitter;
 
 // Project modules
 var presetsManager = require('./presets/presets-manager');
@@ -10,6 +11,9 @@ var secret = require('./secret');
 
 // The stream process object will be stored here
 var broadcastStream = null;
+
+// emits the broadcast started event with the stream
+var ev = new EventEmitter();
 
 // ==============================================================
 
@@ -29,6 +33,7 @@ function broadcast() {
 	broadcastStream = avconv(commandParams.split(' '));
 	logStreamData(broadcastStream);
 
+	ev.emit('broadcast-started', broadcastStream);
 	logger.log(BROADCAST_STARTED_MSG);
 }
 
@@ -78,7 +83,8 @@ module.exports = {
 	broadcast: broadcast,
 	stop: stopPreviousBroadcast,
 	isRunning: isRunning,
-	addAudioStream: addAudioStream
+	addAudioStream: addAudioStream,
+	event: ev
 };
 
 // ==============================================================

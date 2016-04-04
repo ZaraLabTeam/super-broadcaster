@@ -69,6 +69,7 @@
 	function start() {
 		socket.emit('broadcast-start');
 		btnStart.disabled = true;
+		window.playVideo();
 	}
 
 	// On Stop
@@ -138,7 +139,7 @@
 		socket.emit('log-cpu');
 
 		if (cbCpuLog.checked) {
-			changeCssClass(cpuLog, '');	
+			changeCssClass(cpuLog, '');
 		} else {
 			changeCssClass(cpuLog, 'hidden');
 		}
@@ -242,6 +243,19 @@
 		window.AudioContext = (function() {
 			return window.AudioContext || window.webkitAudioContext;
 		})();
+
+		String.prototype.formatPV = function(args) {
+			if (!args) return this;
+
+			var str = this;
+
+			for (var arg in args) {
+				str = str.replace(
+					RegExp("\\{\\{" + arg + "\\}\\}", "gi"), args[arg]);
+			}
+
+			return str;
+		};
 	}
 
 	// ================================================================	
