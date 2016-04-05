@@ -23,6 +23,12 @@ function handleHttp(req, res) {
 			});
 
 			req.resume();
+		} else if (req.url === '/stream-example.html') {
+			req.addListener('end', function () {
+				static_files.serve(req, res);
+			});
+
+			req.resume();
 		}
 		else {
 			req.addListener('end', function () {

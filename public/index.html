@@ -7,18 +7,30 @@
 </head>
 
 <body>
+	
 	<h1>Control Panel</h1>
 
 	<div class="wrapper">
     	<div class="container">
-			  <h3>Log</h3>
-			<div id="messages"></div>
+    		<!-- <video id="player" controls autoplay muted="true" class="hidden"
+				src="rtp:/127.0.0.1:8003/test">
+				Sorry ne bachka!
+			</video> -->
+			<h3>Player</h3>
+		    <div id="canvas-container" class="shadow">
+		    	<canvas id="videoCanvas" height="400">
+					<p>
+						Please use a browser that supports the Canvas Element
+					</p>
+				</canvas>
+		        <canvas height="100" id="audioCanvas"></canvas>
+		    </div>
 		</div>
 
 		<div class="container">
 			<h3>Config</h3>
 			<form accept-charset="utf-8" autocomplete="off">
-				<fieldset>
+				<fieldset class="shadow">
 					<legend>Broadcast configuration</legend>
 
 					<label for="config">Select Quality</label>
@@ -41,6 +53,14 @@
 						placeholder="Paste your json config here"
 						spellcheck="false"></textarea>
 					</div>
+
+					<fieldset>
+						<legend>Audio Streaming</legend>
+						<button class="btn btn-primary" 
+							id="start-rec-btn">Start Recording</button>
+	  	  				<button class="btn btn-primary" 
+	  	  					id="stop-rec-btn">Stop Recording</button>
+					</fieldset>
 					
 				</fieldset>
 			</form>
@@ -49,36 +69,24 @@
 		<div id="cpu-log" class="hidden">
 			<span>CPU: </span><span id="cpu-log-value"></span>
 		</div>
+
 	</div>
 
 	<div class="wrapper">
-		<video id="player" controls autoplay muted="true" class="hidden"
-			src="rtp:/127.0.0.1:8003/test">
-			Sorry ne bachka!
-		</video>
+		<h3>Log</h3>
+		<div id="messages"></div>
 		<div id="stream-logging">Stream Logging</div>
-		<button class="btn btn-primary" id="start-rec-btn">Start Recording</button>
-  	  	<button class="btn btn-primary" id="stop-rec-btn">Stop Recording</button>
-
-	    <div id="canvas-container">
-	        <canvas width="600" height="100" id="audioCanvas"></canvas>
-
-	        <canvas id="videoCanvas" width="640" height="480">
-				<p>
-					Please use a browser that supports the Canvas Element
-				</p>
-			</canvas>
-	    </div>
 	</div>
 
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="/public/js/socket.io-stream.js"></script>
-	<script src="/public/js/jsmpeg.js"></script>
+	<script src="/public/js/jsmpg.js"></script>
 	<script src="/public/js/binary.js"></script>
     <script src="/public/js/re-sampler.js"></script>
 	<script src="/public/js/socket-connection.js"></script>
 	<script src="/public/js/main.js"></script>
-	<script src="/public/js/audio-stream.js"></script>
 	<script src="/public/js/video-preview.js"></script>
+	<script src="/public/js/audio-stream.js"></script>
+	
 </body>
 </html>

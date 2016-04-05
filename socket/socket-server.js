@@ -3,10 +3,13 @@
 // Constants
 // Copy & paste
 var PORT = 8007;
-var STREAM_MAGIC_BYTES = 'jsmp'; 
+var STREAM_PORT = 8010;
+var STREAM_MAGIC_BYTES = 'jsmp';
 
 // NPM Modules
-var socketServer = new (require('ws').Server)({port: PORT});
+var socketServer = new(require('ws').Server)({
+	port: PORT
+});
 
 // Project Modules
 var logger = require('../logging/logger');
@@ -27,26 +30,32 @@ socketServer.on('connection', function(socket) {
 	streamHeader.writeUInt16BE(width, 4);
 	streamHeader.writeUInt16BE(height, 6);
 
-	socket.send(streamHeader, {binary: true});
+	socket.send(streamHeader, {
+		binary: true
+	});
 
 	logger.log('New WebSocket Connection ({{count}} total)'
-			.formatPV({count: socketServer.clients.length}));
+		.formatPV({
+			count: socketServer.clients.length
+		}));
 
 	socket.on('close', function(code, message) {
 		logger.log('Disconnected WebSocket ({{count}} total)'
-			.formatPV({count: socketServer.clients.length}));
+			.formatPV({
+				count: socketServer.clients.length
+			}));
 	});
 });
 
 socketServer.broadcast = function(data, opts) {
-	console.log('BC');
-	for(var i in this.clients) {
+	for (var i in this.clients) {
 		if (this.clients[i].readyState === 1) {
-			console.log('Client Ready');
 			this.clients[i].send(data, opts);
 		} else {
 			logger.log('Error: Client ({{number}}) not connected.'
-				.formatPV({number: i}));
+				.formatPV({
+					number: i
+				}));
 		}
 	}
 };
@@ -54,10 +63,14 @@ socketServer.broadcast = function(data, opts) {
 broadcaster.event.on('broadcast-started', playStream);
 
 function playStream(stream) {
-	logger.log('Staring stream on port {{port}}'.formatPV({port: PORT}));
+	logger.log('Staring stream on port {{port}}'.formatPV({
+		port: PORT
+	}));
 
 	stream.on('data', function(data) {
-		socketServer.broadcast(data, {binary: true});
+		socketServer.broadcast(data, {
+			binary: true
+		});
 	});
 }
 

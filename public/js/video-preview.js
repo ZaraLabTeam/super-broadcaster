@@ -1,16 +1,14 @@
 (function() {
 	var hostname = window.location.hostname;
 	var canvas = document.getElementById('videoCanvas');
-	var client = new WebSocket('ws://{{hn}}:8007'.formatPV({
+	var addr = 'ws://{{hn}}:8007'.formatPV({
 		hn: hostname
-	}));
+	});
 
-	function play() {
-		var player = new jsmpeg(client, {
-			canvas: canvas,
-			autoplay: true
-		});
-	}
+	var client = new WebSocket(addr);
 
-	window.playVideo = play;
+	var player = new jsmpeg(client, {
+		canvas: canvas,
+		autoplay: true
+	});
 })();
