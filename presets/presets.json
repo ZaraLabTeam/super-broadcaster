@@ -96,7 +96,12 @@
 	},
 	"testVideoAndMp3PipeIn": {
 		"name": "testVideoAndMp3PipeIn",
-		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -itsoffset -2.0 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -maxrate 1500k -bufsize 3000k -f flv ",
+		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -itsoffset 3.0 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -maxrate 1000k -bufsize 2000k -f flv ",
+		"output": "audioVideo.flv"
+	},
+	"testVideoAndMp3PipeInFFlags": {
+		"name": "testVideoAndMp3PipeInFFlags",
+		"command": "-f video4linux2 -fflags nobuffer -s vga -i /dev/video0 -f mp3 -itsoffset -4.0 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -maxrate 1000k -bufsize 2000k -f flv ",
 		"output": "audioVideo.flv"
 	}
 }
