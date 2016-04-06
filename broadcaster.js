@@ -71,19 +71,12 @@ function isRunning() {
 	return false;
 }
 
-function addAudioStream(stream) {
-	if (broadcastStream) {
-		stream.pipe(broadcastStream);
-	}
-}
-
 // ================ EXPORTS =====================================
 
 module.exports = {
 	broadcast: broadcast,
 	stop: stopPreviousBroadcast,
 	isRunning: isRunning,
-	addAudioStream: addAudioStream,
 	event: ev
 };
 

@@ -42,6 +42,7 @@ canvas {
 	position: fixed;
 	right: 2rem;
 	top: 1rem;
+	z-index: 10;
 
 	background-color: black;
 	color: white;

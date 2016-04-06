@@ -1,19 +1,18 @@
 // ================ DEPENDENCIES =============================
 
 // Constants
-// Copy & paste
-var PORT = 8007;
-var STREAM_PORT = 8010;
+// Copy & pasted
 var STREAM_MAGIC_BYTES = 'jsmp';
+
+// Project Modules
+var config = require('../config/server-config');
+var logger = require('../logging/logger');
+var broadcaster = require('../broadcaster');
 
 // NPM Modules
 var socketServer = new(require('ws').Server)({
-	port: PORT
+	port: config.wsPort
 });
-
-// Project Modules
-var logger = require('../logging/logger');
-var broadcaster = require('../broadcaster');
 
 var width = 640;
 var height = 480;
@@ -64,7 +63,7 @@ broadcaster.event.on('broadcast-started', playStream);
 
 function playStream(stream) {
 	logger.log('Staring stream on port {{port}}'.formatPV({
-		port: PORT
+		port: config.wsPort
 	}));
 
 	stream.on('data', function(data) {

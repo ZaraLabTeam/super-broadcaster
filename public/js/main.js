@@ -69,7 +69,6 @@
 	function start() {
 		socket.emit('broadcast-start');
 		btnStart.disabled = true;
-		// window.playVideo();
 	}
 
 	// On Stop

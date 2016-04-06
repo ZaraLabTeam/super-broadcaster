@@ -79,9 +79,24 @@
 		"command": "-s 640x480 -f video4linux2 -i /dev/video0 -f mpeg1video -b 800k -r 30 ",
 		"output": "http://localhost:8010/"
 	},
-	"default264PipeOut2": {
-		"name": "default264PipeOut2",
-		"command": "-s 640x480 -f video4linux2 -i /dev/video0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -async 1 -maxrate 750k -bufsize 5000k -f mpeg1video ",
-		"output": "pipe:1"
+	"default264UDP": {
+		"name": "default264UDP",
+		"command": "-s 640x480 -f video4linux2 -i /dev/video0 -f mpeg1video -b 800k -r 30 ",
+		"output": "tcp://localhost:8012?listen"
+	},
+	"testMp3": {
+		"name": "testMp3",
+		"command": "-f mp3 -i pipe:0 ",
+		"output": "testMp3.mp3"
+	},
+	"logitechYTMp3PipeIn": {
+		"name": "logitechYTMp3PipeIn",
+		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -maxrate 1500k -bufsize 3000k -f flv ",
+		"output": "tcp://127.0.0.1:8100/test?listen"
+	},
+	"testVideoAndMp3PipeIn": {
+		"name": "testVideoAndMp3PipeIn",
+		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -itsoffset -2.0 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -maxrate 1500k -bufsize 3000k -f flv ",
+		"output": "audioVideo.flv"
 	}
 }

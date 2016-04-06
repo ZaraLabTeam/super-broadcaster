@@ -13,20 +13,20 @@ var socketIo = require('socket.io');
 var httpHandler = require('./http/httpHandler');
 var ioHandler = require('./socket/ioHandler');
 var logger = require('./logging/logger');
-require('./socket/socket-server');
+// require('./socket/socket-server');
 
 // ==============================================================
 
 // ================ IMPLEMENTATION ==============================
 
 var http_serv = http.createServer(httpHandler.handle)
-	.listen(serverConfig.port); // .listen(serverConfig.port, serverConfig.host);
+	.listen(serverConfig.httpPort); // .listen(serverConfig.port, serverConfig.host);
 
 var io = socketIo.listen(http_serv);
 // ioConfig.config(io);
 
 ioHandler.handle(io);	
 
-console.log('running on port -> ' + serverConfig.port);
+console.log('running on port -> ' + serverConfig.httpPort);
 
 // ================================================================
