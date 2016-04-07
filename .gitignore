@@ -1,6 +1,13 @@
 # key and pass
 secret.json
 
+# ssl certificate
+config/server.crt
+config/server.key
+
+# audio/video recordings
+recordings
+
 # temp files
 presets/active.json
 

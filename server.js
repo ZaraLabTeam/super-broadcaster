@@ -6,7 +6,7 @@ var serverConfig = require('./config/server-config');
 var ioConfig = require('./config/io-config');
 
 // NPM modules
-var http = require('http');
+var https = require('https');
 var socketIo = require('socket.io');
 
 // Project modules
@@ -19,14 +19,14 @@ var logger = require('./logging/logger');
 
 // ================ IMPLEMENTATION ==============================
 
-var http_serv = http.createServer(httpHandler.handle)
+var httpsServer = https.createServer(serverConfig.options, httpHandler.handle)
 	.listen(serverConfig.httpPort); // .listen(serverConfig.port, serverConfig.host);
 
-var io = socketIo.listen(http_serv);
+var io = socketIo.listen(httpsServer);
 // ioConfig.config(io);
 
 ioHandler.handle(io);	
 
-console.log('running on port -> ' + serverConfig.httpPort);
+console.log('running on port -> {{port}}'.formatPV({port: serverConfig.httpPort}));
 
 // ================================================================

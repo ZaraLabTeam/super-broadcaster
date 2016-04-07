@@ -11,11 +11,9 @@
   "license": "MIT",
   "dependencies": {
     "avconv": "^3.0.2",
-    "binaryjs": "^0.2.1",
     "node-static": "^0.7.7",
     "socket.io": "^1.4.5",
     "socket.io-stream": "^0.9.0",
-    "speaker": "^0.2.6",
     "ws": "^1.0.1"
   },
   "devDependencies": {},
