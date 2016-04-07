@@ -34,35 +34,10 @@
 		"command": "-f video4linux2 -s hd720 -i /dev/video0 -f alsa -i default:CARD=U0x46d0x825 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -async 1 -acodec libmp3lame -ab 128k -ar 44100 -maxrate 4000k -bufsize 8000k -f flv ",
 		"output": "default"
 	},
-	"test": {
-		"name": "test",
-		"command": "-f video4linux2 -i /dev/video0 -f alsa -i pulse -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -async 1 -acodec libmp3lame -ab 24k -ar 22050 -maxrate 750k -bufsize 5000k -f rtp ",
-		"output": "rtp://127.0.0.1:8004/test"
-	},
-	"test_raspberry": {
-		"name": "test_raspberry",
-		"command": "-f video4linux2 -i /dev/video0 -f alsa -i default:CARD=U0x46d0x825 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -async 1 -acodec libmp3lame -ab 24k -ar 22050 -maxrate 750k -bufsize 5000k -f rtp ",
-		"output": "rtp://127.0.0.1:8004/test"
-	},
 	"testNoSound": {
 		"name": "testNoSound",
 		"command": "-f video4linux2 -i /dev/video0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -maxrate 750k -bufsize 5000k -f rtp ",
 		"output": "rtp://127.0.0.1:8004/test"
-	},
-	"logitechYT": {
-		"name": "logitechYT",
-		"command": "-f video4linux2 -s hd720 -i /dev/video0 -f alsa -i pulse -vcodec libx264 -preset superfast -tune zerolatency -r 25 -acodec libmp3lame -ab 128k -ar 44100 -maxrate 4500k -bufsize 9000k -f flv ",
-		"output": "default"
-	},
-	"raspberry_UsbCamMed000": {
-		"name": "raspberry_UsbCamMed000",
-		"command": "-f video4linux2 -i /dev/video0 -f alsa -i hw:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -async 1 -acodec libmp3lame -ab 128k -ar 44100 -maxrate 1000k -bufsize 5000k -f flv ",
-		"output": "default"
-	},
-	"default264Pipe": {
-		"name": "default264Pipe",
-		"command": "-f video4linux2 -i /dev/video0 -f s16le -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -async 1 -acodec libmp3lame -ab 24k -ar 22050 -maxrate 750k -bufsize 5000k -f flv ",
-		"output": "default"
 	},
 	"default264Speakers": {
 		"name": "default264Speakers",
@@ -74,34 +49,29 @@
 		"command": "-s 640x480 -f video4linux2 -i /dev/video0 -f mpeg1video -b 800k -r 30 ",
 		"output": "pipe:1"
 	},
-	"default264localhost": {
-		"name": "default264localhost",
-		"command": "-s 640x480 -f video4linux2 -i /dev/video0 -f mpeg1video -b 800k -r 30 ",
-		"output": "http://localhost:8010/"
-	},
-	"default264UDP": {
-		"name": "default264UDP",
-		"command": "-s 640x480 -f video4linux2 -i /dev/video0 -f mpeg1video -b 800k -r 30 ",
-		"output": "tcp://localhost:8012?listen"
-	},
 	"testMp3": {
 		"name": "testMp3",
 		"command": "-f mp3 -i pipe:0 ",
-		"output": "testMp3.mp3"
-	},
-	"logitechYTMp3PipeIn": {
-		"name": "logitechYTMp3PipeIn",
-		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -maxrate 1500k -bufsize 3000k -f flv ",
-		"output": "tcp://127.0.0.1:8100/test?listen"
+		"output": "recordings/testMp3.mp3"
 	},
 	"testVideoAndMp3PipeIn": {
 		"name": "testVideoAndMp3PipeIn",
-		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -itsoffset 3.0 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -maxrate 1000k -bufsize 2000k -f flv ",
+		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -maxrate 1000k -bufsize 2000k -f flv ",
 		"output": "audioVideo.flv"
 	},
 	"testVideoAndMp3PipeInFFlags": {
 		"name": "testVideoAndMp3PipeInFFlags",
 		"command": "-f video4linux2 -fflags nobuffer -s vga -i /dev/video0 -f mp3 -itsoffset -4.0 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -maxrate 1000k -bufsize 2000k -f flv ",
+		"output": "audioVideo.flv"
+	},
+	"videoTest": {
+		"name": "videoTest",
+		"command": "-s 640x480 -f video4linux2 -i /dev/video0 -f mp3 -i pipe:0 -async 1 -f flv ",
+		"output": "videoTest.flv"
+	},
+	"testVideoAndMp3PipeInAndFilter": {
+		"name": "testVideoAndMp3PipeInAndFilter",
+		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -maxrate 1000k -bufsize 2000k -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
 		"output": "audioVideo.flv"
 	}
 }

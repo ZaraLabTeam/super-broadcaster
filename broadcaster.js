@@ -87,7 +87,6 @@ module.exports = {
 function logStreamData(stream) {
 	stream.on('message', function(msg) {
 		logger.streamLog(msg);
-
 	});
 
 	stream.on('error', function(err) {

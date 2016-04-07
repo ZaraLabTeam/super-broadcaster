@@ -6,7 +6,7 @@
 
 	btnStartRec.addEventListener('click', function(evt) {
 		evt.preventDefault();
-		socketConnection.emit('broadcast-start');
+		// socketConnection.emit('broadcast-start');
 
 		//setTimeout(function() {
 			streamer.start();
@@ -15,7 +15,7 @@
 
 	btnStopRec.addEventListener('click', function(evt) {
 		evt.preventDefault();
-		stop();
+		streamer.stop();
 	});
 
 	function onAudio(e) {
