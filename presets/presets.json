@@ -103,5 +103,10 @@
 		"name": "testVideoAndMp3PipeInFFlags",
 		"command": "-f video4linux2 -fflags nobuffer -s vga -i /dev/video0 -f mp3 -itsoffset -4.0 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -maxrate 1000k -bufsize 2000k -f flv ",
 		"output": "audioVideo.flv"
+	},
+	"ytPipeInMp3": {
+		"name": "ytPipeInMp3",
+		"command": "-f video4linux2 -fflags nobuffer -s vga -i /dev/video0 -f mp3 -itsoffset -9.5 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -maxrate 1000k -bufsize 2000k -f flv ",
+		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
 	}
 }
