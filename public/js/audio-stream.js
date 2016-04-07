@@ -6,11 +6,8 @@
 
 	btnStartRec.addEventListener('click', function(evt) {
 		evt.preventDefault();
-		// socketConnection.emit('broadcast-start');
-
-		//setTimeout(function() {
-			streamer.start();
-		//}, 500);
+		socketConnection.emit('broadcast-start');
+		streamer.start();
 	});
 
 	btnStopRec.addEventListener('click', function(evt) {

@@ -39,6 +39,7 @@ function broadcast() {
 
 function stopPreviousBroadcast() {
 	if (broadcastStream) {
+		broadcastStream.end();
 		broadcastStream.kill();
 		broadcastStream = null;
 
