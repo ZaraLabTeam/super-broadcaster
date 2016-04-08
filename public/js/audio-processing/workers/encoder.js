@@ -1,29 +1,53 @@
-importScripts('libmp3lame.js');
+//importScripts('libmp3lame.js');
+importScripts('../../bower_components/lamejs/lame.all.js');
 
-var mp3codec;
+var mp3encoder;
+var lib = new lamejs();
 
 self.onmessage = function(e) {
-	switch (e.data.cmd) {
-	case 'init':
-		if (!e.data.config) {
-			e.data.config = { };
-		}
-		mp3codec = Lame.init();
-		Lame.set_mode(mp3codec, e.data.config.mode || Lame.JOINT_STEREO);
-		Lame.set_num_channels(mp3codec, e.data.config.channels || 2);
-		Lame.set_out_samplerate(mp3codec, e.data.config.samplerate || 44100);
-		Lame.set_bitrate(mp3codec, e.data.config.bitrate || 128);
-		Lame.init_params(mp3codec);
-		break;
-	case 'encode':
-		var mp3data = Lame.encode_buffer_ieee_float(mp3codec, e.data.buf, e.data.buf);
-		self.postMessage({cmd: 'data', buf: mp3data.data});
-		break;
-	case 'finish':
-		var mp3data = Lame.encode_flush(mp3codec);
-		self.postMessage({cmd: 'end', buf: mp3data.data});
-		Lame.close(mp3codec);
-		mp3codec = null;
-		break;
+	var command = e.data.cmd;
+
+	switch (command) {
+
+		case 'init':
+			var config = {};
+
+			if (e.data.config) {
+				config = e.data.config;
+			}
+
+			mp3encoder = new lib.Mp3Encoder(
+				config.channels || 2,
+				config.samplerate || 44100,
+				config.bitrate || 128);
+
+			break;
+
+		case 'encode':
+			var lo = e.data.buf;
+			var l = new Float32Array(lo.length);
+
+			for (var i = 0; i < lo.length; i++) {
+				l[i] = lo[i] * 32767.5;
+			}
+			var mp3data = mp3encoder.encodeBuffer(l);
+
+			self.postMessage({
+				cmd: 'data',
+				buf: mp3data
+			});
+
+			break;
+
+		case 'finish':
+			var mp3data = mp3encoder.flush();
+
+			self.postMessage({
+				cmd: 'end',
+				buf: mp3data
+			});
+
+			mp3encoder = null;
+			break;
 	}
 };

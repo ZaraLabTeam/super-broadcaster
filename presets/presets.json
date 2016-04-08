@@ -91,17 +91,22 @@
 	},
 	"AlmostInSyncASUS": {
 		"name": "AlmostInSyncASUS",
-		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -itsoffset -2.15 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 1000k -bufsize 2000k -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
+		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 1000k -bufsize 2000k -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
 		"output": "recordings/audioVideo.flv"
 	},
 	"AlmostInSyncASUS2": {
 		"name": "AlmostInSyncASUS2",
-		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -itsoffset -2.15 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -ar 44100 -maxrate 1000k -bufsize 2000k -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
+		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -itsoffset -2.15 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -ar 44100 -maxrate 1000k -bufsize 2000k -f flv ",
 		"output": "recordings/audioVideo.flv"
 	},
 	"AlmostInSyncASUSyt": {
 		"name": "AlmostInSyncASUSyt",
 		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -itsoffset -2.15 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 1000k -bufsize 2000k -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
 		"output": "default"
+	},
+	"AlmostInSyncASUSaltEncoder": {
+		"name": "AlmostInSyncASUSaltEncoder",
+		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -itsoffset -2.15 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -ar 44100 -maxrate 1000k -bufsize 2000k -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
+		"output": "recordings/audioVideo.flv"
 	}
 }

@@ -1,0 +1,22 @@
+{
+  "name": "super-broadcaster",
+  "description": "Broadcast video to youtube on demand",
+  "main": "server.js",
+  "authors": [
+    "ZaraLab"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/ZaraLabTeam/super-broadcaster",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/js/bower_components/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "lamejs": "*"
+  }
+}

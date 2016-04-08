@@ -10,8 +10,9 @@
 		this.ws = null;
 		this.input = null;
 		this.node = null;
-		this.samplerate = 24000;// 22050;
+		this.samplerate = (new AudioContext()).sampleRate; // 44100; // 22050;
 		this.samplerates = [8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000];
+		this.channels = 1;
 		this.bitrate = 128;// 64;
 		this.bitrates = [8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160, 192, 224, 256, 320];
 		this.onAudio = onAudioCallback;
@@ -36,13 +37,13 @@
 		this.encoder.postMessage({
 			cmd: 'init',
 			config: {
+				channels: self.channels,
 				samplerate: self.samplerate,
 				bitrate: self.bitrate
 			}
 		});
 
 		this.encoder.onmessage = function(e) {
-			// self.ws.send(e.data.buf);
 			if (self.bStream && self.bStream.writable)
 				self.bStream.write(new ss.Buffer(e.data.buf));
 
@@ -87,15 +88,15 @@
 			if (!self.recording)
 				return;
 
+			if (self.onAudio) {
+				self.onAudio(e);
+			}
+
 			var channelLeft = e.inputBuffer.getChannelData(0);
 			self.encoder.postMessage({
 				cmd: 'encode',
 				buf: channelLeft
 			});
-
-			if (self.onAudio) {
-				self.onAudio(e);
-			}
 		};
 
 		this.input.connect(this.node);
