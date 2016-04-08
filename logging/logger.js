@@ -1,7 +1,7 @@
 // ================ DEPENDENCIES =============================
 
 // NPM Modules
-var memwatch = require('memwatch');
+var memwatch = require('memwatch-next');
 var EventEmitter = require('events').EventEmitter;
 
 // Project Modules
