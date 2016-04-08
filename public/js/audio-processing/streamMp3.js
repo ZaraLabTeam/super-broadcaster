@@ -10,7 +10,7 @@
 		this.ws = null;
 		this.input = null;
 		this.node = null;
-		this.samplerate = 22050;// 22050;
+		this.samplerate = 24000;// 22050;
 		this.samplerates = [8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000];
 		this.bitrate = 128;// 64;
 		this.bitrates = [8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160, 192, 224, 256, 320];

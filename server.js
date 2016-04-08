@@ -6,7 +6,13 @@ var serverConfig = require('./config/server-config');
 var ioConfig = require('./config/io-config');
 
 // NPM modules
-var https = require('https');
+var protocol;
+if (serverConfig.httpsOptions) {
+	protocol = require('https');
+} else {
+	protocol = require('http');
+}
+
 var socketIo = require('socket.io');
 
 // Project modules
@@ -19,10 +25,16 @@ require('./socket/socket-server');
 
 // ================ IMPLEMENTATION ==============================
 
-var httpsServer = https.createServer(serverConfig.options, httpHandler.handle)
-	.listen(serverConfig.httpPort); // .listen(serverConfig.port, serverConfig.host);
+var server;
+if (serverConfig.httpsOptions) {
+	server = protocol.createServer(serverConfig.httpsOptions, httpHandler.handle);
+} else {
+	server = protocol.createServer(httpHandler.handle);
+}
 
-var io = socketIo.listen(httpsServer);
+server.listen(serverConfig.httpPort); // .listen(serverConfig.port, serverConfig.host);
+
+var io = socketIo.listen(server);
 // ioConfig.config(io);
 
 ioHandler.handle(io);	
