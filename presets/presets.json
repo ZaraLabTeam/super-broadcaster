@@ -51,7 +51,7 @@
 	},
 	"testMp3": {
 		"name": "testMp3",
-		"command": "-f mp3 -i pipe:0 ",
+		"command": "-f mp3 -i pipe:0 -ar 44100 ",
 		"output": "recordings/testMp3.mp3"
 	},
 	"testVideoAndMp3PipeIn": {
@@ -108,5 +108,10 @@
 		"name": "AlmostInSyncASUSaltEncoder",
 		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -itsoffset -2.15 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -ar 44100 -maxrate 1000k -bufsize 2000k -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
 		"output": "recordings/audioVideo.flv"
+	},
+	"altFormat": {
+		"name": "altFormat",
+		"command": "-f video4linux2 -i /dev/video0 -f mp3 -itsoffset -2.15 -i pipe:0 -c:v libvpx -b:v 6000k -qmin 10 -qmax 42 -maxrate 500k -bufsize 1500k -threads 8 -vf scale=-1:720 -ar 44100 -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f webm ",
+		"output": "recordings/audioVideo.webm"
 	}
 }

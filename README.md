@@ -34,3 +34,12 @@ If you are using **libx264** codec start with -vcodec libx264 -preset **ultrafas
 You can stream audio to the nodejs server from the webApp and then merge it with the video stream
 	* using **pulse audio**: To check you input/output source use `pactl list sources | grep Name` to stream your speakers audio use the `alsa_output ... .monitor` source and `-f pulse` option
 	* using **jack** create a jack and use as an input 
+
+## Resources And References Used To Create This App
+
+* [Speech To Server](https://github.com/akrennmair/speech-to-server)
+* [node (socket) live audio stream / broadcast](http://stackoverflow.com/questions/23396575/node-socket-live-audio-stream-broadcast)
+* [Recording MP3 Using Only HTML5 and JavaScript](http://audior.ec/blog/recording-mp3-using-only-html5-and-javascript-recordmp3-js/)
+* [lamejs](https://github.com/zhuker/lamejs)
+* [Getting Started with Web Audio API](http://www.html5rocks.com/en/tutorials/webaudio/intro/)
+* [avconv Documentation](https://libav.org/avconv.html)

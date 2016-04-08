@@ -1,6 +1,10 @@
 // ================ DEPENDENCIES =============================
 
+// NPM Modules
+var memwatch = require('memwatch');
 var EventEmitter = require('events').EventEmitter;
+
+// Project Modules
 var cpuAverage = require('./cpu').cpuAverage;
 
 var cpuLoggingInterval;
@@ -63,6 +67,25 @@ Logger.prototype.toggleCpuLogging = function toggleCpuLogging() {
 };
 
 var singleInstance = new Logger();
+
+memwatch.on('leak', function(info) {
+	singleInstance.log('################## MEMWATCH LEAK ###################');
+	singleInstance.log('Start: {{start}}'.formatPV(info));
+	singleInstance.log('End: {{end}}'.formatPV(info));
+	singleInstance.log('Growth: {{growth}}'.formatPV(info));
+	singleInstance.log('Reason: {{reason}}'.formatPV(info));
+	singleInstance.log('####################################################');
+});
+
+memwatch.on('stats', function(stats) {
+	singleInstance.log('################## MEMWATCH STATS ##################');
+	singleInstance.log('Estimated Base: {{estimated_base}}'.formatPV(stats));
+	singleInstance.log('Current Base: {{current_base}}'.formatPV(stats));
+	singleInstance.log('Min: {{min}}'.formatPV(stats));
+	singleInstance.log('Max: {{max}}'.formatPV(stats));
+	singleInstance.log('Usage trend: {{usage_trend}}'.formatPV(stats));
+	singleInstance.log('####################################################');
+});
 
 // ================================================================
 
