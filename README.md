@@ -7,8 +7,9 @@ Broadcast live (well almost ~30sec) to your channel in youtoube
 ## But how is this possible?
 
 This project is setup to start on a linux machine 
-you must have the [libav](https://libav.org/avconv.html) package installed
-or else it won't run.
+it requires that you have **ffmpeg** installed.
+
+if you have the [libav](https://libav.org/avconv.html) package installed, you can change the `broadcaster.js` to require **avconv** `npm install avconv` and use it instead.
 
 also `sudo apt-get install libasound2-dev`
 
@@ -31,9 +32,7 @@ You must set a default output in the secrets.json, but it can be overriden in th
 
 If you are using **libx264** codec start with -vcodec libx264 -preset **ultrafast** this is the least stresfull preset then superfast, fast and so on until superslow, each step adds twice as much demand on the cpu 
 
-You can stream audio to the nodejs server from the webApp and then merge it with the video stream
-	* using **pulse audio**: To check you input/output source use `pactl list sources | grep Name` to stream your speakers audio use the `alsa_output ... .monitor` source and `-f pulse` option
-	* using **jack** create a jack and use as an input 
+You can stream audio to the nodejs server from the webApp and then merge it with the video stream by specifying audio input as **pipe:0** `-f mp3 -i pipe:0 ...` then audio will be fetched from the webApp, you may need to sync the audio and video streams with some ffmpeg configuration options
 
 ## Resources And References Used To Create This App
 
@@ -42,4 +41,4 @@ You can stream audio to the nodejs server from the webApp and then merge it with
 * [Recording MP3 Using Only HTML5 and JavaScript](http://audior.ec/blog/recording-mp3-using-only-html5-and-javascript-recordmp3-js/)
 * [lamejs](https://github.com/zhuker/lamejs)
 * [Getting Started with Web Audio API](http://www.html5rocks.com/en/tutorials/webaudio/intro/)
-* [avconv Documentation](https://libav.org/avconv.html)
+* for previouse version using avconv [avconv Documentation](https://libav.org/avconv.html)
