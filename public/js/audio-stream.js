@@ -12,6 +12,7 @@
 
 	btnStopRec.addEventListener('click', function(evt) {
 		evt.preventDefault();
+		socketConnection.emit('broadcast-stop');
 		streamer.stop();
 	});
 

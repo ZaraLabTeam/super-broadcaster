@@ -1,7 +1,8 @@
 // ================ DEPENDENCIES ================================
 
 // NPM Dependencies
-var avconv = require('avconv');
+// var avconv = require('avconv');
+var ffmpeg = require('./ffmpeg/ffmpeg');
 var EventEmitter = require('events').EventEmitter;
 
 // Project modules
@@ -30,7 +31,7 @@ function broadcast() {
 	var commandParams = prepareForBroadcast();
 	if (!commandParams) return;
 
-	broadcastStream = avconv(commandParams.split(' '));
+	broadcastStream = ffmpeg(commandParams.split(' '));
 	logStreamData(broadcastStream);
 
 	ev.emit('broadcast-started', broadcastStream);
@@ -85,16 +86,14 @@ module.exports = {
 
 // ================ HELPERS =====================================
 
-function logStreamData(stream) {
-	stream.on('message', function(msg) {
-		logger.streamLog(msg);
-	});
+function logStreamData(childProcess) {
+	childProcess.on('message', logger.streamLog);
 
-	stream.on('error', function(err) {
+	childProcess.on('error', function(err) {
 		logger.log(err.toString());
 	});
 
-	stream.once('exit', function(exitCode, signal, metadata) {
+	childProcess.once('exit', function(exitCode, signal, metadata) {
 		/*
 		Here you know the avconv process is finished
 		Metadata contains parsed avconv output as described in the next section
