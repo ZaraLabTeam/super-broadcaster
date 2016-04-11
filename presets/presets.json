@@ -113,5 +113,30 @@
 		"name": "altFormat",
 		"command": "-f video4linux2 -i /dev/video0 -f mp3 -itsoffset -2.15 -i pipe:0 -c:v libvpx -b:v 6000k -qmin 10 -qmax 42 -maxrate 500k -bufsize 1500k -threads 8 -vf scale=-1:720 -ar 44100 -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f webm ",
 		"output": "recordings/audioVideo.webm"
+	},
+	"youtube240p": {
+		"name": "youtube240p",
+		"command": "-f video4linux2 -s 426x240 -i /dev/video0 -f mp3 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 500k -bufsize 500k; -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
+		"output": "default"
+	},
+	"youtube360p": {
+		"name": "youtube360p",
+		"command": "-f video4linux2 -s 640x360 -i /dev/video0 -f mp3 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 800k -bufsize 800k; -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
+		"output": "default"
+	},
+	"youtube480p": {
+		"name": "youtube480p",
+		"command": "-f video4linux2 -s 854x480 -i /dev/video0 -f mp3 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 1200k -bufsize 1200k; -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
+		"output": "default"
+	},
+	"youtube720p": {
+		"name": "youtube720p",
+		"command": "-f video4linux2 -s 1280x720 -i /dev/video0 -f mp3 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 2600k -bufsize 2600k; -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
+		"output": "default"
+	},
+	"youtube1080p": {
+		"name": "youtube1080p",
+		"command": "-f video4linux2 -s 1920x1080 -i /dev/video0 -f mp3 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 4500k -bufsize 9000k; -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
+		"output": "default"
 	}
 }
