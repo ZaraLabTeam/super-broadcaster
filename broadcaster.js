@@ -3,6 +3,8 @@
 // NPM Dependencies
 // var avconv = require('avconv');
 var ffmpeg = require('./ffmpeg/ffmpeg');
+var spawn = require('child_process').spawn;
+var exec = require('child_process').exec;
 var EventEmitter = require('events').EventEmitter;
 
 // Project modules
@@ -10,8 +12,9 @@ var presetsManager = require('./presets/presets-manager');
 var logger = require('./logging/logger');
 var secret = require('./secret');
 
-// The stream process object will be stored here
+// The stream process objects will be stored here
 var broadcastStream = null;
+var processes = [];
 
 // emits the broadcast started event with the stream
 var ev = new EventEmitter();
@@ -28,10 +31,32 @@ var CONFIGURATION_MSG = '============ Configuration ============ \n';
  * Fires up a video stream from the shell with the last set configutation
  */
 function broadcast() {
-	var commandParams = prepareForBroadcast();
-	if (!commandParams) return;
+	var commands = prepareForBroadcast();
 
-	broadcastStream = ffmpeg(commandParams.split(' '));
+	commands.forEach(function(cmd) {
+		logger.log(
+			'Running command: "{{command}}" with args: "{{params}}"'
+				.formatPV(cmd));
+
+		var child = spawn(cmd.command, cmd.params);
+		processes.push(child);
+	});
+
+	var prevProc = null;
+
+	processes.forEach(function(prc) {
+		if (prevProc) {
+			prevProc.stdout.pipe(prc.stdin);
+		} 
+
+		prevProc = prc;
+	});
+
+	broadcastStream = processes[processes.length - 1];
+
+	// broadcastStream = ffmpeg(commandParams.split(' '));
+	// broadcastStream = exec(commandParams);
+
 	logStreamData(broadcastStream);
 
 	ev.emit('broadcast-started', broadcastStream);
@@ -40,9 +65,12 @@ function broadcast() {
 
 function stopPreviousBroadcast() {
 	if (broadcastStream) {
-		broadcastStream.end();
-		broadcastStream.kill();
-		broadcastStream = null;
+		// broadcastStream.kill();
+		// broadcastStream = null;
+
+		processes.forEach(function(prc) {
+			prc.kill();
+		});
 
 		logger.log(BROADCAST_ENDED_MSG);
 	}
@@ -51,18 +79,26 @@ function stopPreviousBroadcast() {
 function prepareForBroadcast() {
 	var broadcastConfig = presetsManager.getActivePreset();
 
-	broadcastConfig.command += (broadcastConfig.output === 'default' ? secret.output : broadcastConfig.output);
+	// broadcastConfig.command += (broadcastConfig.output === 'default' ? secret.output : broadcastConfig.output);
 
-	var params = broadcastConfig.command;
+	var data = broadcastConfig.command.split('|');
+	var commands = [];
+	data.forEach( function(element) {
+		var args = element.split(' ').cleanPV('');
+		commands.push({
+			command: args[0],
+			params: args.slice(1)
+		});
+	});
 
 	var message = CONFIGURATION_MSG +
-		params + '\n' +
-		CONFIGURATION_MSG;
+				 'EncoderCfg ' + broadcastConfig.command + '\n' + 
+				  CONFIGURATION_MSG;
 
 	logger.log(message);
 	stopPreviousBroadcast();
 
-	return params;
+	return commands;
 }
 
 function isRunning() {
@@ -91,6 +127,10 @@ function logStreamData(childProcess) {
 
 	childProcess.on('error', function(err) {
 		logger.log(err.toString());
+	});
+
+	childProcess.stderr.on('data', function(data) {
+		logger.log(data);
 	});
 
 	childProcess.once('exit', function(exitCode, signal, metadata) {

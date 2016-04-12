@@ -12,38 +12,40 @@ var PRESETS_PATH = __dirname + '/presets.json';
 var ACTIVE_PRESET_PATH = __dirname + '/active.json';
 var activeConfig = '';
 
-function savePreset(name, command, output, callback) {
+function savePreset(cfg, callback) {
 	try {
-		validateConfig(name, command, output);
+		validateConfig(cfg.name, cfg.command, cfg.output);
 	} catch (err) {
 		logger.log(err.toString());
 		return;
 	}
 
-	presets[name] = {
-		"name": name,
-		"command": command,
-		"output": output || "default"
-	};
+	// presets[name] = {
+	// 	"name": name,
+	// 	"command": command,
+	// 	"output": output || "default"
+	// };
+
+	presets[cfg.name] = cfg;
 
 	var stringifiedPresets = stringify(presets);
 
 	fs.writeFile(PRESETS_PATH, stringifiedPresets, null, function(err) {
 		if (err) {
 			logger.log('Error saving "{{name}}" preset'.formatPV({
-				name: name
+				name: cfg.name
 			}));
 			return callback(err);
 		}
 
 		logger.log('Config "{{name}}" saved successfully!'.formatPV({
-			name: name
+			name: cfg.name
 		}));
 
-		setActivePreset(name);
+		setActivePreset(cfg.name);
 
 		if (callback) {
-			callback(null, name);
+			callback(null, cfg.name);
 		}
 	});
 }
@@ -129,6 +131,7 @@ function getActivePreset() {
 
 	return {
 		name: activeConfig.name,
+		rPiConfig: activeConfig.rPiConfig,
 		command: activeConfig.command,
 		output: activeConfig.output
 	};
@@ -139,6 +142,7 @@ function getPreset(name) {
 	if (preset) {
 		return {
 			name: preset.name,
+			rPiConfig: preset.rPiConfig,
 			command: preset.command,
 			output: preset.output
 		};

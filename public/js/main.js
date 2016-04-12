@@ -87,7 +87,7 @@
 	function save() {
 		try {
 			var config = JSON.parse(presetDataText.value);
-			socket.emit('preset-add', config.name, config.command, config.output, function(err, name) {
+			socket.emit('preset-add', config, function(err, name) {
 				if (err) {
 					alert(err.toString());
 					return;

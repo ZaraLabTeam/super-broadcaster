@@ -138,5 +138,43 @@
 		"name": "youtube1080p",
 		"command": "-f video4linux2 -s 1920x1080 -i /dev/video0 -f mp3 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 4500k -bufsize 9000k; -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
 		"output": "default"
+	},
+	"testPipePipe": {
+		"name": "testPipePipe",
+		"command": "-f video4linux2 -s 640x360 -i /dev/video0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 800k -bufsize 800k | ffmpeg -f flv -i - -f flv ",
+		"output": "test.flv"
+	},
+	"pipeRaspiToFF": {
+		"name": "pipeRaspiToFF",
+		"command": "-f h264 -re -s 1280x720 -i - -vcodec libx264 -preset ultrafast -tune zerolatency -r 30 -maxrate 800k -bufsize 800k ",
+		"output": "test.mp4"
+	},
+	"pipeFFToFF": {
+		"name": "pipeFFToFF",
+		"rPiConfig": "-f video4linux2 -i /dev/video0 -",
+		"command": "-re -i pipe: -vcodec libx264 -preset ultrafast -tune zerolatency -maxrate 800k -bufsize 800k ",
+		"output": "test.mp4"
+	},
+	"pipeAVToFF": {
+		"name": "pipeAVToFF",
+		"rPiConfig": "-f video4linux2 -i /dev/video0 -y pipe:",
+		"command": "-re -f video4linux2 -i - ",
+		"output": "test.mp4"
+	},
+	"pipeAVToFFexec": {
+		"name": "pipeAVToFFexec",
+		"command": "avconv -f video4linux2 -i /dev/video0 -vcodec libx264 -f flv - | ffmpeg -i - test.flv"
+	},
+	"pipeAVToFFexecPIPE": {
+		"name": "pipeAVToFFexecPIPE",
+		"command": "ffmpeg -f video4linux2 -i /dev/video0 -vcodec libx264 -f flv - | avconv -f video4linux2 -i - test.flv"
+	},
+	"pipeFFToFFexec": {
+		"name": "pipeFFToFFexec",
+		"command": "ffmpeg -f video4linux2 -i /dev/video0 -vcodec libx264 -f flv - | ffmpeg -f flv -i - -f mp3 -i pipe:1 -ar 44100 test.flv"
+	},
+	"pipeFFToFFexecAdvanced": {
+		"name": "pipeFFToFFexecAdvanced",
+		"command": "ffmpeg -f v4l2 -i /dev/video0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 500k -bufsize 1000k -f flv - | ffmpeg -f flv -re -i - -f mp3 -i pipe:1 -ar 44100 test.flv"
 	}
 }
