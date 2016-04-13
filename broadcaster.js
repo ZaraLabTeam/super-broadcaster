@@ -2,9 +2,8 @@
 
 // NPM Dependencies
 // var avconv = require('avconv');
-var ffmpeg = require('./ffmpeg/ffmpeg');
+// var ffmpeg = require('./ffmpeg/ffmpeg');
 var spawn = require('child_process').spawn;
-var exec = require('child_process').exec;
 var EventEmitter = require('events').EventEmitter;
 
 // Project modules
@@ -33,44 +32,21 @@ var CONFIGURATION_MSG = '============ Configuration ============ \n';
 function broadcast() {
 	var commands = prepareForBroadcast();
 
-	commands.forEach(function(cmd) {
-		logger.log(
-			'Running command: "{{command}}" with args: "{{params}}"'
-				.formatPV(cmd));
-
-		var child = spawn(cmd.command, cmd.params);
-		processes.push(child);
-	});
-
-	var prevProc = null;
-
-	processes.forEach(function(prc) {
-		if (prevProc) {
-			prevProc.stdout.pipe(prc.stdin);
-		} 
-
-		prevProc = prc;
-	});
-
-	broadcastStream = processes[processes.length - 1];
-
-	// broadcastStream = ffmpeg(commandParams.split(' '));
-	// broadcastStream = exec(commandParams);
+	startCommands(commands);
 
 	logStreamData(broadcastStream);
 
-	ev.emit('broadcast-started', broadcastStream);
+	ev.emit('broadcast-started', broadcastStream.stdout);
 	logger.log(BROADCAST_STARTED_MSG);
 }
 
 function stopPreviousBroadcast() {
 	if (broadcastStream) {
-		// broadcastStream.kill();
-		// broadcastStream = null;
-
-		processes.forEach(function(prc) {
+		var i = processes.length;
+		while (i--) {
+			var prc = processes[i];
 			prc.kill();
-		});
+		}
 
 		logger.log(BROADCAST_ENDED_MSG);
 	}
@@ -79,10 +55,9 @@ function stopPreviousBroadcast() {
 function prepareForBroadcast() {
 	var broadcastConfig = presetsManager.getActivePreset();
 
-	// broadcastConfig.command += (broadcastConfig.output === 'default' ? secret.output : broadcastConfig.output);
-
 	var data = broadcastConfig.command.split('|');
 	var commands = [];
+
 	data.forEach( function(element) {
 		var args = element.split(' ').cleanPV('');
 		commands.push({
@@ -109,6 +84,29 @@ function isRunning() {
 	return false;
 }
 
+function startCommands(commands) {
+	commands.forEach(function(cmd) {
+		logger.log(
+			'Running command: "{{command}}" with args: "{{params}}"'
+				.formatPV(cmd));
+
+		var child = spawn(cmd.command, cmd.params);
+		processes.push(child);
+	});
+
+	var prevProc = null;
+
+	processes.forEach(function(prc) {
+		if (prevProc) {
+			prevProc.stdout.pipe(prc.stdin);
+		} 
+
+		prevProc = prc;
+	});
+
+	broadcastStream = processes[processes.length - 1];
+}
+
 // ================ EXPORTS =====================================
 
 module.exports = {
@@ -129,6 +127,7 @@ function logStreamData(childProcess) {
 		logger.log(err.toString());
 	});
 
+	// ffmpeg outputs stream information to stderr
 	childProcess.stderr.on('data', function(data) {
 		logger.log(data);
 	});

@@ -16,7 +16,7 @@ broadcaster.event.on('broadcast-started', function(broadcastStream) {
 	bcStream = broadcastStream;
 
 	if (aStream) {
-		aStream.pipe(bcStream.stdout);
+		aStream.pipe(bcStream);
 	}
 });
 
@@ -25,7 +25,7 @@ function handleAudio(audioStream, meta) {
 	aStream = audioStream;
 
 	if (bcStream) {
-		audioStream.pipe(bcStream.stdout);
+		audioStream.pipe(bcStream);
 	} 
 
 	audioStream.on('error', function(err) {
@@ -35,7 +35,7 @@ function handleAudio(audioStream, meta) {
 	audioStream.once('exit', function() {
 		logger.log('Audio stream ended');
 		if (bcStream) {
-			audioStream.unpipe(bcStream.stdout);
+			audioStream.unpipe(bcStream);
 			audioStream = null;
 		}
 	});

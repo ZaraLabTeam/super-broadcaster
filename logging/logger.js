@@ -2,15 +2,22 @@
 
 // NPM Modules
 var memwatch = require('memwatch-next');
+var os = require('os');
 var EventEmitter = require('events').EventEmitter;
 
 // Project Modules
 var cpuAverage = require('./cpu').cpuAverage;
 
-var cpuLoggingInterval;
+// Constants
+var CPU_POLL_INTREVAL = 1000;
+var RAM_POLL_INTERVAL = 1000 * 5;
+
 // ================================================================
 
 // ================ IMPLEMENTATION =============================
+// Timeout intervals
+var cpuLoggingInterval;
+var memoryLogInterval;
 
 function Logger() {}
 
@@ -51,11 +58,11 @@ Logger.prototype.cpuLog = function() {
 			//Output result 
 			self.emit('cpu-log', percentageCPU);
 
-		}, 250);
-	}, 500);
+		}, CPU_POLL_INTREVAL / 2);
+	}, CPU_POLL_INTREVAL);
 };
 
-Logger.prototype.toggleCpuLogging = function toggleCpuLogging() {
+Logger.prototype.toggleCpuLogging = function () {
 	if (cpuLoggingInterval) {
 		clearInterval(cpuLoggingInterval);
 		cpuLoggingInterval = null;
@@ -66,7 +73,32 @@ Logger.prototype.toggleCpuLogging = function toggleCpuLogging() {
 	}
 };
 
+Logger.prototype.logMemoryUsage = function () {
+	var self = this;
+	this.stopMemoryLog();
+
+	memoryLogInterval = setInterval(function () {
+		var data = pollMemoryUsage();
+		var msg = 
+			'Memory Usage: {{prc}}% \n'
+			.formatPV({prc: data});
+
+		process.stdout.write(msg);
+		self.emit('memory-log', msg);
+
+	}, RAM_POLL_INTERVAL);
+};
+
+Logger.prototype.stopMemoryLog = function() {
+	if (memoryLogInterval) {
+		clearInterval(memoryLogInterval);
+		memoryLogInterval = null;
+	}
+};
+
 var singleInstance = new Logger();
+
+singleInstance.logMemoryUsage();
 
 memwatch.on('leak', function(info) {
 	singleInstance.log('################## MEMWATCH LEAK ###################');
@@ -86,6 +118,18 @@ memwatch.on('stats', function(stats) {
 	singleInstance.log('Usage trend: {{usage_trend}}'.formatPV(stats));
 	singleInstance.log('####################################################');
 });
+
+// ================================================================
+
+// ================ HELPERS =============================
+
+function pollMemoryUsage() {
+	var total = os.totalmem(),
+      usage = total - os.freemem(),
+      percentage = usage / total * 100; 
+
+      return percentage.toFixed(2);
+}
 
 // ================================================================
 
