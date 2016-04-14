@@ -43,7 +43,7 @@ canvas {
 	width: 60%;
 }
 
-#cpu-log {
+#usage-logging {
 	width: 100px;
 
 	position: fixed;
@@ -113,4 +113,8 @@ canvas {
 
 .shadow {
 	box-shadow: 5px 5px 25px rgba(0, 0, 0, 0.62);
+}
+
+.time {
+	color: ##1ccce1;
 }

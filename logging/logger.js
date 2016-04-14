@@ -1,7 +1,7 @@
 // ================ DEPENDENCIES =============================
 
 // NPM Modules
-var memwatch = require('memwatch-next');
+// var memwatch = require('memwatch-next');
 var os = require('os');
 var EventEmitter = require('events').EventEmitter;
 
@@ -26,11 +26,11 @@ Logger.prototype = new EventEmitter();
 Logger.prototype.log = function(msg) {
 	msg = msg + '\n';
 	process.stdout.write(msg);
-	this.emit('message', msg);
+	this.emit('general-log', msg);
 };
 
-Logger.prototype.streamLog = function(msg) {
-	process.stdout.write(msg);
+Logger.prototype.broadcastLog = function(msg) {
+	msg = msg + '\n';
 	this.emit('stream-log', msg);
 };
 
@@ -84,7 +84,7 @@ Logger.prototype.logMemoryUsage = function () {
 			.formatPV({prc: data});
 
 		process.stdout.write(msg);
-		self.emit('memory-log', msg);
+		self.emit('memory-log', data);
 
 	}, RAM_POLL_INTERVAL);
 };
@@ -100,24 +100,24 @@ var singleInstance = new Logger();
 
 singleInstance.logMemoryUsage();
 
-memwatch.on('leak', function(info) {
-	singleInstance.log('################## MEMWATCH LEAK ###################');
-	singleInstance.log('Start: {{start}}'.formatPV(info));
-	singleInstance.log('End: {{end}}'.formatPV(info));
-	singleInstance.log('Growth: {{growth}}'.formatPV(info));
-	singleInstance.log('Reason: {{reason}}'.formatPV(info));
-	singleInstance.log('####################################################');
-});
+// memwatch.on('leak', function(info) {
+// 	singleInstance.log('################## MEMWATCH LEAK ###################');
+// 	singleInstance.log('Start: {{start}}'.formatPV(info));
+// 	singleInstance.log('End: {{end}}'.formatPV(info));
+// 	singleInstance.log('Growth: {{growth}}'.formatPV(info));
+// 	singleInstance.log('Reason: {{reason}}'.formatPV(info));
+// 	singleInstance.log('####################################################');
+// });
 
-memwatch.on('stats', function(stats) {
-	singleInstance.log('################## MEMWATCH STATS ##################');
-	singleInstance.log('Estimated Base: {{estimated_base}}'.formatPV(stats));
-	singleInstance.log('Current Base: {{current_base}}'.formatPV(stats));
-	singleInstance.log('Min: {{min}}'.formatPV(stats));
-	singleInstance.log('Max: {{max}}'.formatPV(stats));
-	singleInstance.log('Usage trend: {{usage_trend}}'.formatPV(stats));
-	singleInstance.log('####################################################');
-});
+// memwatch.on('stats', function(stats) {
+// 	singleInstance.log('################## MEMWATCH STATS ##################');
+// 	singleInstance.log('Estimated Base: {{estimated_base}}'.formatPV(stats));
+// 	singleInstance.log('Current Base: {{current_base}}'.formatPV(stats));
+// 	singleInstance.log('Min: {{min}}'.formatPV(stats));
+// 	singleInstance.log('Max: {{max}}'.formatPV(stats));
+// 	singleInstance.log('Usage trend: {{usage_trend}}'.formatPV(stats));
+// 	singleInstance.log('####################################################');
+// });
 
 // ================================================================
 

@@ -1,4 +1,4 @@
-(function(socket) {
+(function(socket, ss) {
 	'use strict';
 
 	// Todo: auto scroll logger window
@@ -11,6 +11,7 @@
 	socket.establishConnection()
 		.then(setupSelectMenu)
 		.then(setPresetData)
+		.then(InitLogger.bind(null, socket))
 		.catch(function(err) {
 			console.log(err);
 			console.log(socket);

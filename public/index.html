@@ -73,15 +73,21 @@
 			</form>
 		</div>
 
-		<div id="cpu-log" class="hidden">
-			<span>CPU: </span><span id="cpu-log-value"></span>
+		<div id="usage-logging">
+			<div id="cpu-log" class="hidden">
+				<span>CPU: </span><span id="cpu-log-value"></span>
+			</div>
+			<div id="memory-log">
+				<span>RAM: </span><span id="ram-log-value"></span>
+			</div>
 		</div>
 
 	</div>
 
 	<div class="wrapper">
 		<h3>Log</h3>
-		<div id="messages"></div>
+		<div id="messages">
+		</div>
 		<div id="stream-logging">Stream Logging</div>
 	</div>
 
@@ -91,6 +97,7 @@
 	<script src="/public/js/binary.js"></script>
     <script src="/public/js/re-sampler.js"></script>
 	<script src="/public/js/socket-connection.js"></script>
+	<script src="/public/js/logger.js"></script>
 	<script src="/public/js/main.js"></script>
 	<script src="/public/js/video-preview.js"></script>
 	<script src="/public/js/audio-processing/streamMp3.js"></script>

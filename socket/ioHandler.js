@@ -49,16 +49,21 @@ function handleIO(io) {
 				logger.log(err.toString());
 			});
 
-			logger.on('message', function(msg) {
-				socket.emit('message', msg);
+			logger.on('general-log', function(msg) {
+				socket.emit('general-log', msg);
 			});
 
 			logger.on('stream-log', function(msg) {
+				console.log('io -> ', msg);
 				socket.emit('stream-log', msg);
 			});
 
 			logger.on('cpu-log', function(percentage) {
 				socket.emit('cpu-log', percentage);
+			});
+
+			logger.on('memory-log', function(percentage) {
+				socket.emit('memory-log', percentage);
 			});
 
 			function disconnect() {

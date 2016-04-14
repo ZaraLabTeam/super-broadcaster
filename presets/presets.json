@@ -163,18 +163,18 @@
 	},
 	"pipeAVToFFexec": {
 		"name": "pipeAVToFFexec",
-		"command": "avconv -f video4linux2 -i /dev/video0 -vcodec libx264 -f flv - | ffmpeg -i - test.flv"
+		"command": "avconv -f video4linux2 -i /dev/video0 -vcodec libx264 -f flv - | ffmpeg -i - recordings/test.flv"
 	},
 	"pipeAVToFFexecPIPE": {
 		"name": "pipeAVToFFexecPIPE",
-		"command": "ffmpeg -f video4linux2 -i /dev/video0 -vcodec libx264 -f flv - | avconv -f video4linux2 -i - test.flv"
+		"command": "ffmpeg -f video4linux2 -i /dev/video0 -vcodec libx264 -f flv - | avconv -f video4linux2 -i - recordings/test.flv"
 	},
 	"pipeFFToFFexec": {
 		"name": "pipeFFToFFexec",
-		"command": "ffmpeg -f video4linux2 -i /dev/video0 -vcodec libx264 -f flv - | ffmpeg -f flv -i - -f mp3 -i pipe:1 -ar 44100 test.flv"
+		"command": "ffmpeg -f video4linux2 -i /dev/video0 -vcodec libx264 -f flv - | ffmpeg -f flv -i - -f mp3 -i pipe:1 -ar 44100 recordings/test.flv"
 	},
 	"pipeFFToFFexecAdvanced": {
 		"name": "pipeFFToFFexecAdvanced",
-		"command": "ffmpeg -f v4l2 -i /dev/video0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 500k -bufsize 1000k -f flv - | ffmpeg -f flv -re -i - -f mp3 -i pipe:1 -ar 44100 test.flv"
+		"command": "ffmpeg -f v4l2 -i /dev/video0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 500k -bufsize 1000k -f flv - | ffmpeg -f flv -re -i - -f mp3 -i pipe:1 -ar 44100 recordings/test.flv"
 	}
 }

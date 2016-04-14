@@ -36,6 +36,7 @@ function broadcast() {
 
 	logStreamData(broadcastStream);
 
+									// ffmpeg outputs stream information to stderr
 	ev.emit('broadcast-started', broadcastStream.stdout);
 	logger.log(BROADCAST_STARTED_MSG);
 }
@@ -105,6 +106,8 @@ function startCommands(commands) {
 	});
 
 	broadcastStream = processes[processes.length - 1];
+
+	logger.log('Spawned Processes: ' + processes.length);
 }
 
 // ================ EXPORTS =====================================
@@ -121,16 +124,25 @@ module.exports = {
 // ================ HELPERS =====================================
 
 function logStreamData(childProcess) {
-	childProcess.on('message', logger.streamLog);
 
 	childProcess.on('error', function(err) {
 		logger.log(err.toString());
 	});
 
 	// ffmpeg outputs stream information to stderr
+	logger.log('here');
+	childProcess.stderr.setEncoding('utf8');
 	childProcess.stderr.on('data', function(data) {
-		logger.log(data);
+		logger.broadcastLog(data);
 	});
+
+	// childProcess.stderr.on('data', logger.broadcastLog);
+
+	// Log only the first 5 seconds of data that provide general information
+	// then logging is handled by another log monitor (for bitrate and etc.)
+	// setTimeout(function() {
+	// 	childProcess.stderr.removeListener('data', logger.log);
+	// }, 5 * 1000);
 
 	childProcess.once('exit', function(exitCode, signal, metadata) {
 		/*
