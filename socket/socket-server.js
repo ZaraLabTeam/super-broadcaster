@@ -1,4 +1,11 @@
-// ================ DEPENDENCIES =============================
+/* ================ DESCRIPTION =============================
+*
+* This package is used to stream video through websockets to the
+* Client Control Panel App
+*
+* =========================================================== */
+
+// ================ DEPENDENCIES ============================= 
 
 // Constants
 // Copy & pasted
