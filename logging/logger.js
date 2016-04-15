@@ -24,13 +24,11 @@ function Logger() {}
 Logger.prototype = new EventEmitter();
 
 Logger.prototype.log = function(msg) {
-	msg = msg + '\n';
-	process.stdout.write(msg);
+	process.stdout.write(msg + '\n');
 	this.emit('general-log', msg);
 };
 
 Logger.prototype.broadcastLog = function(msg) {
-	msg = msg + '\n';
 	this.emit('stream-log', msg);
 };
 

@@ -36,21 +36,19 @@ function broadcast() {
 
 	logStreamData(broadcastStream);
 
-									// ffmpeg outputs stream information to stderr
+	// ffmpeg outputs stream information to stderr
 	ev.emit('broadcast-started', broadcastStream.stdout);
 	logger.log(BROADCAST_STARTED_MSG);
 }
 
 function stopPreviousBroadcast() {
-	if (broadcastStream) {
-		var i = processes.length;
-		while (i--) {
-			var prc = processes[i];
-			prc.kill();
-		}
-
-		logger.log(BROADCAST_ENDED_MSG);
+	var i = processes.length;
+	while (i--) {
+		var prc = processes[i];
+		prc.kill();
 	}
+
+	logger.log(BROADCAST_ENDED_MSG);
 }
 
 function prepareForBroadcast() {
@@ -59,7 +57,7 @@ function prepareForBroadcast() {
 	var data = broadcastConfig.command.split('|');
 	var commands = [];
 
-	data.forEach( function(element) {
+	data.forEach(function(element) {
 		var args = element.split(' ').cleanPV('');
 		commands.push({
 			command: args[0],
@@ -68,8 +66,8 @@ function prepareForBroadcast() {
 	});
 
 	var message = CONFIGURATION_MSG +
-				 'EncoderCfg ' + broadcastConfig.command + '\n' + 
-				  CONFIGURATION_MSG;
+		'EncoderCfg ' + broadcastConfig.command + '\n' +
+		CONFIGURATION_MSG;
 
 	logger.log(message);
 	stopPreviousBroadcast();
@@ -89,7 +87,7 @@ function startCommands(commands) {
 	commands.forEach(function(cmd) {
 		logger.log(
 			'Running command: "{{command}}" with args: "{{params}}"'
-				.formatPV(cmd));
+			.formatPV(cmd));
 
 		var child = spawn(cmd.command, cmd.params);
 		processes.push(child);
@@ -100,7 +98,7 @@ function startCommands(commands) {
 	processes.forEach(function(prc) {
 		if (prevProc) {
 			prevProc.stdout.pipe(prc.stdin);
-		} 
+		}
 
 		prevProc = prc;
 	});
@@ -129,26 +127,29 @@ function logStreamData(childProcess) {
 		logger.log(err.toString());
 	});
 
-	// ffmpeg outputs stream information to stderr
-	logger.log('here');
+	// ffmpeg or avconv outputs stream information to stderr
+	// Log the general information to the main log
+	// then logging is handled by another log monitor (for bitrate, fps and etc.)
+	var logToGeneral = function(data) {
+		if (data.indexOf('frame') === 0) {
+			logger.log('Swiching logging to broadcast mode');
+			childProcess.stderr.removeListener('data', logToGeneral);
+			childProcess.stderr.on('data', function(data) {
+				logger.broadcastLog(data);
+			});
+
+			return;
+		}
+
+		logger.log(data);
+	};
+
+	
 	childProcess.stderr.setEncoding('utf8');
-	childProcess.stderr.on('data', function(data) {
-		logger.broadcastLog(data);
-	});
-
-	// childProcess.stderr.on('data', logger.broadcastLog);
-
-	// Log only the first 5 seconds of data that provide general information
-	// then logging is handled by another log monitor (for bitrate and etc.)
-	// setTimeout(function() {
-	// 	childProcess.stderr.removeListener('data', logger.log);
-	// }, 5 * 1000);
-
-	childProcess.once('exit', function(exitCode, signal, metadata) {
-		/*
-		Here you know the avconv process is finished
-		Metadata contains parsed avconv output as described in the next section
-		*/
+	childProcess.stderr.on('data', logToGeneral);
+	
+	// Todo: parameters check
+	childProcess.once('exit', function(exitCode, signal) {
 
 		logger.log('...broadcast received exit call');
 	});

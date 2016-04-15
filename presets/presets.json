@@ -1,7 +1,7 @@
 {
 	"default264": {
 		"name": "default264",
-		"command": "-f video4linux2 -i /dev/video0 -f alsa -i pulse -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -async 1 -acodec libmp3lame -ab 24k -ar 22050 -maxrate 750k -bufsize 5000k -f flv ",
+		"command": "ffmpeg -f video4linux2 -i /dev/video0 -f alsa -i pulse -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -async 1 -acodec libmp3lame -ab 24k -ar 22050 -maxrate 750k -bufsize 5000k -f flv ",
 		"output": "default"
 	},
 	"default264New": {
@@ -167,7 +167,7 @@
 	},
 	"pipeAVToFFexecPIPE": {
 		"name": "pipeAVToFFexecPIPE",
-		"command": "ffmpeg -f video4linux2 -i /dev/video0 -vcodec libx264 -f flv - | avconv -f video4linux2 -i - recordings/test.flv"
+		"command": "avconv -f video4linux2 -i /dev/video0 -vcodec libx264 -f flv - | ffmpeg -f flv -i - recordings/test.flv"
 	},
 	"pipeFFToFFexec": {
 		"name": "pipeFFToFFexec",

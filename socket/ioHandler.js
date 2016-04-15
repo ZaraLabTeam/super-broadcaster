@@ -54,7 +54,6 @@ function handleIO(io) {
 			});
 
 			logger.on('stream-log', function(msg) {
-				console.log('io -> ', msg);
 				socket.emit('stream-log', msg);
 			});
 
