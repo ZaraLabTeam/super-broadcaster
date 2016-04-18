@@ -268,5 +268,10 @@
 		"name": "10+ min synced",
 		"command": "raspivid -t 0 -n -w 854 -h 480 -fps 30 -b 550000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -i - -f mp3 -i pipe:1 -vcodec copy -ar 44100 -f flv",
 		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
+	},
+	"synced2": {
+		"name": "synced2",
+		"command": "avconv -f video4linux2 -s vga -r 30 -i /dev/video0 -f mp3 -i pipe:1 -vcodec libx264 -preset ultrafast -tune zerolatency -r 30 -ar 44100 -ab 128k -ar 44100 -maxrate 1000k -bufsize 1000k -f flv",
+		"output": "test"
 	}
 }

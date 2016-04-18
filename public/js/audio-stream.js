@@ -6,7 +6,6 @@
 
 	btnStartRec.addEventListener('click', function(evt) {
 		evt.preventDefault();
-		socketConnection.emit('broadcast-start');
 		streamer.start();
 	});
 

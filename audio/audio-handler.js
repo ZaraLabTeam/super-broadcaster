@@ -12,7 +12,6 @@ var bcStream;
 var aStream;
 
 broadcaster.event.on('broadcast-started', function(broadcastStream) {
-	logger.log('bc stream received');
 	bcStream = broadcastStream;
 
 	if (aStream) {
@@ -26,7 +25,10 @@ function handleAudio(audioStream, meta) {
 
 	if (bcStream) {
 		audioStream.pipe(bcStream);
-	} 
+	} else {
+		logger.log('Audio Received -> Start Broadcast');
+		broadcaster.broadcast();
+	}
 
 	audioStream.on('error', function(err) {
 		logger.log(err.toString());
