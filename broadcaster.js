@@ -1,8 +1,7 @@
 // ================ DEPENDENCIES ================================
 
 // NPM Dependencies
-// var avconv = require('avconv');
-// var ffmpeg = require('./ffmpeg/ffmpeg');
+var terminate = require('terminate');
 var spawn = require('child_process').spawn;
 var EventEmitter = require('events').EventEmitter;
 
@@ -36,19 +35,45 @@ function broadcast() {
 
 	logStreamData(broadcastStream);
 
-	// ffmpeg outputs stream information to stderr
 	ev.emit('broadcast-started', broadcastStream.stdout);
 	logger.log(BROADCAST_STARTED_MSG);
 }
 
 function stopPreviousBroadcast() {
-	var i = processes.length;
-	while (i--) {
-		var prc = processes[i];
+	var prevProc = null;
+
+	// Unpipe Streams
+	processes.forEach(function(prc) {
+		if (prevProc) {
+			prevProc.stdout.unpipe(prc.stdin);
+		}
+
+		prevProc = prc;
+	});
+
+	// Terminate Processes
+	processes.forEach(function(prc) {
 		prc.kill();
+	});
+
+	// var i = processes.length;
+	// while (i--) {
+	// 	var prc = processes[i];
+	// 	terminate(prc.pid, handleTermination);
+	// }
+
+	if (broadcastStream) {
+		logger.log(BROADCAST_ENDED_MSG);
 	}
 
-	logger.log(BROADCAST_ENDED_MSG);
+	processes = [];
+	broadcastStream = null;
+}
+
+function handleTermination(err) {
+	if (err) {
+		logger.log('Terminate Proccess Error!');
+	}
 }
 
 function prepareForBroadcast() {
@@ -125,6 +150,8 @@ function logStreamData(childProcess) {
 
 	childProcess.on('error', function(err) {
 		logger.log(err.toString());
+
+		stopPreviousBroadcast();
 	});
 
 	// ffmpeg or avconv outputs stream information to stderr
@@ -144,10 +171,10 @@ function logStreamData(childProcess) {
 		logger.log(data);
 	};
 
-	
+
 	childProcess.stderr.setEncoding('utf8');
 	childProcess.stderr.on('data', logToGeneral);
-	
+
 	// Todo: parameters check
 	childProcess.once('exit', function(exitCode, signal) {
 

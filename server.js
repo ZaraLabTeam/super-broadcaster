@@ -29,6 +29,7 @@ var server;
 if (serverConfig.httpsOptions) {
 	server = protocol.createServer(serverConfig.httpsOptions, httpHandler.handle);
 } else {
+	// Grabing audio from browser won't work over http for the most of the browsers
 	server = protocol.createServer(httpHandler.handle);
 }
 

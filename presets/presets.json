@@ -176,5 +176,13 @@
 	"pipeFFToFFexecAdvanced": {
 		"name": "pipeFFToFFexecAdvanced",
 		"command": "ffmpeg -f v4l2 -i /dev/video0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 500k -bufsize 1000k -f flv - | ffmpeg -f flv -re -i - -f mp3 -i pipe:1 -ar 44100 recordings/test.flv"
+	},
+	"pipeFFToFFexecAdvanced2": {
+		"name": "pipeFFToFFexecAdvanced2",
+		"command": "ffmpeg -f v4l2 -i /dev/video0 -vcodec libx264 -preset ultrafast -tune zerolatency -maxrate 500k -bufsize 500k -f flv - | ffmpeg -f flv -itsoffset 1.45 -i - -f mp3 -i pipe:1 -ar 44100 recordings/test.flv"
+	},
+	"synced": {
+		"name": "synced",
+		"command": "ffmpeg -f v4l2 -itsoffset 1.45 -i /dev/video0 -vcodec libx264 -preset ultrafast -tune zerolatency -maxrate 500k -bufsize 500k -f mp3 -i pipe:1 -ar 44100 recordings/test.flv"
 	}
 }
