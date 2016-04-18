@@ -20,6 +20,10 @@
 		socket.on('cpu-log', printUsage.bind(null, cpuLoggingBox));
 
 		socket.on('memory-log', printUsage.bind(null, memoryLoggingBox));
+
+		socket.on('disconnect', printMessage.bind(null, messageBox, false, 'Disconnected'));
+
+		printMessage(messageBox, false, 'Connected', 'good');
 	};
 
 	function printMessage(container, replaceContent, msg, cssClass) {

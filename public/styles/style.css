@@ -118,3 +118,19 @@ canvas {
 .time {
 	color: ##1ccce1;
 }
+
+@media all and (max-width: 960px) {
+	.container {
+		width: 100%;
+		min-width: 100%;
+	}
+
+	#videoCanvas {
+		display: none;
+	}
+
+	#stream-logging {
+		height: 80px;
+	}
+
+}

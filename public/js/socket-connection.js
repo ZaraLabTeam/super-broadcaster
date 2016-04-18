@@ -3,10 +3,6 @@ window.socketConnection = (function() {
 
 	// ================ INITIALIZATION =============================
 
-	var messageBox = document.getElementById('messages');
-	var streamLogging = document.getElementById('stream-logging');
-	var cpuLogging = document.getElementById('cpu-log-value');
-
 	var connectedSocket = {};
 	var connectionPromise = new Promise(establishConnection);
 
@@ -27,15 +23,11 @@ window.socketConnection = (function() {
 		});
 
 		socket.once('connect', function() {
-			printMessage('Connected!', 'good');
+			console.log('Connected');
 
-			this.on('disconnect', disconnected);
-
-			this.on('message', printMessage);
-
-			this.on('stream-log', printLog);
-
-			this.on('cpu-log', printCpu);
+			this.on('disconnect', function() {
+				console.log('disconnected');
+			});
 
 			connectedSocket = this;
 
@@ -60,38 +52,6 @@ window.socketConnection = (function() {
 		var localPass = localStorage.getItem('pass');
 
 		return localPass;
-	}
-
-	function disconnected() {
-		printMessage('Disconnected!', 'bad');
-	}
-
-	function printMessage(msg, cssClass) {
-		if (!cssClass) {
-			cssClass = 'standard';
-		}
-
-		msg = msg.replace(RegExp('\n', 'g'), '<br />');
-
-		messageBox.innerHTML += '<p class="' + cssClass + '">' + msg + '</p>\n';
-		messageBox.scrollTop = messageBox.scrollHeight;
-	}
-
-	function printLog(msg) {
-		streamLogging.innerHTML = '<p class="good">' + msg + '</p>';
-	}
-
-	function printCpu(percent) {
-		var cssClass = '';
-		if (percent < 40) {
-			cssClass = 'good';
-		} else if (percent < 75) {
-			cssClass = 'warning';
-		} else {
-			cssClass = 'bad';
-		}
-
-		cpuLogging.innerHTML = '<p class="' + cssClass + '">' + percent + '%</p>';
 	}
 
 	function clear() {
