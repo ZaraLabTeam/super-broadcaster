@@ -190,5 +190,83 @@
 		"name": "newTest",
 		"command": "ffmpeg -f video4linux2 -i /dev/video0 -f alsa -i pulse -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -async 1 -acodec libmp3lame -ab 24k -ar 22050 -maxrate 750k -bufsize 5000k -f flv recordings/test.flv",
 		"output": "default"
+	},
+	"raspiToFFPipe": {
+		"name": "raspiToFFPipe",
+		"command": "raspivid -t -1 -w 960 -h 540 -fps 25 -b 500000 -vf -rot 135 -o - | ffmpeg -f h264 -i - -f mp3 -i pipe:1 -ar 44100 -f flv test.flv"
+	},
+	"raspiToFFPipeNoAudio": {
+		"name": "raspiToFFPipeNoAudio",
+		"command": "raspivid -t 0 -w 1280 -h 720 -vf -rot 270 -o - | ffmpeg -f h264 -i - recordings/test.flv"
+	},
+	"raspiToFFPipe2": {
+		"name": "raspiToFFPipe2",
+		"command": "raspivid -t 0 -w 1280 -h 720 -vf -rot 270 -o - | ffmpeg -f h264 -i - -f mp3 -i pipe:1 -ar 44100 -f flv test.flv"
+	},
+	"raspiToFFPipe3": {
+		"name": "raspiToFFPipe3",
+		"command": "raspivid -t 0 -w 1280 -h 720 -vf -rot 270 -o - | ffmpeg -f h264 -i - -f mp3 -i pipe:1 -vcodec libx264 -preset ultrafast -tune zerolatency -maxrate 1000k -bufsize 1000k -ar 44100 -f flv recordings/test.flv"
+	},
+	"raspiToFFPipeYT": {
+		"name": "raspiToFFPipeYT",
+		"command": "raspivid -n -t 0 -w 1280 -h 720 -b 1000000 -vf -rot 270 -o - | ffmpeg -f h264 -re -i - -f mp3 -i pipe:1 -vcodec libx264 -preset ultrafast -tune zerolatency -maxrate 1000k -bufsize 1000k -ar 44100 -f flv rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
+	},
+	"raspiToFFPipeYT2": {
+		"name": "raspiToFFPipeYT2",
+		"command": "raspivid -n -t 0 -w 854 -h 480 -fps 30 -b 1000000 -vf -rot 270 -o - | ffmpeg -f h264 -i - -f mp3 -i pipe:1 -vcodec libx264 -preset ultrafast -r 30 -maxrate 1000k -bufsize 1000k -ar 44100 -f flv rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
+	},
+	"raspiToFFPipeYT3": {
+		"name": "raspiToFFPipeYT3",
+		"command": "raspivid -n -t 0 -w 854 -h 480 -fps 30 -b 900000 -vf -rot 270 -o - | ffmpeg -f h264 -i - -f mp3 -i pipe:1 -vcodec copy -ar 44100 -f flv rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
+	},
+	"raspiToFFPipeUDP": {
+		"name": "raspiToFFPipeUDP",
+		"command": "raspivid -n -t 0 -w 854 -h 480 -fps 30 -b 900000 -vf -rot 270 -o - | ffmpeg -re -f h264 -i - -f mp3 -i pipe:1 -vcodec libx264 -ar 44100 -f mpegts udp://192.168.0.28:8020"
+	},
+	"raspiToFFPipeTCP": {
+		"name": "raspiToFFPipeTCP",
+		"command": "raspivid -n -t 0 -w 854 -h 480 -fps 30 -b 900000 -vf -rot 270 -o - | ffmpeg -re -f h264 -i - -f mp3 -i pipe:1 -vcodec copy -ar 44100 -f mpegts tcp://192.168.0.28:8021?listen"
+	},
+	"raspiToFFPipeToFile": {
+		"name": "raspiToFFPipeToFile",
+		"command": "raspivid -n -t 0 -w 854 -h 480 -fps 30 -b 900000 -vf -rot 270 -o - | ffmpeg -re -f h264 -i - -f mp3 -i pipe:1 -vcodec copy -ar 44100 -f flv recordings/test.flv"
+	},
+	"raspiToFFPipeToFile2": {
+		"name": "raspiToFFPipeToFile2",
+		"command": "raspivid -t 0 -n -w 1280 -h 720 -fps 30 -b 900000 -vf -rot 0 -o - | ffmpeg -f h264 -i - -f mp3 -itsoffset 0.8 -i pipe:1 -vcodec copy -ar 44100 -f flv",
+		"output": "test"
+	},
+	"raspiToFFPipeToFileLatest": {
+		"name": "raspiToFFPipeToFileLatest",
+		"command": "raspivid -t 0 -n -w 854 -h 480 -fps 30 -b 900000 -vf -rot 0 -o - | ffmpeg -vsync cfr -fflags nobuffer -f h264 -i - -f mp3 -fflags nobuffer -analyzeduration 0 -i pipe:1 -vcodec copy -ar 44100 -f flv recordings/test.flv"
+	},
+	"raspiToFFPipeToLive": {
+		"name": "raspiToFFPipeToLive",
+		"command": "raspivid -t 0 -w 1280 -h 720 -fps 30 -b 900000 -vf -rot 0 -o - | ffmpeg -f h264 -i - -f mp3 -itsoffset 0.8 -i pipe:1 -vcodec copy -ar 44100 -f flv rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
+	},
+	"raspiToFFPipeToFile3": {
+		"name": "raspiToFFPipeToFile3",
+		"command": "raspivid -t 0 -n -w 1280 -h 720 -fps 30 -b 900000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -i - -f mp3 -itsoffset -0.75 -i pipe:1 -vcodec copy -ar 44100 -f flv",
+		"output": "test"
+	},
+	"raspiToFFPipeToFileMayStana": {
+		"name": "raspiToFFPipeToFileMayStana",
+		"command": "raspivid -t 0 -n -w 1280 -h 720 -fps 30 -b 900000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -i - -f mp3 -itsoffset -0.2 -i pipe:1 -vcodec copy -ar 44100 -f flv",
+		"output": "test"
+	},
+	"raspiToFFPipeToFileMayStanaLive": {
+		"name": "raspiToFFPipeToFileMayStanaLive",
+		"command": "raspivid -t 0 -n -w 1280 -h 720 -fps 30 -b 900000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -i - -f mp3 -itsoffset -0.2 -i pipe:1 -vcodec copy -ar 44100 -f flv",
+		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
+	},
+	"yetAnotherTest": {
+		"name": "yetAnotherTest",
+		"command": "raspivid -t 0 -n -w 854 -h 480 -fps 30 -b 550000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -i - -f mp3 -i pipe:1 -vcodec copy -ar 44100 -f flv",
+		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
+	},
+	"10+ min synced": {
+		"name": "10+ min synced",
+		"command": "raspivid -t 0 -n -w 854 -h 480 -fps 30 -b 550000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -i - -f mp3 -i pipe:1 -vcodec copy -ar 44100 -f flv",
+		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
 	}
 }
