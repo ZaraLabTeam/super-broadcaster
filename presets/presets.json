@@ -183,6 +183,12 @@
 	},
 	"synced": {
 		"name": "synced",
-		"command": "ffmpeg -f v4l2 -itsoffset 1.45 -i /dev/video0 -vcodec libx264 -preset ultrafast -tune zerolatency -maxrate 500k -bufsize 500k -f mp3 -i pipe:1 -ar 44100 recordings/test.flv"
+		"command": "ffmpeg -f v4l2 -itsoffset 1.55 -i /dev/video0 -f mp3 -i pipe:1 -ar 44100 -f flv",
+		"output": "test"
+	},
+	"newTest": {
+		"name": "newTest",
+		"command": "ffmpeg -f video4linux2 -i /dev/video0 -f alsa -i pulse -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -async 1 -acodec libmp3lame -ab 24k -ar 22050 -maxrate 750k -bufsize 5000k -f flv recordings/test.flv",
+		"output": "default"
 	}
 }

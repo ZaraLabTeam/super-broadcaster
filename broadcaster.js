@@ -90,14 +90,31 @@ function prepareForBroadcast() {
 		});
 	});
 
-	var message = CONFIGURATION_MSG +
-		'EncoderCfg ' + broadcastConfig.command + '\n' +
-		CONFIGURATION_MSG;
+	if (broadcastConfig.output) {
+		setOutput(broadcastConfig.output, commands[commands.length - 1]);
+	}
+
+	var message =
+		'{{configMsg}} Preset: {{preset}} \n Command: {{command}} \n {{configMsg}}'
+		.formatPV({
+			configMsg: CONFIGURATION_MSG,
+			preset: broadcastConfig.name,
+			command: broadcastConfig.command
+		});
 
 	logger.log(message);
 	stopPreviousBroadcast();
 
 	return commands;
+}
+
+function setOutput(output, command) {
+	if (output === 'test') {
+			output = 'recordings/test-{{now}}'
+				.formatPV({now: (new Date()).getTime()});
+		}
+
+		command.params.push(output);
 }
 
 function isRunning() {
@@ -116,6 +133,12 @@ function startCommands(commands) {
 
 		var child = spawn(cmd.command, cmd.params);
 		processes.push(child);
+
+		child.on('error', function(err) {
+			logger.log('Child Process Failed: \n {{err}}'.formatPV({
+				err: err.toString()
+			}));
+		});
 	});
 
 	var prevProc = null;
@@ -123,7 +146,19 @@ function startCommands(commands) {
 	processes.forEach(function(prc) {
 		if (prevProc) {
 			prevProc.stdout.pipe(prc.stdin);
+
+			prevProc.stdout.on('error', function(err) {
+				logger.log('Child stdout Error: {{err}}'.formatPV({
+					err: err.toString()
+				}));
+			});
 		}
+
+		prc.stdin.on('error', function(err) {
+			logger.log('Child stdin Error: {{err}}'.formatPV({
+				err: err.toString()
+			}));
+		});
 
 		prevProc = prc;
 	});
@@ -148,11 +183,11 @@ module.exports = {
 
 function logStreamData(childProcess) {
 
-	childProcess.on('error', function(err) {
-		logger.log(err.toString());
+	// childProcess.on('error', function(err) {
+	// 	logger.log(err.toString());
 
-		stopPreviousBroadcast();
-	});
+	// 	stopPreviousBroadcast();
+	// });
 
 	// ffmpeg or avconv outputs stream information to stderr
 	// Log the general information to the main log

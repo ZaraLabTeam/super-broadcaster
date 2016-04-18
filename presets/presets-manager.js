@@ -20,12 +20,6 @@ function savePreset(cfg, callback) {
 		return;
 	}
 
-	// presets[name] = {
-	// 	"name": name,
-	// 	"command": command,
-	// 	"output": output || "default"
-	// };
-
 	presets[cfg.name] = cfg;
 
 	var stringifiedPresets = stringify(presets);
@@ -129,23 +123,13 @@ function getActivePreset() {
 		}
 	}
 
-	return {
-		name: activeConfig.name,
-		rPiConfig: activeConfig.rPiConfig,
-		command: activeConfig.command,
-		output: activeConfig.output
-	};
+	return activeConfig;
 }
 
 function getPreset(name) {
 	var preset = presets[name];
 	if (preset) {
-		return {
-			name: preset.name,
-			rPiConfig: preset.rPiConfig,
-			command: preset.command,
-			output: preset.output
-		};
+		return preset;
 	} else {
 		return null;
 	}
