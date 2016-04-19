@@ -8,6 +8,10 @@ canvas {
 	background-color: #999;
 }
 
+label:hover {
+	cursor: pointer;
+}
+
 #messages {
 	height: 300px;
 	overflow-y: scroll;
@@ -62,8 +66,6 @@ canvas {
 }
 
 #videoCanvas {
-	 /*Always stretch the canvas to 640x480, regardless of its
-	internal size.*/ 
 	max-height: 280px;
 }
 
@@ -117,6 +119,10 @@ canvas {
 
 .time {
 	color: ##1ccce1;
+}
+
+.btn-block button {
+    margin: 0.25rem 0.025rem 0;
 }
 
 @media all and (max-width: 960px) {

@@ -38,7 +38,7 @@ function handleAudio(audioStream, meta) {
 		}
 	});
 
-	audioStream.once('exit', function() {
+	audioStream.once('end', function() {
 		logger.log('Audio stream ended');
 		if (bcStream) {
 			audioStream.unpipe(bcStream);

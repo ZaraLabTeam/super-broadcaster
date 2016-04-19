@@ -14,7 +14,51 @@
 	
 
 	<div class="wrapper">
-    	<div class="container">
+  
+		<div class="container">
+			<h3>Config</h3>
+			<form accept-charset="utf-8" autocomplete="off">
+				<fieldset class="shadow">
+					<legend>Broadcast configuration</legend>
+
+					<fieldset class="btn-block">
+					<legend>Preset Control</legend>
+
+						<div>
+							<label for="config">Select Quality</label>
+							<select id="config"></select> 
+						</div>
+						
+
+						<button id="set-config">Apply Preset</button>
+						<button id="delete-config">Delete Preset</button>
+						<button id="save-config">Save/Create</button>
+					</fieldset>
+
+					<div id="toggle">
+						<textarea id="preset-data" 
+						placeholder="Paste your json config here"
+						spellcheck="false"></textarea>
+					</div>
+
+					<fieldset class="btn-block">
+						<legend>Broadcast Control</legend>
+
+  	  					<button id="start">Start</button>
+						<button id="stop">Stop</button>
+						<input type="checkbox"
+							id="client-audio"
+							name="client-audio" />
+							<label for="client-audio">Use Client Audio</label>
+						<button id="clear">Clear Log</button>
+
+					</fieldset>
+					
+				</fieldset>
+			</form>
+		</div>
+
+		<div class="container">
 	    	<!-- <video id="my-video" class="video-js" controls 
 	    		width="640" height="264" data-setup="{}">
 			    <source src="tcp://127.0.0.1:8100/test" type='video/mp4'>
@@ -34,47 +78,8 @@
 		    </div>
 		</div>
 
-		<div class="container">
-			<h3>Config</h3>
-			<form accept-charset="utf-8" autocomplete="off">
-				<fieldset class="shadow">
-					<legend>Broadcast configuration</legend>
-
-					<label for="config">Select Quality</label>
-
-					<select id="config">
-					</select> 
-
-					<div class="btn-block">
-						<button id="set-config">Apply Preset</button>
-						<button id="delete-config">Delete Preset</button>
-						<button id="start">Start</button>
-						<button id="stop">Stop</button>
-						<button id="clear">Clear</button>
-						<button id="save-config">Save/Create</button>
-					</div>
-					<input type="checkbox" id="toggle-cpu-log">CPU</input>
-
-					<div id="toggle">
-						<textarea id="preset-data" 
-						placeholder="Paste your json config here"
-						spellcheck="false"></textarea>
-					</div>
-
-					<fieldset>
-						<legend>Audio Streaming</legend>
-						<button class="btn btn-primary" 
-							id="start-rec-btn">Start Recording</button>
-	  	  				<button class="btn btn-primary" 
-	  	  					id="stop-rec-btn">Stop Recording</button>
-					</fieldset>
-					
-				</fieldset>
-			</form>
-		</div>
-
 		<div id="usage-logging">
-			<div id="cpu-log" class="hidden">
+			<div id="cpu-log">
 				<span>CPU: </span><span id="cpu-log-value"></span>
 			</div>
 			<div id="memory-log">

@@ -54,11 +54,6 @@ window.socketConnection = (function() {
 		return localPass;
 	}
 
-	function clear() {
-		messageBox.innerHTML = '';
-		streamLogging.innerHTML = '';
-	}
-
 	function addEvent() {
 		connectedSocket.on.apply(connectedSocket, arguments);
 	}
@@ -77,8 +72,6 @@ window.socketConnection = (function() {
 		establishConnection: function() {
 			return connectionPromise;
 		},
-
-		clearLog: clear,
 
 		on: addEvent,
 

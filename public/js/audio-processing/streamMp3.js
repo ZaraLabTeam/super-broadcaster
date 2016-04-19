@@ -50,6 +50,7 @@
 			if (e.data.cmd == 'end') {
 				// self.ws.close();
 				// self.ws = null;
+				self.bStream.end();
 				self.encoder.terminate();
 				self.encoder = null;
 			}
@@ -110,7 +111,6 @@
 
 		console.log('stop recording');
 
-		this.stream.stop();
 		this.recording = false;
 
 		this.encoder.postMessage({

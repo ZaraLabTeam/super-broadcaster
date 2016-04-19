@@ -1,19 +1,6 @@
 (function(ss, socketConnection, Mp3AudioStreamer) {
 	var canvas = document.getElementById('audioCanvas'),
-		btnStartRec = document.getElementById('start-rec-btn'),
-		btnStopRec = document.getElementById('stop-rec-btn'),
 		streamer = new Mp3AudioStreamer(ss, {}, onAudio);
-
-	btnStartRec.addEventListener('click', function(evt) {
-		evt.preventDefault();
-		streamer.start();
-	});
-
-	btnStopRec.addEventListener('click', function(evt) {
-		evt.preventDefault();
-		socketConnection.emit('broadcast-stop');
-		streamer.stop();
-	});
 
 	function onAudio(e) {
 		var left = e.inputBuffer.getChannelData(0);
@@ -42,5 +29,14 @@
 			context.fillRect(i, (1 + min) * amp, 1, Math.max(1, (max - min) * amp));
 		}
 	}
+
+	window.audioStream = {
+		start: function() {
+			streamer.start();
+		},
+		stop: function() {
+			streamer.stop();
+		}
+	};
 
 })(window.ss, window.socketConnection, window.Mp3AudioStreamer);

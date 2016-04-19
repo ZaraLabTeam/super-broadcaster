@@ -15,9 +15,6 @@ var RAM_POLL_INTERVAL = 1000 * 5;
 // ================================================================
 
 // ================ IMPLEMENTATION =============================
-// Timeout intervals
-var cpuLoggingInterval;
-var memoryLogInterval;
 
 function Logger() {}
 
@@ -32,10 +29,11 @@ Logger.prototype.broadcastLog = function(msg) {
 	this.emit('stream-log', msg);
 };
 
-Logger.prototype.cpuLog = function() {
+Logger.prototype.logCpuUsage = function() {
 	var self = this;
+	this.stopCpuLog();
 
-	cpuLoggingInterval = setInterval(function() {
+	this.cpuLoggingInterval = setInterval(function() {
 
 		//Grab first CPU Measure
 		var startMeasure = cpuAverage();
@@ -60,14 +58,11 @@ Logger.prototype.cpuLog = function() {
 	}, CPU_POLL_INTREVAL);
 };
 
-Logger.prototype.toggleCpuLogging = function () {
-	if (cpuLoggingInterval) {
-		clearInterval(cpuLoggingInterval);
-		cpuLoggingInterval = null;
+Logger.prototype.stopCpuLog = function() {
+	if (this.cpuLoggingInterval) {
+		clearInterval(this.cpuLoggingInterval);
+		this.cpuLoggingInterval = null;
 		this.emit('message', 'Stopped CPU logging');
-	} else {
-		singleInstance.cpuLog();
-		this.emit('message', 'Started CPU logging');
 	}
 };
 
@@ -75,28 +70,25 @@ Logger.prototype.logMemoryUsage = function () {
 	var self = this;
 	this.stopMemoryLog();
 
-	memoryLogInterval = setInterval(function () {
+	this.memoryLogInterval = setInterval(function () {
 		var data = pollMemoryUsage();
-		var msg = 
-			'Memory Usage: {{prc}}% \n'
-			.formatPV({prc: data});
-
-		process.stdout.write(msg);
 		self.emit('memory-log', data);
 
 	}, RAM_POLL_INTERVAL);
 };
 
 Logger.prototype.stopMemoryLog = function() {
-	if (memoryLogInterval) {
-		clearInterval(memoryLogInterval);
-		memoryLogInterval = null;
+	if (this.memoryLogInterval) {
+		clearInterval(this.memoryLogInterval);
+		this.memoryLogInterval = null;
+		this.emit('message', 'Stopped Meomory logging');
 	}
 };
 
 var singleInstance = new Logger();
 
 singleInstance.logMemoryUsage();
+singleInstance.logCpuUsage();
 
 // memwatch.on('leak', function(info) {
 // 	singleInstance.log('################## MEMWATCH LEAK ###################');

@@ -15,13 +15,13 @@
 
 		socket.on('general-log', printMessage.bind(null, messageBox, false));
 
-		socket.on('stream-log', 'data', printMessage.bind(null, streamLoggingBox, true));
+		socket.on('stream-log', printMessage.bind(null, streamLoggingBox, true));
 
 		socket.on('cpu-log', printUsage.bind(null, cpuLoggingBox));
 
 		socket.on('memory-log', printUsage.bind(null, memoryLoggingBox));
 
-		socket.on('disconnect', printMessage.bind(null, messageBox, false, 'Disconnected'));
+		socket.on('disconnect', printMessage.bind(null, messageBox, false, 'Disconnected', 'bad'));
 
 		printMessage(messageBox, false, 'Connected', 'good');
 	};

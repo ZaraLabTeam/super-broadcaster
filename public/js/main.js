@@ -8,12 +8,13 @@
 	var DEFAULT_CONFIG_NAME = 'default264';
 
 	polyfills();
+
 	socket.establishConnection()
 		.then(setupSelectMenu)
 		.then(setPresetData)
-		.then(InitLogger.bind(null, socket))
+		.then(InitLogger.bind(window, socket))
 		.catch(function(err) {
-			console.log(err);
+			alert(err.toString());
 			console.log(socket);
 		});
 
@@ -23,21 +24,26 @@
 	var videoPlayer = document.getElementById('player');
 	var cpuLog = document.getElementById('cpu-log');
 
-	var btnBlock = document.getElementsByClassName('btn-block')[0];
+	var btnBlocks = document.querySelectorAll('.btn-block');
 	var btnStart = document.getElementById('start');
 	var btnStop = document.getElementById('stop');
 	var btnSetConfig = document.getElementById('set-config');
 	var btnDeleteConfig = document.getElementById('delete-config');
 	var btnSaveConfig = document.getElementById('save-config');
 	var btnClear = document.getElementById('clear');
-	var cbCpuLog = document.getElementById('toggle-cpu-log');
+	var cbClientAudio = document.getElementById('client-audio');
 
 	// ================================================================
 
 	// ================ UI EVENTS =================================
+	
+	for (var i = 0; i < btnBlocks.length; i++) {
+		var block = btnBlocks[i];
 
-	btnBlock.addEventListener('click', function(evt) {
-		evt.preventDefault();
+		block.addEventListener('click', buttonsHandler, false);
+	}
+
+	function buttonsHandler(evt) {
 		var target = evt.target;
 
 		if (target === btnStart) {
@@ -54,27 +60,34 @@
 			clear();
 		} else {
 			console.log('Else');
+			return;
 		}
 
-	}, false);
+		evt.preventDefault();
+	}
 
 	// On Config Select
 	configSelect.addEventListener('change', function() {
 		setPresetData();
 	}, false);
 
-	// On Cpu Log Check
-	cbCpuLog.addEventListener('click', toggleCpuLogging, false);
-
 	// On Start
 	function start() {
-		socket.emit('broadcast-start');
+		if (cbClientAudio.checked) {
+			// When the server receives the auido it will signal
+			// the broadcaster to start the broadcast stream
+			window.audioStream.start();
+		} else {
+			socket.emit('broadcast-start');
+		}
+		
 		btnStart.disabled = true;
 	}
 
 	// On Stop
 	function stop() {
 		socket.emit('broadcast-stop');
+		window.audioStream.stop();
 		btnStart.disabled = false;
 	}
 
@@ -131,18 +144,7 @@
 
 	// On Clear
 	function clear() {
-		window.socketConnection.clearLog();
-	}
-
-	// On Cpu Log
-	function toggleCpuLogging() {
-		socket.emit('log-cpu');
-
-		if (cbCpuLog.checked) {
-			changeCssClass(cpuLog, '');
-		} else {
-			changeCssClass(cpuLog, 'hidden');
-		}
+		document.getElementById('messages').innerHTML = '';
 	}
 
 	// ============================================================

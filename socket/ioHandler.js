@@ -41,8 +41,6 @@ function handleIO(io) {
 
 			socket.on('preset-getByName', getPreset);
 
-			socket.on('log-cpu', logger.toggleCpuLogging.bind(logger));
-
 			socket.on('disconnect', disconnect);
 
 			socket.on('error', function(err) {
