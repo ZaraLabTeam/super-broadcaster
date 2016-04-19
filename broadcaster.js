@@ -36,7 +36,7 @@ function broadcast() {
 	logStreamData(broadcastStream);
 
 	ev.emit('broadcast-started', broadcastStream.stdout);
-	logger.log(BROADCAST_STARTED_MSG);
+	logger.log(BROADCAST_STARTED_MSG, 'success');
 }
 
 function stopPreviousBroadcast() {
@@ -63,7 +63,7 @@ function stopPreviousBroadcast() {
 	// }
 
 	if (broadcastStream) {
-		logger.log(BROADCAST_ENDED_MSG);
+		logger.log(BROADCAST_ENDED_MSG, 'danger');
 	}
 
 	processes = [];
@@ -72,7 +72,7 @@ function stopPreviousBroadcast() {
 
 function handleTermination(err) {
 	if (err) {
-		logger.log('Terminate Proccess Error!');
+		logger.log('Terminate Proccess Error!', 'danger');
 	}
 }
 
@@ -102,7 +102,7 @@ function prepareForBroadcast() {
 			command: broadcastConfig.command
 		});
 
-	logger.log(message);
+	logger.log(message, 'warning');
 	stopPreviousBroadcast();
 
 	return commands;
@@ -137,7 +137,7 @@ function startCommands(commands) {
 		child.on('error', function(err) {
 			logger.log('Child Process Failed: \n {{err}}'.formatPV({
 				err: err.toString()
-			}));
+			}), 'danger');
 		});
 	});
 
@@ -150,14 +150,14 @@ function startCommands(commands) {
 			prevProc.stdout.on('error', function(err) {
 				logger.log('Child stdout Error: {{err}}'.formatPV({
 					err: err.toString()
-				}));
+				}), 'danger');
 			});
 		}
 
 		prc.stdin.on('error', function(err) {
 			logger.log('Child stdin Error: {{err}}'.formatPV({
 				err: err.toString()
-			}));
+			}), 'error');
 		});
 
 		prevProc = prc;
@@ -165,7 +165,7 @@ function startCommands(commands) {
 
 	broadcastStream = processes[processes.length - 1];
 
-	logger.log('Spawned Processes: ' + processes.length);
+	logger.log('Spawned Processes: ' + processes.length, 'warning');
 }
 
 // ================ EXPORTS =====================================
@@ -194,7 +194,7 @@ function logStreamData(childProcess) {
 	// then logging is handled by another log monitor (for bitrate, fps and etc.)
 	var logToGeneral = function(data) {
 		if (data.indexOf('frame') === 0) {
-			logger.log('Swiching logging to broadcast mode');
+			logger.log('Swiching logging to broadcast mode', 'warning');
 			childProcess.stderr.removeListener('data', logToGeneral);
 			childProcess.stderr.on('data', function(data) {
 				logger.broadcastLog(data);
@@ -213,7 +213,7 @@ function logStreamData(childProcess) {
 	// Todo: parameters check
 	childProcess.once('exit', function(exitCode, signal) {
 
-		logger.log('...broadcast received exit call');
+		logger.log('...broadcast received exit call', 'warning');
 	});
 }
 

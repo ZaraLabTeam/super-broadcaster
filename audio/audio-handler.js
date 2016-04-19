@@ -20,18 +20,18 @@ broadcaster.event.on('broadcast-started', function(broadcastStream) {
 });
 
 function handleAudio(audioStream, meta) {
-	logger.log('Stream starting... @{{sampleRate}}Hz'.formatPV(meta));
+	logger.log('Stream starting... @{{sampleRate}}Hz'.formatPV(meta), 'warning');
 	aStream = audioStream;
 
 	if (bcStream) {
 		audioStream.pipe(bcStream);
 	} else {
-		logger.log('Audio Received -> Start Broadcast');
+		logger.log('Audio Received -> Start Broadcast', 'warning');
 		broadcaster.broadcast();
 	}
 
 	audioStream.on('error', function(err) {
-		logger.log(err.toString());
+		logger.log(err.toString(), 'danger');
 		if (bcStream) {
 			audioStream.unpipe(bcStream);
 			audioStream = null;
@@ -39,7 +39,7 @@ function handleAudio(audioStream, meta) {
 	});
 
 	audioStream.once('end', function() {
-		logger.log('Audio stream ended');
+		logger.log('Audio stream ended', 'warning');
 		if (bcStream) {
 			audioStream.unpipe(bcStream);
 			audioStream = null;

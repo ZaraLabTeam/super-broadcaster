@@ -78,19 +78,24 @@ label:hover {
 	display: none;
 }
 
-.good {
+.success {
 	color: green;
 }
 
-.bad {
+.danger {
 	color: red;
 }
 
 .warning {
-	color: orange	;
+	color: orange;
 }
 
 .standard {
+	color: #eee;
+	font-style: italic;
+}
+
+.normal {
 	color: #eee;
 	font-style: italic;
 }

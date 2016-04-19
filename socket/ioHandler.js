@@ -44,11 +44,11 @@ function handleIO(io) {
 			socket.on('disconnect', disconnect);
 
 			socket.on('error', function(err) {
-				logger.log(err.toString());
+				logger.log(err.toString(), 'danger');
 			});
 
-			logger.on('general-log', function(msg) {
-				socket.emit('general-log', msg);
+			logger.on('general-log', function(msg, style) {
+				socket.emit('general-log', msg, style);
 			});
 
 			logger.on('stream-log', function(msg) {

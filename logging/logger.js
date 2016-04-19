@@ -2,6 +2,7 @@
 
 // NPM Modules
 // var memwatch = require('memwatch-next');
+var chalk = require('chalk');
 var os = require('os');
 var EventEmitter = require('events').EventEmitter;
 
@@ -12,6 +13,13 @@ var cpuAverage = require('./cpu').cpuAverage;
 var CPU_POLL_INTREVAL = 1000;
 var RAM_POLL_INTERVAL = 1000 * 5;
 
+var styles = {
+	danger: chalk.bold.red,
+	success: chalk.green,
+	normal: chalk.white,
+	warning: chalk.italic.yellow
+};
+
 // ================================================================
 
 // ================ IMPLEMENTATION =============================
@@ -20,9 +28,14 @@ function Logger() {}
 
 Logger.prototype = new EventEmitter();
 
-Logger.prototype.log = function(msg) {
-	process.stdout.write(msg + '\n');
-	this.emit('general-log', msg);
+Logger.prototype.log = function(msg, style) {
+	if (!styles[style]) {
+		style = 'normal';
+	} 
+
+	process.stdout.write(styles[style](msg + '\n'));
+
+	this.emit('general-log', msg, style);
 };
 
 Logger.prototype.broadcastLog = function(msg) {
@@ -62,7 +75,7 @@ Logger.prototype.stopCpuLog = function() {
 	if (this.cpuLoggingInterval) {
 		clearInterval(this.cpuLoggingInterval);
 		this.cpuLoggingInterval = null;
-		this.emit('message', 'Stopped CPU logging');
+		this.log('Stopped CPU logging', 'warning');
 	}
 };
 
@@ -81,7 +94,7 @@ Logger.prototype.stopMemoryLog = function() {
 	if (this.memoryLogInterval) {
 		clearInterval(this.memoryLogInterval);
 		this.memoryLogInterval = null;
-		this.emit('message', 'Stopped Meomory logging');
+		this.log('Stopped Meomory logging', 'warning');
 	}
 };
 
