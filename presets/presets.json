@@ -298,5 +298,20 @@
 		"name": "Generic Local Test (Audio from client)",
 		"command": "avconv -f video4linux2 -i /dev/video0 -r 25 -g 50 -threads 0 -vcodec libx264 -preset slow -tune zerolatency -pix_fmt yuv420p -maxrate 500k -bufsize 500k -f flv - | ffmpeg -f flv -thread_queue_size 1024 -i - -f mp3 -thread_queue_size 1024 -i pipe:1 -vcodec copy -ar 44100 -f flv",
 		"output": "test"
+	},
+	"lattest 720p": {
+		"name": "lattest 720p",
+		"command": "raspivid -t 0 -n -w 1280 -h 720 -fps 30 -b 2000000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -thread_queue_size 512 -i - -f mp3 -thread_queue_size 512 -i pipe:1 -vcodec copy -ar 44100 -f flv",
+		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
+	},
+	"lattest 1080p": {
+		"name": "lattest 1080p",
+		"command": "raspivid -t 0 -n -w 1920 -h 1080 -fps 30 -b 4000000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -thread_queue_size 512 -i - -f mp3 -thread_queue_size 512 -i pipe:1 -vcodec copy -ar 44100 -f flv",
+		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
+	},
+	"test timestamps": {
+		"name": "test timestamps",
+		"command": "raspivid -t 0 -n -w 1920 -h 1080 -fps 30 -b 2500000 -rot 180 -o - | ffmpeg -framerate 30 -f h264 -thread_queue_size 1024 -i - -f mp3 -thread_queue_size 1024 -i pipe:1 -vcodec copy -ar 44100 -f flv",
+		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
 	}
 }
