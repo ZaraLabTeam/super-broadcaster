@@ -16,7 +16,7 @@ function savePreset(cfg, callback) {
 	try {
 		validateConfig(cfg.name, cfg.command, cfg.output);
 	} catch (err) {
-		logger.log(err.toString());
+		logger.log(err.toString(), 'danger');
 		return;
 	}
 
@@ -28,13 +28,13 @@ function savePreset(cfg, callback) {
 		if (err) {
 			logger.log('Error saving "{{name}}" preset'.formatPV({
 				name: cfg.name
-			}));
+			}), 'danger');
 			return callback(err);
 		}
 
 		logger.log('Config "{{name}}" saved successfully!'.formatPV({
 			name: cfg.name
-		}));
+		}), 'success');
 
 		setActivePreset(cfg.name);
 
@@ -53,13 +53,13 @@ function setActivePreset(name) {
 		var stringifiedPreset = stringify(config);
 		fs.writeFile(ACTIVE_PRESET_PATH, stringifiedPreset, null, function(err) {
 			if (err) {
-				logger.log(err.toString());
+				logger.log(err.toString(), 'danger');
 				return;
 			}
 
 			logger.log('Active config set to: "{{name}}"'.formatPV({
 				name: name
-			}));
+			}), 'success');
 		});
 	} else {
 		logger.log(
@@ -67,7 +67,7 @@ function setActivePreset(name) {
 			.formatPV({
 				name: name,
 				prev: activeConfig.name
-			}));
+			}), 'warning');
 	}
 }
 
@@ -85,13 +85,13 @@ function removePreset(name, callback) {
 					name: name
 				});
 
-				logger.log(err.toString());
+				logger.log(err.toString(), 'danger');
 				return callback(message);
 			}
 
 			logger.log('Removed "{{name}}" from configurations'.formatPV({
 				name: name
-			}));
+			}), 'success');
 
 			if (callback) {
 				callback(null, name);
@@ -101,7 +101,7 @@ function removePreset(name, callback) {
 		message = 'No such config "{{name}}"'.formatPV({
 			name: name
 		});
-		logger.log(message);
+		logger.log(message, 'danger');
 		callback(message);
 	}
 }
@@ -118,7 +118,7 @@ function getActivePreset() {
 			var saved = fs.readFileSync(ACTIVE_PRESET_PATH);
 			activeConfig = JSON.parse(saved);
 		} catch (err) {
-			logger.log(err.toString());
+			logger.log(err.toString(), 'danger');
 			setActivePreset('default264');
 		}
 	}

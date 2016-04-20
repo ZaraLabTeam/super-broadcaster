@@ -43,13 +43,13 @@ socketServer.on('connection', function(socket) {
 	logger.log('New WebSocket Connection ({{count}} total)'
 		.formatPV({
 			count: socketServer.clients.length
-		}));
+		}), 'success');
 
 	socket.on('close', function(code, message) {
 		logger.log('Disconnected WebSocket ({{count}} total)'
 			.formatPV({
 				count: socketServer.clients.length
-			}));
+			}), 'danger');
 	});
 });
 
@@ -61,7 +61,7 @@ socketServer.broadcast = function(data, opts) {
 			logger.log('Error: Client ({{number}}) not connected.'
 				.formatPV({
 					number: i
-				}));
+				}), 'danger');
 		}
 	}
 };
@@ -71,7 +71,7 @@ broadcaster.event.on('broadcast-started', playStream);
 function playStream(stream) {
 	logger.log('Staring stream on port {{port}}'.formatPV({
 		port: config.wsPort
-	}));
+	}), 'warning');
 
 	stream.on('data', function(data) {
 		socketServer.broadcast(data, {

@@ -129,7 +129,7 @@ function startCommands(commands) {
 	commands.forEach(function(cmd) {
 		logger.log(
 			'Running command: "{{command}}" with args: "{{params}}"'
-			.formatPV(cmd));
+			.formatPV(cmd), 'warning');
 
 		var child = spawn(cmd.command, cmd.params);
 		processes.push(child);
