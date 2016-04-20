@@ -23,6 +23,7 @@
 	var presetDataText = document.getElementById('preset-data');
 	var videoPlayer = document.getElementById('player');
 	var cpuLog = document.getElementById('cpu-log');
+	var lblOnAir = document.getElementById('on-air');
 
 	var btnBlocks = document.querySelectorAll('.btn-block');
 	var btnStart = document.getElementById('start');
@@ -32,6 +33,8 @@
 	var btnSaveConfig = document.getElementById('save-config');
 	var btnClear = document.getElementById('clear');
 	var cbClientAudio = document.getElementById('client-audio');
+
+
 
 	// ================================================================
 
@@ -89,6 +92,8 @@
 		socket.emit('broadcast-stop');
 		window.audioStream.stop();
 		btnStart.disabled = false;
+		
+		setTimeout(changeCssClass.bind(null, lblOnAir, 'hidden'), 500);
 	}
 
 	// On SetConfig

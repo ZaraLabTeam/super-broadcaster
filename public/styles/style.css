@@ -74,6 +74,13 @@ label:hover {
 	border-top: 2px solid white;
 }
 
+#on-air {
+	float: right;
+	margin-right: 10px;
+	font-weight: bold;
+	color: rgba(100, 100, 100, 0.65);
+}
+
 .hidden {
 	display: none;
 }
@@ -112,7 +119,7 @@ label:hover {
 	margin: 1% auto;
 }
 
-.wrapper:after {
+.wrapper:after, .btn-block:after {
 	content:"";
 	display:table;
 	clear:both;
@@ -130,7 +137,7 @@ label:hover {
     margin: 0.25rem 0.025rem 0;
 }
 
-@media all and (max-width: 960px) {
+@media all and (max-width: 980px) {
 	.container {
 		width: 100%;
 		min-width: 100%;
@@ -143,5 +150,4 @@ label:hover {
 	#stream-logging {
 		height: 80px;
 	}
-
 }

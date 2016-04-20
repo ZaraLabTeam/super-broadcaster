@@ -7,15 +7,16 @@
 		var messageBox = document.getElementById('messages'),
 			streamLoggingBox = document.getElementById('stream-logging'),
 			cpuLoggingBox = document.getElementById('cpu-log-value'),
-			memoryLoggingBox = document.getElementById('ram-log-value');
-
-		// Logging Streams
-		var generalLog = null,
-			broadcastLog = null;
+			memoryLoggingBox = document.getElementById('ram-log-value'),
+			onAirLabel = document.getElementById('on-air'),
+			color = 'default';
 
 		socket.on('general-log', printMessage.bind(null, messageBox, false));
 
-		socket.on('stream-log', printMessage.bind(null, streamLoggingBox, true));
+		socket.on('stream-log', function(msg, style) {
+			printMessage(streamLoggingBox, true, msg, style);
+			color = toggleOnAir(onAirLabel, color);
+		});
 
 		socket.on('cpu-log', printUsage.bind(null, cpuLoggingBox));
 
@@ -64,4 +65,19 @@
 				percent: percent
 			});
 	}
+
+	function toggleOnAir(label, color) {
+		label.className = '';
+		
+		if (color === 'default') {
+			label.style = '';
+			color = 'red';
+		} else {
+			color = 'default';
+			label.style = 'color: red';
+		}
+
+		return color;
+	}
+
 })(window);
