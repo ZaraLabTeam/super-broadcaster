@@ -64,7 +64,7 @@ function handleIO(io) {
 			});
 
 			function disconnect() {
-				logger.log('Client Disconnected');
+				logger.log('Client Disconnected', 'danger');
 			}
 
 			function getConfigs(callback) {

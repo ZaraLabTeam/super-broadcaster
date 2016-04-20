@@ -6,13 +6,10 @@ var serverConfig = require('./config/server-config');
 var ioConfig = require('./config/io-config');
 
 // NPM modules
-var protocol;
-if (serverConfig.httpsOptions) {
-	protocol = require('https');
-} else {
-	protocol = require('http');
-}
+var protocol = {};
+var protocolName = serverConfig.httpsOptions ? 'https' : 'http';
 
+protocol = require(protocolName);
 var socketIo = require('socket.io');
 
 // Project modules
@@ -40,6 +37,6 @@ var io = socketIo.listen(server);
 
 ioHandler.handle(io);	
 
-console.log('running on port -> {{port}}'.formatPV({port: serverConfig.httpPort}));
+logger.logServerAddress(protocolName, serverConfig.httpPort);
 
 // ================================================================
