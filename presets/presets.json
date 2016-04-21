@@ -88,5 +88,10 @@
 		"name": "yt1080p",
 		"command": "raspivid -t 0 -n -w 1920 -h 1080 -fps 30 -b 4500000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -thread_queue_size 512 -i - -f mp3 -thread_queue_size 512 -i pipe:1 -vcodec copy -ar 44100 -f flv",
 		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
+	},
+	"lattest 720p": {
+		"name": "lattest 720p 500k",
+		"command": "raspivid -t 0 -n -w 1280 -h 720 -fps 15 -b 5000000 -vf -rot 0 -o - | ffmpeg -f h264 -r 15 -i - -f mp3 -i pipe:1 -c:v libx264 -preset ultrafast -tune zerolatency -coder 1 -refs 1 -ar 44100 -ac 1 -b:v 1000k -maxrate 1000k -bufsize 1000k -f flv",
+		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
 	}
 }
