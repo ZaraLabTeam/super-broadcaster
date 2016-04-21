@@ -25,6 +25,9 @@
 		socket.on('disconnect', printMessage.bind(
 			null, messageBox, false, 'Disconnected', 'danger'));
 
+		socket.on('reconnect', printMessage.bind(
+			null, messageBox, false, 'Reconnected', 'success'));
+
 		printMessage(messageBox, false, 'Connected', 'success');
 	};
 

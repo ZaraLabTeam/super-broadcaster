@@ -30,14 +30,8 @@ if (process.argv[2] === 'auto') {
 }
 
 // To ensure clean exit send the 'SIGTERM' code whe terminating node externally
-process.on('SIGTERM', function() {
-	logger.log('Exiting nodejs', 'danger');
-	processes.forEach(function(prc) {
-		prc.kill();
-	});
-
-	process.exit();
-});
+process.on('SIGTERM', abort);
+process.on('SIGINT', abort);
 
 /**
  * Fires up a video stream from the shell with the last set configutation
@@ -170,6 +164,15 @@ function startCommands(commands) {
 	logger.log('Spawned Processes: ' + processes.length, 'warning');
 }
 
+function abort() {
+	logger.log('Exiting nodejs', 'danger');
+	processes.forEach(function(prc) {
+		prc.kill();
+	});
+
+	process.exit();
+}
+
 // ================ EXPORTS =====================================
 
 module.exports = {
@@ -208,14 +211,15 @@ function logStreamData(childProcess) {
 		logger.log(data);
 	};
 
-
 	childProcess.stderr.setEncoding('utf8');
 	childProcess.stderr.on('data', logToGeneral);
 
 	// Todo: parameters check
 	childProcess.once('exit', function(exitCode, signal) {
-
 		logger.log('...broadcast received exit call', 'warning');
+		if (isRunning) {
+			stopPreviousBroadcast();
+		}
 	});
 }
 
