@@ -9,244 +9,29 @@
 		"command": "-f video4linux2 -i /dev/video0 -f alsa -i pulse -vcodec libx264 -preset slow -tune zerolatency -r 25 -acodec libmp3lame -ab 128k -ar 44100 -maxrate 4500k -bufsize 9000k -f flv ",
 		"output": "default"
 	},
-	"raspberry_UsbCamLow": {
-		"name": "raspberry_UsbCamLow",
-		"command": "-f video4linux2 -s qvga -i /dev/video0 -f alsa -i default:CARD=U0x46d0x825 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -async 1 -acodec libmp3lame -ab 24k -ar 22050 -maxrate 750k -bufsize 5000k -f flv ",
-		"output": "default"
-	},
-	"raspberry_UsbCamMed": {
-		"name": "raspberry_UsbCamMed",
-		"command": "-f video4linux2 -i /dev/video0 -f alsa -i default:CARD=U0x46d0x825 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -async 1 -acodec libmp3lame -ab 128k -ar 44100 -maxrate 1000k -bufsize 5000k -f flv ",
-		"output": "default"
-	},
-	"raspberry_UsbCamMed_25fps": {
-		"name": "raspberry_UsbCamMed_25fps",
-		"command": "-f video4linux2 -i /dev/video0 -f alsa -i default:CARD=U0x46d0x825 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -async 1 -acodec libmp3lame -ab 128k -ar 44100 -maxrate 1000k -bufsize 5000k -f flv ",
-		"output": "default"
-	},
-	"raspberry_UsbCamHigh": {
-		"name": "raspberry_UsbCamHigh",
-		"command": "-f video4linux2 -s hd720 -i /dev/video0 -f alsa -i default:CARD=U0x46d0x825 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -async 1 -acodec libmp3lame -ab 128k -ar 44100 -maxrate 4000k -bufsize 8000k -f flv ",
-		"output": "default"
-	},
-	"raspberry_UsbCamHigh_25fps": {
-		"name": "raspberry_UsbCamHigh_25fps",
-		"command": "-f video4linux2 -s hd720 -i /dev/video0 -f alsa -i default:CARD=U0x46d0x825 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -async 1 -acodec libmp3lame -ab 128k -ar 44100 -maxrate 4000k -bufsize 8000k -f flv ",
-		"output": "default"
-	},
-	"testNoSound": {
-		"name": "testNoSound",
-		"command": "-f video4linux2 -i /dev/video0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -maxrate 750k -bufsize 5000k -f rtp ",
-		"output": "rtp://127.0.0.1:8004/test"
-	},
 	"default264Speakers": {
 		"name": "default264Speakers",
 		"command": "-f video4linux2 -s vga -i /dev/video0 -f pulse -i alsa_output.0.analog-stereo.monitor -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -acodec libmp3lame -ab 128k -ar 44100 -maxrate 1500k -bufsize 3000k -f flv ",
 		"output": "default"
-	},
-	"default264PipeOut": {
-		"name": "default264PipeOut",
-		"command": "-s 640x480 -f video4linux2 -i /dev/video0 -f mpeg1video -b 800k -r 30 ",
-		"output": "pipe:1"
-	},
-	"testMp3": {
-		"name": "testMp3",
-		"command": "-f mp3 -i pipe:0 -ar 44100 ",
-		"output": "recordings/testMp3.mp3"
 	},
 	"testVideoAndMp3PipeIn": {
 		"name": "testVideoAndMp3PipeIn",
 		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -maxrate 1000k -bufsize 2000k -f flv ",
 		"output": "audioVideo.flv"
 	},
-	"testVideoAndMp3PipeInFFlags": {
-		"name": "testVideoAndMp3PipeInFFlags",
-		"command": "-f video4linux2 -fflags nobuffer -s vga -i /dev/video0 -f mp3 -itsoffset -4.0 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -maxrate 1000k -bufsize 2000k -f flv ",
-		"output": "audioVideo.flv"
-	},
-	"ytPipeInMp3": {
-		"name": "ytPipeInMp3",
-		"command": "-f video4linux2 -fflags nobuffer -s vga -i /dev/video0 -f mp3 -itsoffset -9.5 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -maxrate 1000k -bufsize 2000k -f flv ",
-		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
-	},
-	"videoTest": {
-		"name": "videoTest",
-		"command": "-s 640x480 -f video4linux2 -i /dev/video0 -f mp3 -i pipe:0 -async 1 -f flv ",
-		"output": "videoTest.flv"
-	},
-	"testVideoAndMp3PipeInAndFilter": {
-		"name": "testVideoAndMp3PipeInAndFilter",
-		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 1000k -bufsize 2000k -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
-		"output": "recordings/audioVideo.flv"
-	},
 	"testVideoAndMp3PipeInWithOffset": {
 		"name": "testVideoAndMp3PipeInWithOffset",
 		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -itsoffset -3.5 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 1000k -bufsize 2000k -f flv ",
 		"output": "recordings/audioVideo.flv"
 	},
-	"testVideoAndMp3PipeInAndFilter2": {
-		"name": "testVideoAndMp3PipeInAndFilter2",
-		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -itsoffset -2.15 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 1000k -bufsize 2000k -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
-		"output": "recordings/audioVideo.flv"
-	},
-	"AlmostInSyncASUS": {
-		"name": "AlmostInSyncASUS",
-		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 1000k -bufsize 2000k -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
-		"output": "recordings/audioVideo.flv"
-	},
-	"AlmostInSyncASUS2": {
-		"name": "AlmostInSyncASUS2",
-		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -itsoffset -2.15 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -ar 44100 -maxrate 1000k -bufsize 2000k -f flv ",
-		"output": "recordings/audioVideo.flv"
-	},
-	"AlmostInSyncASUSyt": {
-		"name": "AlmostInSyncASUSyt",
-		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -itsoffset -1.50 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -ar 44100 -maxrate 1000k -bufsize 2000k -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
+	"Rpi Generic Camera": {
+		"name": "Rpi Generic Camera",
+		"command": "-f video4linux2 -i /dev/video0 -f alsa -i default:CARD=U0x46d0x825 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -async 1 -acodec libmp3lame -ab 128k -ar 44100 -maxrate 1000k -bufsize 5000k -f flv ",
 		"output": "default"
-	},
-	"AlmostInSyncASUSaltEncoder": {
-		"name": "AlmostInSyncASUSaltEncoder",
-		"command": "-f video4linux2 -s vga -i /dev/video0 -f mp3 -itsoffset -2.15 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -ar 44100 -maxrate 1000k -bufsize 2000k -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
-		"output": "recordings/audioVideo.flv"
-	},
-	"altFormat": {
-		"name": "altFormat",
-		"command": "-f video4linux2 -i /dev/video0 -f mp3 -itsoffset -2.15 -i pipe:0 -c:v libvpx -b:v 6000k -qmin 10 -qmax 42 -maxrate 500k -bufsize 1500k -threads 8 -vf scale=-1:720 -ar 44100 -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f webm ",
-		"output": "recordings/audioVideo.webm"
-	},
-	"youtube240p": {
-		"name": "youtube240p",
-		"command": "-f video4linux2 -s 426x240 -i /dev/video0 -f mp3 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 500k -bufsize 500k; -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
-		"output": "default"
-	},
-	"youtube360p": {
-		"name": "youtube360p",
-		"command": "-f video4linux2 -s 640x360 -i /dev/video0 -f mp3 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 800k -bufsize 800k; -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
-		"output": "default"
-	},
-	"youtube480p": {
-		"name": "youtube480p",
-		"command": "-f video4linux2 -s 854x480 -i /dev/video0 -f mp3 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 1200k -bufsize 1200k; -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
-		"output": "default"
-	},
-	"youtube720p": {
-		"name": "youtube720p",
-		"command": "-f video4linux2 -s 1280x720 -i /dev/video0 -f mp3 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 2600k -bufsize 2600k; -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
-		"output": "default"
-	},
-	"youtube1080p": {
-		"name": "youtube1080p",
-		"command": "-f video4linux2 -s 1920x1080 -i /dev/video0 -f mp3 -i pipe:0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 4500k -bufsize 9000k; -filter_complex asyncts=first_pts=0:compensate=1:min_delta=0 -f flv ",
-		"output": "default"
-	},
-	"testPipePipe": {
-		"name": "testPipePipe",
-		"command": "-f video4linux2 -s 640x360 -i /dev/video0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 800k -bufsize 800k | ffmpeg -f flv -i - -f flv ",
-		"output": "test.flv"
-	},
-	"pipeRaspiToFF": {
-		"name": "pipeRaspiToFF",
-		"command": "-f h264 -re -s 1280x720 -i - -vcodec libx264 -preset ultrafast -tune zerolatency -r 30 -maxrate 800k -bufsize 800k ",
-		"output": "test.mp4"
-	},
-	"pipeFFToFF": {
-		"name": "pipeFFToFF",
-		"rPiConfig": "-f video4linux2 -i /dev/video0 -",
-		"command": "-re -i pipe: -vcodec libx264 -preset ultrafast -tune zerolatency -maxrate 800k -bufsize 800k ",
-		"output": "test.mp4"
-	},
-	"pipeAVToFF": {
-		"name": "pipeAVToFF",
-		"rPiConfig": "-f video4linux2 -i /dev/video0 -y pipe:",
-		"command": "-re -f video4linux2 -i - ",
-		"output": "test.mp4"
-	},
-	"pipeAVToFFexec": {
-		"name": "pipeAVToFFexec",
-		"command": "avconv -f video4linux2 -i /dev/video0 -vcodec libx264 -f flv - | ffmpeg -i - recordings/test.flv"
-	},
-	"pipeAVToFFexecPIPE": {
-		"name": "pipeAVToFFexecPIPE",
-		"command": "avconv -f video4linux2 -i /dev/video0 -vcodec libx264 -f flv - | ffmpeg -f flv -i - recordings/test.flv"
-	},
-	"pipeFFToFFexec": {
-		"name": "pipeFFToFFexec",
-		"command": "ffmpeg -f video4linux2 -i /dev/video0 -vcodec libx264 -f flv - | ffmpeg -f flv -i - -f mp3 -i pipe:1 -ar 44100 recordings/test.flv"
-	},
-	"pipeFFToFFexecAdvanced": {
-		"name": "pipeFFToFFexecAdvanced",
-		"command": "ffmpeg -f v4l2 -i /dev/video0 -vcodec libx264 -preset ultrafast -tune zerolatency -r 15 -maxrate 500k -bufsize 1000k -f flv - | ffmpeg -f flv -re -i - -f mp3 -i pipe:1 -ar 44100 recordings/test.flv"
-	},
-	"pipeFFToFFexecAdvanced2": {
-		"name": "pipeFFToFFexecAdvanced2",
-		"command": "ffmpeg -f v4l2 -i /dev/video0 -vcodec libx264 -preset ultrafast -tune zerolatency -maxrate 500k -bufsize 500k -f flv - | ffmpeg -f flv -itsoffset 1.45 -i - -f mp3 -i pipe:1 -ar 44100 recordings/test.flv"
 	},
 	"synced": {
 		"name": "synced",
 		"command": "ffmpeg -f v4l2 -itsoffset 1.55 -i /dev/video0 -f mp3 -i pipe:1 -ar 44100 -f flv",
-		"output": "test"
-	},
-	"newTest": {
-		"name": "newTest",
-		"command": "ffmpeg -f video4linux2 -i /dev/video0 -f alsa -i pulse -vcodec libx264 -preset ultrafast -tune zerolatency -r 25 -async 1 -acodec libmp3lame -ab 24k -ar 22050 -maxrate 750k -bufsize 5000k -f flv recordings/test.flv",
-		"output": "default"
-	},
-	"raspiToFFPipe": {
-		"name": "raspiToFFPipe",
-		"command": "raspivid -t -1 -w 960 -h 540 -fps 25 -b 500000 -vf -rot 135 -o - | ffmpeg -f h264 -i - -f mp3 -i pipe:1 -ar 44100 -f flv test.flv"
-	},
-	"raspiToFFPipeNoAudio": {
-		"name": "raspiToFFPipeNoAudio",
-		"command": "raspivid -t 0 -w 1280 -h 720 -vf -rot 270 -o - | ffmpeg -f h264 -i - recordings/test.flv"
-	},
-	"raspiToFFPipe2": {
-		"name": "raspiToFFPipe2",
-		"command": "raspivid -t 0 -w 1280 -h 720 -vf -rot 270 -o - | ffmpeg -f h264 -i - -f mp3 -i pipe:1 -ar 44100 -f flv test.flv"
-	},
-	"raspiToFFPipe3": {
-		"name": "raspiToFFPipe3",
-		"command": "raspivid -t 0 -w 1280 -h 720 -vf -rot 270 -o - | ffmpeg -f h264 -i - -f mp3 -i pipe:1 -vcodec libx264 -preset ultrafast -tune zerolatency -maxrate 1000k -bufsize 1000k -ar 44100 -f flv recordings/test.flv"
-	},
-	"raspiToFFPipeYT": {
-		"name": "raspiToFFPipeYT",
-		"command": "raspivid -n -t 0 -w 1280 -h 720 -b 1000000 -vf -rot 270 -o - | ffmpeg -f h264 -re -i - -f mp3 -i pipe:1 -vcodec libx264 -preset ultrafast -tune zerolatency -maxrate 1000k -bufsize 1000k -ar 44100 -f flv rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
-	},
-	"raspiToFFPipeYT2": {
-		"name": "raspiToFFPipeYT2",
-		"command": "raspivid -n -t 0 -w 854 -h 480 -fps 30 -b 1000000 -vf -rot 270 -o - | ffmpeg -f h264 -i - -f mp3 -i pipe:1 -vcodec libx264 -preset ultrafast -r 30 -maxrate 1000k -bufsize 1000k -ar 44100 -f flv rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
-	},
-	"raspiToFFPipeYT3": {
-		"name": "raspiToFFPipeYT3",
-		"command": "raspivid -n -t 0 -w 854 -h 480 -fps 30 -b 900000 -vf -rot 270 -o - | ffmpeg -f h264 -i - -f mp3 -i pipe:1 -vcodec copy -ar 44100 -f flv rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
-	},
-	"raspiToFFPipeUDP": {
-		"name": "raspiToFFPipeUDP",
-		"command": "raspivid -n -t 0 -w 854 -h 480 -fps 30 -b 900000 -vf -rot 270 -o - | ffmpeg -re -f h264 -i - -f mp3 -i pipe:1 -vcodec libx264 -ar 44100 -f mpegts udp://192.168.0.28:8020"
-	},
-	"raspiToFFPipeTCP": {
-		"name": "raspiToFFPipeTCP",
-		"command": "raspivid -n -t 0 -w 854 -h 480 -fps 30 -b 900000 -vf -rot 270 -o - | ffmpeg -re -f h264 -i - -f mp3 -i pipe:1 -vcodec copy -ar 44100 -f mpegts tcp://192.168.0.28:8021?listen"
-	},
-	"raspiToFFPipeToFile": {
-		"name": "raspiToFFPipeToFile",
-		"command": "raspivid -n -t 0 -w 854 -h 480 -fps 30 -b 900000 -vf -rot 270 -o - | ffmpeg -re -f h264 -i - -f mp3 -i pipe:1 -vcodec copy -ar 44100 -f flv recordings/test.flv"
-	},
-	"raspiToFFPipeToFile2": {
-		"name": "raspiToFFPipeToFile2",
-		"command": "raspivid -t 0 -n -w 1280 -h 720 -fps 30 -b 900000 -vf -rot 0 -o - | ffmpeg -f h264 -i - -f mp3 -itsoffset 0.8 -i pipe:1 -vcodec copy -ar 44100 -f flv",
-		"output": "test"
-	},
-	"raspiToFFPipeToFileLatest": {
-		"name": "raspiToFFPipeToFileLatest",
-		"command": "raspivid -t 0 -n -w 854 -h 480 -fps 30 -b 900000 -vf -rot 0 -o - | ffmpeg -vsync cfr -fflags nobuffer -f h264 -i - -f mp3 -fflags nobuffer -analyzeduration 0 -i pipe:1 -vcodec copy -ar 44100 -f flv recordings/test.flv"
-	},
-	"raspiToFFPipeToLive": {
-		"name": "raspiToFFPipeToLive",
-		"command": "raspivid -t 0 -w 1280 -h 720 -fps 30 -b 900000 -vf -rot 0 -o - | ffmpeg -f h264 -i - -f mp3 -itsoffset 0.8 -i pipe:1 -vcodec copy -ar 44100 -f flv rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
-	},
-	"raspiToFFPipeToFile3": {
-		"name": "raspiToFFPipeToFile3",
-		"command": "raspivid -t 0 -n -w 1280 -h 720 -fps 30 -b 900000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -i - -f mp3 -itsoffset -0.75 -i pipe:1 -vcodec copy -ar 44100 -f flv",
 		"output": "test"
 	},
 	"raspiToFFPipeToFileMayStana": {
@@ -259,29 +44,9 @@
 		"command": "raspivid -t 0 -n -w 1280 -h 720 -fps 30 -b 900000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -i - -f mp3 -itsoffset -0.2 -i pipe:1 -vcodec copy -ar 44100 -f flv",
 		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
 	},
-	"yetAnotherTest": {
-		"name": "yetAnotherTest",
-		"command": "raspivid -t 0 -n -w 854 -h 480 -fps 30 -b 550000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -i - -f mp3 -i pipe:1 -vcodec copy -ar 44100 -f flv",
-		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
-	},
 	"10+ min synced": {
 		"name": "10+ min synced",
 		"command": "raspivid -t 0 -n -w 854 -h 480 -fps 30 -b 550000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -i - -f mp3 -i pipe:1 -vcodec copy -ar 44100 -f flv",
-		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
-	},
-	"synced2": {
-		"name": "synced2",
-		"command": "avconv -f video4linux2 -s vga -r 30 -i /dev/video0 -f mp3 -i pipe:1 -vcodec libx264 -preset ultrafast -tune zerolatency -r 30 -ar 44100 -ab 128k -ar 44100 -maxrate 1000k -bufsize 1000k -f flv",
-		"output": "test"
-	},
-	"lattest": {
-		"name": "lattest",
-		"command": "raspivid -t 0 -n -w 854 -h 480 -fps 30 -b 550000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -thread_queue_size 512 -i - -f mp3 -thread_queue_size 512 -i pipe:1 -vcodec copy -ar 44100 -f flv",
-		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
-	},
-	"lattestHQ": {
-		"name": "lattestHQ",
-		"command": "raspivid -t 0 -n -w 1920 -h 1080 -fps 30 -b 4500000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -thread_queue_size 512 -i - -f mp3 -thread_queue_size 512 -i pipe:1 -vcodec copy -ar 44100 -f flv",
 		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
 	},
 	"Generic Local Test (No Audio)": {
@@ -299,34 +64,29 @@
 		"command": "avconv -f video4linux2 -i /dev/video0 -r 25 -g 50 -threads 0 -vcodec libx264 -preset slow -tune zerolatency -pix_fmt yuv420p -maxrate 500k -bufsize 500k -f flv - | ffmpeg -f flv -thread_queue_size 1024 -i - -f mp3 -thread_queue_size 1024 -i pipe:1 -vcodec copy -ar 44100 -f flv",
 		"output": "test"
 	},
-	"lattest 720p": {
-		"name": "lattest 720p",
-		"command": "raspivid -t 0 -n -w 1280 -h 720 -fps 30 -b 2000000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -thread_queue_size 512 -i - -f mp3 -thread_queue_size 512 -i pipe:1 -vcodec copy -ar 44100 -f flv",
+	"yt240p": {
+		"name": "yt240p",
+		"command": "raspivid -t 0 -n -w 426 -h 240 -fps 30 -b 500000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -thread_queue_size 512 -i - -f mp3 -thread_queue_size 512 -i pipe:1 -vcodec copy -ar 44100 -f flv",
 		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
 	},
-	"lattest 1080p": {
-		"name": "lattest 1080p",
-		"command": "raspivid -t 0 -n -w 1920 -h 1080 -fps 30 -b 4000000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -thread_queue_size 512 -i - -f mp3 -thread_queue_size 512 -i pipe:1 -vcodec copy -ar 44100 -f flv",
+	"yt360p": {
+		"name": "yt360p",
+		"command": "raspivid -t 0 -n -w 640 -h 360 -fps 30 -b 800000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -thread_queue_size 512 -i - -f mp3 -thread_queue_size 512 -i pipe:1 -vcodec copy -ar 44100 -f flv",
 		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
 	},
-	"test timestamps": {
-		"name": "test timestamps",
-		"command": "raspivid -t 0 -n -w 1920 -h 1080 -fps 30 -b 2500000 -rot 180 -o - | ffmpeg -framerate 30 -f h264 -thread_queue_size 1024 -i - -f mp3 -thread_queue_size 1024 -i pipe:1 -vcodec copy -ar 44100 -f flv",
-		"output": "rtmp://localhost:8030/live"
+	"yt480p": {
+		"name": "yt480p",
+		"command": "raspivid -t 0 -n -w 854 -h 480 -fps 30 -b 1200000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -thread_queue_size 512 -i - -f mp3 -thread_queue_size 512 -i pipe:1 -vcodec copy -ar 44100 -f flv",
+		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
 	},
-	"Test Video Window": {
-		"name": "Test Video Window",
-		"command": "ffmpeg -f video4linux2 -i /dev/video0 -r 25 -g 50 -threads 0 -vcodec libx264 -preset ultrafast -tune zerolatency -pix_fmt yuv420p -maxrate 500k -bufsize 500k -f flv",
-		"output": "rtmp://localhost:8030/live"
+	"yt720p": {
+		"name": "yt720p",
+		"command": "raspivid -t 0 -n -w 1280 -h 720 -fps 30 -b 2500000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -thread_queue_size 512 -i - -f mp3 -thread_queue_size 512 -i pipe:1 -vcodec copy -ar 44100 -f flv",
+		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
 	},
-	"Test Video Window (No Sound)": {
-		"name": "Test Video Window (No Sound)",
-		"command": "ffmpeg -f video4linux2 -i /dev/video0 -r 25 -g 50 -threads 0 -vcodec libx264 -preset ultrafast -tune zerolatency -pix_fmt yuv420p -maxrate 500k -bufsize 500k -f flv",
-		"output": "http://localhost:8030/feed1.ffm"
-	},
-	"Test Video Window (With Sound) 2": {
-		"name": "Test Video Window (With Sound) 2",
-		"command": "ffmpeg -f video4linux2 -i /dev/video0 -c:v libx264 -preset ultrafast -maxrate 1000k -bufsize 1000k",
-		"output": "pipe:2 http://localhost:8030/live.ffm"
+	"yt1080p": {
+		"name": "yt1080p",
+		"command": "raspivid -t 0 -n -w 1920 -h 1080 -fps 30 -b 4500000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -thread_queue_size 512 -i - -f mp3 -thread_queue_size 512 -i pipe:1 -vcodec copy -ar 44100 -f flv",
+		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
 	}
 }

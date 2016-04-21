@@ -24,14 +24,24 @@ var BROADCAST_ENDED_MSG = '============ Broadcast Ended ============';
 var BROADCAST_ABORTED_MSG = '============ Broadcast Aborted ============';
 var CONFIGURATION_MSG = '============ Configuration ============ \n';
 
-/**
- * Fires up a video stream from the shell with the last set configutation
- */
-
+// Auto start the broadcast with the last configuration used 
 if (process.argv[2] === 'auto') {
 	broadcast();
 }
 
+// To ensure clean exit send the 'SIGTERM' code whe terminating node externally
+process.on('SIGTERM', function() {
+	logger.log('Exiting nodejs', 'danger');
+	processes.forEach(function(prc) {
+		prc.kill();
+	});
+
+	process.exit();
+});
+
+/**
+ * Fires up a video stream from the shell with the last set configutation
+ */
 function broadcast() {
 	var commands = prepareForBroadcast();
 
