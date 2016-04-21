@@ -4,7 +4,8 @@
 	<meta charset="utf-8">
 	<title>Control Panel</title>
 	<!-- VideoJs -->
-	<!-- <link href="http://vjs.zencdn.net/vjs-version/video-js.css" rel="stylesheet"> -->
+	<link rel="stylesheet" type="text/css" 
+		href="/public/js/bower_components/video.js/dist/video-js.css">
 	<link rel="stylesheet" type="text/css" href="/public/styles/style.css">
 </head>
 
@@ -60,13 +61,13 @@
 
 		<div class="container">
 	    	<!-- <video id="my-video" class="video-js" controls 
+	    	preload="auto" 
 	    		width="640" height="264" data-setup="{}">
-			    <source src="tcp://127.0.0.1:8100/test" type='video/mp4'>
-			    <source src="tcp://127.0.0.1:8100/test" type='video/flv'>
-			    <p class="vjs-no-js">
-			     	Ne bachka video js
-			    </p>
-		  	</video> -->
+	    		Sto taka ne bachkash !?
+			    <source src="http://localhost:8030/live.mpegts" type="video/mp4">
+			    <source src="http://localhost:8030/live.flv" type="application/x-mpegurl">
+			    <source src="rtsp://localhost:8031/test1.flv" type='video/flv'>
+		  	</video>  -->
 			<h3>Player</h3>
 		    <div id="canvas-container" class="shadow">
 		    	<canvas id="videoCanvas" height="400">
@@ -107,8 +108,11 @@
 	<script src="/public/js/video-preview.js"></script>
 	<script src="/public/js/audio-processing/streamMp3.js"></script>
 	<script src="/public/js/audio-stream.js"></script>
-	<!-- VideoJs -->
-	<!-- <script src="http://vjs.zencdn.net/vjs-version/video.js"></script> -->
+
+	<script src="/public/js/bower_components/video.js/dist/video.js"></script>
+	<script>
+  		videojs.options.flash.swf = "/public/js/bower_components/video.js/dist/video-js.swf";
+	</script>
 	
 </body>
 </html>

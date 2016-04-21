@@ -312,6 +312,21 @@
 	"test timestamps": {
 		"name": "test timestamps",
 		"command": "raspivid -t 0 -n -w 1920 -h 1080 -fps 30 -b 2500000 -rot 180 -o - | ffmpeg -framerate 30 -f h264 -thread_queue_size 1024 -i - -f mp3 -thread_queue_size 1024 -i pipe:1 -vcodec copy -ar 44100 -f flv",
-		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
+		"output": "rtmp://localhost:8030/live"
+	},
+	"Test Video Window": {
+		"name": "Test Video Window",
+		"command": "ffmpeg -f video4linux2 -i /dev/video0 -r 25 -g 50 -threads 0 -vcodec libx264 -preset ultrafast -tune zerolatency -pix_fmt yuv420p -maxrate 500k -bufsize 500k -f flv",
+		"output": "rtmp://localhost:8030/live"
+	},
+	"Test Video Window (No Sound)": {
+		"name": "Test Video Window (No Sound)",
+		"command": "ffmpeg -f video4linux2 -i /dev/video0 -r 25 -g 50 -threads 0 -vcodec libx264 -preset ultrafast -tune zerolatency -pix_fmt yuv420p -maxrate 500k -bufsize 500k -f flv",
+		"output": "http://localhost:8030/feed1.ffm"
+	},
+	"Test Video Window (With Sound) 2": {
+		"name": "Test Video Window (With Sound) 2",
+		"command": "ffmpeg -f video4linux2 -i /dev/video0 -c:v libx264 -preset ultrafast -maxrate 1000k -bufsize 1000k",
+		"output": "pipe:2 http://localhost:8030/live.ffm"
 	}
 }

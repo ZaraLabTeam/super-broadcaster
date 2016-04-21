@@ -22,6 +22,10 @@ var logger = require('./logging/logger');
 
 // ================ IMPLEMENTATION ==============================
 
+if (serverConfig.preStartScript) {
+	require('child_process').exec(serverConfig.preStartScript);
+}
+
 var server;
 if (serverConfig.httpsOptions) {
 	server = protocol.createServer(serverConfig.httpsOptions, httpHandler.handle);

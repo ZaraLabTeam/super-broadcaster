@@ -1,7 +1,6 @@
 // ================ DEPENDENCIES ================================
 
 // NPM Dependencies
-var terminate = require('terminate');
 var spawn = require('child_process').spawn;
 var EventEmitter = require('events').EventEmitter;
 
@@ -28,6 +27,11 @@ var CONFIGURATION_MSG = '============ Configuration ============ \n';
 /**
  * Fires up a video stream from the shell with the last set configutation
  */
+
+if (process.argv[2] === 'auto') {
+	broadcast();
+}
+
 function broadcast() {
 	var commands = prepareForBroadcast();
 
@@ -56,24 +60,12 @@ function stopPreviousBroadcast() {
 		prc.kill();
 	});
 
-	// var i = processes.length;
-	// while (i--) {
-	// 	var prc = processes[i];
-	// 	terminate(prc.pid, handleTermination);
-	// }
-
 	if (broadcastStream) {
 		logger.log(BROADCAST_ENDED_MSG, 'danger');
 	}
 
 	processes = [];
 	broadcastStream = null;
-}
-
-function handleTermination(err) {
-	if (err) {
-		logger.log('Terminate Proccess Error!', 'danger');
-	}
 }
 
 function prepareForBroadcast() {
@@ -118,7 +110,7 @@ function setOutput(output, command) {
 }
 
 function isRunning() {
-	if (broadcastStream) {
+	if (broadcastStream || processes.length) {
 		return true;
 	}
 
