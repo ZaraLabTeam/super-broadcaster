@@ -106,11 +106,15 @@ function prepareForBroadcast() {
 
 function setOutput(output, command) {
 	if (output === 'test') {
-			output = 'recordings/test-{{now}}'
-				.formatPV({now: (new Date()).getTime()});
-		}
+		output = 'recordings/test-{{now}}'
+			.formatPV({
+				now: (new Date()).getTime()
+			});
+	} else if (output === 'default') {
+		output = secret.output;
+	}
 
-		command.params.push(output);
+	command.params.push(output);
 }
 
 function isRunning() {
