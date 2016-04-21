@@ -52,6 +52,13 @@ Example preset:
 ```
 This will start and manage 2 processes: **raspivid** and **ffmpeg** and pipe the former's **data** output to the latter's input
 
+## running with `forever`
+
+To run with `forever` install `npm install -g forever` 
+Run the server normally experiment and select a preset then start the process like this
+`forever start --killSignal=SIGTERM server.js auto`
+to stop use `forever stop server.js` this way you ensure node will terminate the child processes (ffmpeg) it started (by running a cleanup scirpt and exiting)
+
 ## Resources And References Used To Create This App
 
 * [Speech To Server](https://github.com/akrennmair/speech-to-server)
