@@ -19,8 +19,17 @@ broadcaster.event.on('broadcast-started', function(broadcastStream) {
 	}
 });
 
+broadcaster.event.on('broadcast-ended', function() {
+	if (aStream && bcStream) {
+		aStream.unpipe(bcStream);
+	}
+
+	aStream = null;
+	bcStream = null;
+});
+
 function handleAudio(audioStream, meta) {
-	logger.log('Stream starting... @{{sampleRate}}Hz'.formatPV(meta), 'warning');
+	logger.log('Received Audio Stream... @{{sampleRate}}Hz'.formatPV(meta), 'warning');
 	aStream = audioStream;
 
 	if (bcStream) {

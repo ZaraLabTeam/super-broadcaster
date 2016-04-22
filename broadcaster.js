@@ -66,6 +66,7 @@ function stopPreviousBroadcast() {
 
 	if (broadcastStream) {
 		logger.log(BROADCAST_ENDED_MSG, 'danger');
+		ev.emit('broadcast-ended');
 	}
 
 	processes = [];

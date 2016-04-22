@@ -43,7 +43,7 @@ You can stream audio to the nodejs server from the webApp and then merge it with
 To use on raspberry pi with the **raspivid** camera you can pipe two or more streams together 
 using ` | ` as separator.
 Example preset:
-```
+```json
 {
 	"name": "yt1080p",
 	"command": "raspivid -t 0 -n -w 1920 -h 1080 -fps 30 -b 4500000 -vf -rot 0 -o - | ffmpeg -r 30 -f h264 -thread_queue_size 512 -i - -f mp3 -thread_queue_size 512 -i pipe:1 -vcodec copy -ar 44100 -f flv",
