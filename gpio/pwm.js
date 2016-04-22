@@ -35,6 +35,11 @@ var delayed = [];
 
 broadcaster.event.on('broadcast-started', function() {
 	resetPins();
+	if (delayed.length) {
+		delayed.forEach(function(timer) {
+			clearTimeout(timer);
+		});
+	}
 
 	logger.log('Starting lightshow!', 'success');
 	broadcastMode();
@@ -107,7 +112,7 @@ function resetPins() {
 var reset = [0, 0, 0];
 
 var zaraGreen = [0.572, 0.811, 0.15];
-var orangy = [0.913, 0.309, 0.05];
+var orangy = [0.913, 0.109, 0.05];
 var liliac = [0.913, 0.309, 0.725];
 
 function setColor(led, rgbArray) {
