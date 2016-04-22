@@ -76,8 +76,8 @@ function init() {
 }
 
 function broadcastMode() {
-	setColor(led1, zaraGreen);
-	setColor(led2, zaraGreen);
+	setColor(led1, orangy);
+	setColor(led2, orangy);
 }
 
 function standbyMode() {
