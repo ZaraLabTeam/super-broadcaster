@@ -25,46 +25,69 @@ var led2 = {
 };
 
 // Repetition interval
-var REP_INTERVAL = 4000;
+var REP_INTERVAL = 1500;
 // Number of color changes per iteration
-var COLOR_DURATION = 1000;
+var COLOR_DURATION = 500;
 
 // Store the timer ids
 var intervalId = null;
+var delayObj;
 
 broadcaster.event.on('broadcast-started', function() {
 	resetPins();
 
 	logger.log('Starting lightshow!', 'success');
-	intervalId = setInterval(lightShow, REP_INTERVAL);
+	broadcastMode();
 });
 
 broadcaster.event.on('broadcast-ended', function() {
-	clearInterval(intervalId);
-
-	// double reset
-	resetPins();
-	delay(resetPins, REP_INTERVAL);
+	if (intervalId) {
+		clearInterval(intervalId);
+	}
 	
+	if (delayObj) {
+		delayObj.cancel();
+	}
+	
+	resetPins();
+
 	logger.log('Lightshow ended', 'warning');
 });
 
 function lightShow() {	
 	delay(setColor.bind(null, led1, zaraGreen), COLOR_DURATION)
 		.delay(setColor.bind(null, led1, orangy), COLOR_DURATION)
-		.delay(setColor.bind(null, led1, liliac), COLOR_DURATION)
-		.delay(setColor.bind(null, led1, reset), COLOR_DURATION);
+		.delay(setColor.bind(null, led1, liliac), COLOR_DURATION);
 
-	
-	delay(setColor.bind(null, led2, zaraGreen), COLOR_DURATION)
-		.delay(setColor.bind(null, led2, orangy), COLOR_DURATION)
-		.delay(setColor.bind(null, led2, liliac), COLOR_DURATION)
-		.delay(setColor.bind(null, led2, reset), COLOR_DURATION); 	
+	delay(setColor.bind(null, led2, liliac), COLOR_DURATION)
+		.delay(setColor.bind(null, led2, zaraGreen), COLOR_DURATION)
+		.delay(setColor.bind(null, led2, orangy), COLOR_DURATION); 	
+}
+
+function init() {
+	intervalId = setInterval(lightShow, REP_INTERVAL);
+
+	// After the initial animation stay green
+	setTimeout(function(){
+		clearInterval(intervalId);
+
+		standbyMode();
+	}, REP_INTERVAL * 5);
+}
+
+function broadcastMode() {
+	setColor(led1, zaraGreen);
+	setColor(led2, zaraGreen);
+}
+
+function standbyMode() {
+	setColor(led1, zaraGreen);
+	setColor(led2, zaraGreen);
 }
 
 function resetPins() {
-	setColor(led1, reset);
-	setColor(led2, reset);
+	setColor(led1, orangy);
+	setColor(led2, orangy);
 }
 
 // ================================================================
@@ -104,6 +127,7 @@ function delay(fn, t) {
 			}
 		}, t);
 	}
+
 	self = {
 		delay: function(fn, t) {
 			// if already queuing things or running a timer, 
@@ -117,6 +141,7 @@ function delay(fn, t) {
 				// no queue or timer yet, so schedule the timer
 				schedule(fn, t);
 			}
+
 			return self;
 		},
 		cancel: function() {
@@ -124,9 +149,11 @@ function delay(fn, t) {
 			queue = [];
 		}
 	};
+
 	return self.delay(fn, t);
 }
 
 // ================================================================
 
 resetPins();
+init();
