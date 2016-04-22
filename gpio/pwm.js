@@ -31,7 +31,7 @@ var COLOR_DURATION = 500;
 
 // Store the timer ids
 var intervalId = null;
-var delayObj;
+var delayed = [];
 
 broadcaster.event.on('broadcast-started', function() {
 	resetPins();
@@ -44,32 +44,42 @@ broadcaster.event.on('broadcast-ended', function() {
 	if (intervalId) {
 		clearInterval(intervalId);
 	}
-	
-	if (delayObj) {
-		delayObj.cancel();
+
+	if (delayed.length) {
+		delayed.forEach(function(timer) {
+			clearTimeout(timer);
+		});
 	}
-	
+
 	resetPins();
 
 	logger.log('Lightshow ended', 'warning');
 });
 
-function lightShow() {	
-	delay(setColor.bind(null, led1, zaraGreen), COLOR_DURATION)
+function lightShow() {
+	var delay1 = delay(setColor.bind(null, led1, zaraGreen), COLOR_DURATION)
 		.delay(setColor.bind(null, led1, orangy), COLOR_DURATION)
 		.delay(setColor.bind(null, led1, liliac), COLOR_DURATION);
 
-	delay(setColor.bind(null, led2, liliac), COLOR_DURATION)
+	var delay2 = delay(setColor.bind(null, led2, liliac), COLOR_DURATION)
 		.delay(setColor.bind(null, led2, zaraGreen), COLOR_DURATION)
-		.delay(setColor.bind(null, led2, orangy), COLOR_DURATION); 	
+		.delay(setColor.bind(null, led2, orangy), COLOR_DURATION);
+
+	delayed = [delay1, delay2];
 }
 
 function init() {
 	intervalId = setInterval(lightShow, REP_INTERVAL);
 
 	// After the initial animation stay green
-	setTimeout(function(){
+	setTimeout(function() {
 		clearInterval(intervalId);
+
+		if (delayed.length) {
+			delayed.forEach(function(timer) {
+				clearTimeout(timer);
+			});
+		}
 
 		standbyMode();
 	}, REP_INTERVAL * 5);
