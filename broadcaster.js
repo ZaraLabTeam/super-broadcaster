@@ -171,6 +171,8 @@ function startCommands(commands) {
 
 function abort() {
 	logger.log('Exiting nodejs', 'danger');
+	ev.emit('broadcast-ended');
+	
 	processes.forEach(function(prc) {
 		prc.kill();
 	});
