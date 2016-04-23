@@ -98,5 +98,10 @@
 		"name": "yt720p thread queue",
 		"command": "raspivid -t 0 -n -w 1280 -h 720 -fps 30 -b 2500000 -vf -rot 0 -o - | ffmpeg -f h264 -r 30 -thread_queue_size 4096 -i - -f mp3 -thread_queue_size 4096 -i pipe:1 -filter:a aresample=44100 -vcodec copy -f flv",
 		"output": "rtmp://a.rtmp.youtube.com/live2/8ehu-r120-04ac-9h04"
+	},
+	"yt logitech": {
+		"name": "yt logitech",
+		"command": "avconv -f video4linux2 -i /dev/video0 -r 25 -g 50 -threads 0 -vcodec libx264 -preset ultrafast -tune zerolatency -pix_fmt yuv420p -maxrate 2000k -bufsize 2000k -f flv - | ffmpeg -f flv -thread_queue_size 1024 -i - -f mp3 -thread_queue_size 1024 -i pipe:1 -vcodec copy -ar 44100 -f flv",
+		"output": "default"
 	}
 }
