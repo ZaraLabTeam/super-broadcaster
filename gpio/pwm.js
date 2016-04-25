@@ -25,10 +25,12 @@ var led2 = {
 	BLUE: 24
 };
 
-// Repetition interval
-var REP_INTERVAL = 1500;
-// Number of color changes per iteration
-var COLOR_DURATION = 500;
+
+var COLOR_DURATION = 50; // Single color duration
+var COLOR_CHANGES = 50; // Color changes per interval
+var COLOR_STEP = 0.02;
+var REP_INTERVAL = COLOR_DURATION * COLOR_CHANGES; // Repetition interval
+
 
 // Store the timer ids
 var intervalId = null;
@@ -59,13 +61,35 @@ broadcaster.event.on('broadcast-ended', function() {
 });
 
 function lightShow() {
-	var delay1 = delay(setColor.bind(null, led1, colors.zaraGreen), COLOR_DURATION)
-		.delay(setColor.bind(null, led1, colors.orangy), COLOR_DURATION)
-		.delay(setColor.bind(null, led1, colors.liliac), COLOR_DURATION);
+	var white = colors.white,
+		black = reset;
 
-	var delay2 = delay(setColor.bind(null, led2, colors.liliac), COLOR_DURATION)
-		.delay(setColor.bind(null, led2, colors.zaraGreen), COLOR_DURATION)
-		.delay(setColor.bind(null, led2, colors.orangy), COLOR_DURATION);
+	var delay1 = delay(setColor.bind(null, led1, white), COLOR_DURATION),
+		delay2 = delay(setColor.bind(null, led2, black), COLOR_DURATION);
+
+	for (var i = 1; i <= COLOR_CHANGES; i++) {
+		delay1
+			.delay(setColor.bind(null, led1, {
+				r: white.r - COLOR_STEP * i,
+				g: white.g - COLOR_STEP * i,
+				b: white.b - COLOR_STEP * i
+			}), COLOR_DURATION);
+
+		delay2
+			.delay(setColor.bind(null, led2, {
+				r: black.r + COLOR_STEP * i,
+				g: black.g + COLOR_STEP * i,
+				b: black.b + COLOR_STEP * i
+			}), COLOR_DURATION);
+	}
+
+	// delay1 = delay(setColor.bind(null, led1, colors.zaraGreen), COLOR_DURATION)
+	// 	.delay(setColor.bind(null, led1, colors.orangy), COLOR_DURATION)
+	// 	.delay(setColor.bind(null, led1, colors.liliac), COLOR_DURATION);
+
+	// delay2 = delay(setColor.bind(null, led2, colors.liliac), COLOR_DURATION)
+	// 	.delay(setColor.bind(null, led2, colors.zaraGreen), COLOR_DURATION)
+	// 	.delay(setColor.bind(null, led2, colors.orangy), COLOR_DURATION);
 
 	delayed = [delay1, delay2];
 }
@@ -115,7 +139,7 @@ function setColor(led, color) {
 		piblaster.setPwm(led.BLUE, color.b);
 	} catch (e) {
 		logger.log(e.toString(), 'danger');
-	}	
+	}
 }
 
 // ================================================================
@@ -161,6 +185,12 @@ function delay(fn, t) {
 	};
 
 	return self.delay(fn, t);
+}
+
+function clone(obj) {
+	var cloned = JSON.parse(JSON.stringify(obj));
+
+	return cloned;
 }
 
 // ================================================================
