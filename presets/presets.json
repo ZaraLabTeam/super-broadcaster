@@ -101,7 +101,7 @@
 	},
 	"yt logitech": {
 		"name": "yt logitech",
-		"command": "avconv -f video4linux2 -i /dev/video1 -r 25 -g 50 -threads 0 -vcodec libx264 -preset slow -tune zerolatency -pix_fmt yuv420p -maxrate 500k -bufsize 500k -f flv - | ffmpeg -f flv -thread_queue_size 1024 -i - -f mp3 -thread_queue_size 1024 -i pipe:1 -vcodec copy -ar 44100 -f flv",
+		"command": "avconv -f video4linux2 -i /dev/video0 -r 25 -g 50 -threads 0 -vcodec libx264 -preset ultrafast -tune zerolatency -pix_fmt yuv420p -maxrate 2000k -bufsize 2000k -f flv - | ffmpeg -f flv -thread_queue_size 1024 -i - -f mp3 -thread_queue_size 1024 -i pipe:1 -vcodec copy -ar 44100 -f flv",
 		"output": "default"
 	}
 }

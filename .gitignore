@@ -8,6 +8,9 @@ config/server.key
 # audio/video recordings
 recordings
 
+# pi-blaster for the raspberry pi
+pi-blaster
+
 # temp files
 presets/active.json
 
