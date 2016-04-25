@@ -33,7 +33,7 @@ LEDS.forEach(function(led) {
 	Object.freeze(led);
 });
 
-var COLOR_DURATION = 50; // Single color duration
+var COLOR_DURATION = 60; // Single color duration
 var COLOR_CHANGES = 50; // Color changes per interval
 var COLOR_STEP = 0.02;
 var REP_INTERVAL = COLOR_DURATION * COLOR_CHANGES; // Repetition interval
@@ -68,21 +68,10 @@ broadcaster.event.on('broadcast-ended', function() {
 	logger.log('Lightshow ended', 'warning');
 });
 
-function lightShow() {
-	colorTransition(5, colors['zaraGreen'], colors['Some Cherveno']);
-}
-
 function init() {
-	intervalId = setInterval(lightShow, REP_INTERVAL);
-
-	// After the initial animation stay green
-	setTimeout(function() {
-		resetPins();
-
-		standbyMode();
-	}, REP_INTERVAL * 5);
+	colorTransition(5, colors['zaraGreen'], colors['Some Cherveno']);
+	standbyMode();
 }
-
 
 function broadcastMode() {
 	setColor(led1, colors.orangy);
@@ -154,7 +143,10 @@ function colorTransition(iterations, color1, color2) {
 		var delay1 = delay(setColor.bind(null, led1, clone(col1)), COLOR_DURATION),
 			delay2 = delay(setColor.bind(null, led2, clone(col2)), COLOR_DURATION);
 
+			var j = 0;
+
 		while (true) {
+			j++;
 			var transitions = [];
 
 			transitions.push(transitionChannel(col1, color2, 'r'));
@@ -168,6 +160,8 @@ function colorTransition(iterations, color1, color2) {
 			delay2.delay(setColor.bind(null, led2, clone(col2)), COLOR_DURATION);
 
 			delayed = [delay1, delay2];
+
+			console.log(j);
 
 			if (transitions.every(function(ch) {
 				return ch;
