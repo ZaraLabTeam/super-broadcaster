@@ -74,6 +74,8 @@ function handleIO(io) {
 			//Gpio events
 			if (gpio) {
 				socket.on('gpio-setColor', gpio.setColor);
+
+				socket.on('gpio-saveColor', gpio.saveColor);
 			}
 			
 			function disconnect() {

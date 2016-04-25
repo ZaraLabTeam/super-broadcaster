@@ -2,6 +2,7 @@
 
 // NPM Modules
 var piblaster = require('pi-blaster.js');
+var fs = require('fs');
 
 // Project Modules
 var broadcaster = require('../broadcaster');
@@ -37,6 +38,7 @@ var COLOR_CHANGES = 50; // Color changes per interval
 var COLOR_STEP = 0.02;
 var REP_INTERVAL = COLOR_DURATION * COLOR_CHANGES; // Repetition interval
 
+var COLORS_SAVE_PATH = __dirname + '/colors.json';
 
 // Store the timer ids
 var intervalId = null;
@@ -148,6 +150,22 @@ function setColor(led, color) {
 	console.log('{{name}}: {{r}}, {{g}}, {{b}}'.formatPV(color));
 }
 
+function saveColor(color) {
+	console.log('Save Color');
+	if (validateColor(color)) {
+		colors[color.name] = color;
+
+		fs.writeFile(COLORS_SAVE_PATH, stringify(colors), null, function(err) {
+			if (err) {
+				logger.log('Error saving the colors', 'danger');
+				logger.log(err.toString(), 'danger');
+			} else {
+				logger.log('New color saved to colors', 'success');
+			}
+		});
+	}
+}
+
 // ================================================================
 
 // ================ HELPERS =============================
@@ -199,8 +217,17 @@ function clone(obj) {
 	return cloned;
 }
 
+function stringify(json) {
+	var str = JSON.stringify(json, null, '\t');
+	return str;
+}
+
 function isNumber(x) {
 	return !isNaN(x);
+}
+
+function validateColor(color) {
+	return true;
 }
 
 // ================================================================
@@ -211,5 +238,6 @@ init();
 module.exports = {
 	setColor: setColor,
 	ledsCount: LEDS.count,
+	saveColor: saveColor,
 	colors: colors
 };

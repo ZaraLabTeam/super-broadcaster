@@ -17,10 +17,16 @@
 		"g": 0.309,
 		"b": 0.725
 	},
-	"white":{
+	"white": {
 		"name": "white",
 		"r": 1,
 		"g": 1,
 		"b": 1
+	},
+	"Some Cherveno": {
+		"r": "0.890",
+		"g": "0.071",
+		"b": "0.071",
+		"name": "Some Cherveno"
 	}
 }
