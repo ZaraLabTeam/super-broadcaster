@@ -6,6 +6,7 @@ var piblaster = require('pi-blaster.js');
 // Project Modules
 var broadcaster = require('../broadcaster');
 var logger = require('../logging/logger');
+var colors = require('./colors');
 
 // ================================================================
 
@@ -41,27 +42,6 @@ var reset = {
 	b: 0
 };
 
-var zaraGreen = {
-	name: 'zaraGreen',
-	r: 0.572,
-	g: 0.811,
-	b: 0.15
-};
-
-var orangy = {
-	name: 'orangy',
-	r: 0.913,
-	g: 0.109,
-	b: 0.05
-};
-
-var liliac = {
-	name: 'liliac',
-	r: 0.913,
-	g: 0.309,
-	b: 0.725
-};
-
 broadcaster.event.on('broadcast-abort', resetPins);
 
 broadcaster.event.on('broadcast-started', function() {
@@ -79,13 +59,13 @@ broadcaster.event.on('broadcast-ended', function() {
 });
 
 function lightShow() {
-	var delay1 = delay(setColor.bind(null, led1, zaraGreen), COLOR_DURATION)
-		.delay(setColor.bind(null, led1, orangy), COLOR_DURATION)
-		.delay(setColor.bind(null, led1, liliac), COLOR_DURATION);
+	var delay1 = delay(setColor.bind(null, led1, colors.zaraGreen), COLOR_DURATION)
+		.delay(setColor.bind(null, led1, colors.orangy), COLOR_DURATION)
+		.delay(setColor.bind(null, led1, colors.liliac), COLOR_DURATION);
 
-	var delay2 = delay(setColor.bind(null, led2, liliac), COLOR_DURATION)
-		.delay(setColor.bind(null, led2, zaraGreen), COLOR_DURATION)
-		.delay(setColor.bind(null, led2, orangy), COLOR_DURATION);
+	var delay2 = delay(setColor.bind(null, led2, colors.liliac), COLOR_DURATION)
+		.delay(setColor.bind(null, led2, colors.zaraGreen), COLOR_DURATION)
+		.delay(setColor.bind(null, led2, colors.orangy), COLOR_DURATION);
 
 	delayed = [delay1, delay2];
 }
@@ -102,13 +82,13 @@ function init() {
 }
 
 function broadcastMode() {
-	setColor(led1, orangy);
-	setColor(led2, orangy);
+	setColor(led1, colors.orangy);
+	setColor(led2, colors.orangy);
 }
 
 function standbyMode() {
-	setColor(led1, zaraGreen);
-	setColor(led2, zaraGreen);
+	setColor(led1, colors.zaraGreen);
+	setColor(led2, colors.zaraGreen);
 }
 
 function resetPins() {
