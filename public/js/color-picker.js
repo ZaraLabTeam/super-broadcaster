@@ -2,42 +2,32 @@
 	'use strict';
 
 	window.InitColorPicker = function(socket) {
-		var red = document.getElementById('slide-red'),
-			green = document.getElementById('slide-green'),
-			blue = document.getElementById('slide-blue'),
-			sliders = document.getElementById('sliders'),
+		var picker = document.getElementById('color-picker'),
 			checkboxes = document.querySelectorAll('#checkboxes input[type="checkbox"]');
 
-		sliders.addEventListener('input', function() {
-			var leds = getSelected(checkboxes);
-			if (leds.length) {
-				leds.forEach(function(led, index) {
-					console.log(index, {
-						r: red.value,
-						g: green.value,
-						b: blue.value
-					});
-					socket.emit('gpio-setColor', index, {
-						r: red.value,
-						g: green.value,
-						b: blue.value
-					});
-				});
+		picker.addEventListener('input', function(evt) {
+			if (evt.target.nodeName !== 'INPUT') {
+				return;
 			}
+
+			var ledNumber = 0;
+			if (evt.target.id.indexOf('led2') != -1) {
+				ledNumber = 1;
+			}
+
+			console.log(ledNumber, hexToRgb(evt.target.value));
+
+			socket.emit('gpio-setColor', ledNumber, hexToRgb(evt.target.value));
+
 		});
 
-		function getSelected(checkboxElements) {
-			var selected = [],
-				length = checkboxElements.length;
-
-			for (var i = 0; i < length; i++) {
-				var element = checkboxElements[i];
-				if (element.checked) {
-					selected.push(element);
-				}
-			}
-
-			return selected;
+		function hexToRgb(hex) {
+			var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+			return result ? {
+				r: parseInt(result[1], 16) / 255,
+				g: parseInt(result[2], 16) / 255,
+				b: parseInt(result[3], 16) / 255
+			} : null;
 		}
 	};
 
