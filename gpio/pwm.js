@@ -33,30 +33,47 @@ var COLOR_DURATION = 500;
 var intervalId = null;
 var delayed = [];
 
+// Colors
+var reset = {
+	name: 'black',
+	r: 0,
+	g: 0,
+	b: 0
+};
+
+var zaraGreen = {
+	name: 'zaraGreen',
+	r: 0.572,
+	g: 0.811,
+	b: 0.15
+};
+
+var orangy = {
+	name: 'orangy',
+	r: 0.913,
+	g: 0.109,
+	b: 0.05
+};
+
+var liliac = {
+	name: 'liliac',
+	r: 0.913,
+	g: 0.309,
+	b: 0.725
+};
+
+broadcaster.event.on('broadcast-abort', resetPins);
+
 broadcaster.event.on('broadcast-started', function() {
 	resetPins();
-	if (delayed.length) {
-		delayed.forEach(function(timer) {
-			clearTimeout(timer);
-		});
-	}
 
 	logger.log('Starting lightshow!', 'success');
 	broadcastMode();
 });
 
 broadcaster.event.on('broadcast-ended', function() {
-	if (intervalId) {
-		clearInterval(intervalId);
-	}
-
-	if (delayed.length) {
-		delayed.forEach(function(timer) {
-			clearTimeout(timer);
-		});
-	}
-
 	resetPins();
+	standbyMode();
 
 	logger.log('Lightshow ended', 'warning');
 });
@@ -78,13 +95,7 @@ function init() {
 
 	// After the initial animation stay green
 	setTimeout(function() {
-		clearInterval(intervalId);
-
-		if (delayed.length) {
-			delayed.forEach(function(timer) {
-				clearTimeout(timer);
-			});
-		}
+		resetPins();
 
 		standbyMode();
 	}, REP_INTERVAL * 5);
@@ -101,26 +112,30 @@ function standbyMode() {
 }
 
 function resetPins() {
-	setColor(led1, orangy);
-	setColor(led2, orangy);
+	if (intervalId) {
+		clearInterval(intervalId);
+	}
+
+	if (delayed.length) {
+		delayed.forEach(function(timer) {
+			timer.cancel();
+		});
+	}
+
+	setColor(led1, reset);
+	setColor(led2, reset);
 }
 
-// ================================================================
+function setColor(led, color) {
+	console.log('{{name}}: {{r}}, {{g}}, {{b}}'.formatPV(color));
 
-// ================ COLORS =============================
-
-var reset = [0, 0, 0];
-
-var zaraGreen = [0.572, 0.811, 0.15];
-var orangy = [0.913, 0.109, 0.05];
-var liliac = [0.913, 0.309, 0.725];
-
-function setColor(led, rgbArray) {
-	piblaster.setPwm(led.RED, rgbArray[0]);
-	piblaster.setPwm(led.GREEN, rgbArray[1]);
-	piblaster.setPwm(led.BLUE, rgbArray[2]);
-
-	console.log('rgb: {{0}}, {{1}}, {{2}}'.formatPV(rgbArray));
+	try {
+		piblaster.setPwm(led.RED, color.r);
+		piblaster.setPwm(led.GREEN, color.g);
+		piblaster.setPwm(led.BLUE, color.b);
+	} catch (e) {
+		logger.log(e.toString(), 'danger');
+	}	
 }
 
 // ================================================================
