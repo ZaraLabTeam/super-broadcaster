@@ -69,32 +69,7 @@ broadcaster.event.on('broadcast-ended', function() {
 });
 
 function lightShow() {
-	var col1 = clone(colors.zaraGreen),
-		col2 = clone(colors.zaraGreen);
-
-	col1.g = 0;
-	col2.g = 1;
-
-	var delay1 = delay(setColor.bind(null, led1, col1), COLOR_DURATION),
-		delay2 = delay(setColor.bind(null, led2, col2), COLOR_DURATION);
-
-	for (var i = 1; i <= COLOR_CHANGES; i++) {
-		delay1
-			.delay(setColor.bind(null, led1, {
-				r: col1.r,
-				g: col1.g + COLOR_STEP * i,
-				b: col1.b
-			}), COLOR_DURATION);
-
-		delay2
-			.delay(setColor.bind(null, led2, {
-				r: col2.r,
-				g: col2.g - COLOR_STEP * i,
-				b: col2.b
-			}), COLOR_DURATION);
-	}
-
-	delayed = [delay1, delay2];
+	colorTransition(5, colors['zaraGreen'], colors['Some Cherveno']);
 }
 
 function init() {
@@ -107,6 +82,7 @@ function init() {
 		standbyMode();
 	}, REP_INTERVAL * 5);
 }
+
 
 function broadcastMode() {
 	setColor(led1, colors.orangy);
@@ -164,6 +140,89 @@ function saveColor(color) {
 			}
 		});
 	}
+}
+
+// ================================================================
+
+// ================ ANIMATIONS =============================
+
+function colorTransition(iterations, color1, color2) {
+	var col1 = clone(color1),
+		col2 = clone(color2);
+
+	for (var i = 0; i < iterations; i++) {
+		var delay1 = delay(setColor.bind(null, led1, clone(col1)), COLOR_DURATION),
+			delay2 = delay(setColor.bind(null, led2, clone(col2)), COLOR_DURATION);
+
+		while (true) {
+			var transitions = [];
+
+			transitions.push(transitionChannel(col1, color2, 'r'));
+			transitions.push(transitionChannel(col1, color2, 'g'));
+			transitions.push(transitionChannel(col1, color2, 'b'));
+			delay1.delay(setColor.bind(null, led1, clone(col1)), COLOR_DURATION);
+
+			transitions.push(transitionChannel(col2, color1, 'r'));
+			transitions.push(transitionChannel(col2, color1, 'g'));
+			transitions.push(transitionChannel(col2, color1, 'b'));
+			delay2.delay(setColor.bind(null, led2, clone(col2)), COLOR_DURATION);
+
+			delayed = [delay1, delay2];
+
+			if (transitions.every(function(ch) {
+				return ch;
+			})) {
+				break;
+			}
+		}
+
+		var swap = clone(color1);
+		color1 = clone(color2);
+		color2 = swap;
+	}
+}
+
+function simpleTransition() {
+	var col1 = clone(colors.zaraGreen),
+		col2 = clone(colors.zaraGreen);
+
+	col1.g = 0;
+	col2.g = 1;
+
+	var delay1 = delay(setColor.bind(null, led1, col1), COLOR_DURATION),
+		delay2 = delay(setColor.bind(null, led2, col2), COLOR_DURATION);
+
+	for (var i = 1; i <= COLOR_CHANGES; i++) {
+		delay1
+			.delay(setColor.bind(null, led1, {
+				r: col1.r,
+				g: col1.g + COLOR_STEP * i,
+				b: col1.b
+			}), COLOR_DURATION);
+
+		delay2
+			.delay(setColor.bind(null, led2, {
+				r: col2.r,
+				g: col2.g - COLOR_STEP * i,
+				b: col2.b
+			}), COLOR_DURATION);
+	}
+
+	delayed = [delay1, delay2];
+}
+
+function transitionChannel(color, target, channel) {
+	if (Math.abs(color[channel] - target[channel]) > 0.02) {
+		if (color[channel] < target[channel]) {
+			color[channel] += COLOR_STEP;
+		} else {
+			color[channel] -= COLOR_STEP;
+		}
+
+		return false;
+	}
+
+	return true;
 }
 
 // ================================================================
