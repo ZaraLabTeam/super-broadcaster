@@ -81,17 +81,12 @@ label:hover {
 	color: rgba(100, 100, 100, 0.65);
 }
 
-#checkboxes, #sliders {
+#pickers {
 	list-style: none;
 }
 
-#checkboxes {
-	float: left;
-	width: 100px;
-}
-
-#sliders {
-	float:left;
+#pickers li {
+	display: inline-block;
 }
 
 .hidden {
