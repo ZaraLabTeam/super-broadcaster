@@ -1,5 +1,9 @@
 // ================ DEPENEDENCIES =============================
 
+// Configs
+var secret = require('../secret');
+var serverConfig = require('../config/server-config');
+
 // NPM modules
 var ss = require('socket.io-stream');
 
@@ -8,9 +12,11 @@ var broadcaster = require('../broadcaster');
 var audioHandler = require('../audio/audio-handler');
 var presetsManager = require('../presets/presets-manager');
 var logger = require('../logging/logger');
+var gpio = null;
+if (serverConfig.useGPIO) {
+	gpio = require('../gpio/pwm');
+}
 
-// Configs
-var secret = require('../secret');
 
 // ================================================================
 

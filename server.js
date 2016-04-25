@@ -6,7 +6,6 @@ var serverConfig = require('./config/server-config');
 var ioConfig = require('./config/io-config');
 
 // NPM modules
-var os = require('os');
 var protocol = {};
 var protocolName = serverConfig.httpsOptions ? 'https' : 'http';
 
@@ -20,9 +19,9 @@ var logger = require('./logging/logger');
 // require('./socket/socket-server');
 
 // If on rapsbery enable the gpio module
-// if (os.arch === 'arm') {
+// if (serverConfig.useGPIO) {
 	require('./gpio/pwm');
-//}
+// }
 
 // ==============================================================
 

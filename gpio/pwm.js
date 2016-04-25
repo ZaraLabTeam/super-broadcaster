@@ -25,6 +25,12 @@ var led2 = {
 	BLUE: 24
 };
 
+var LEDS = [led1, led2];
+
+// Prevent modification of the leds pins
+LEDS.forEach(function(led) {
+	Object.freeze(led);
+});
 
 var COLOR_DURATION = 50; // Single color duration
 var COLOR_CHANGES = 50; // Color changes per interval
@@ -86,14 +92,6 @@ function lightShow() {
 			}), COLOR_DURATION);
 	}
 
-	// delay1 = delay(setColor.bind(null, led1, colors.zaraGreen), COLOR_DURATION)
-	// 	.delay(setColor.bind(null, led1, colors.orangy), COLOR_DURATION)
-	// 	.delay(setColor.bind(null, led1, colors.liliac), COLOR_DURATION);
-
-	// delay2 = delay(setColor.bind(null, led2, colors.liliac), COLOR_DURATION)
-	// 	.delay(setColor.bind(null, led2, colors.zaraGreen), COLOR_DURATION)
-	// 	.delay(setColor.bind(null, led2, colors.orangy), COLOR_DURATION);
-
 	delayed = [delay1, delay2];
 }
 
@@ -134,6 +132,10 @@ function resetPins() {
 }
 
 function setColor(led, color) {
+	if (isNumber(+led)) {
+		led = LED[led];	
+	}
+
 	console.log('{{name}}: {{r}}, {{g}}, {{b}}'.formatPV(color));
 
 	try {
@@ -196,7 +198,17 @@ function clone(obj) {
 	return cloned;
 }
 
+function isNumber(x) {
+	return !isNaN(x);
+}
+
 // ================================================================
 
 resetPins();
 init();
+
+module.exports = {
+	setColor: setColor,
+	LEDS: LEDS,
+	colors: colors
+};

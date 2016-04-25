@@ -1,4 +1,5 @@
 var fs = require('fs');
+var os = require('os');
 
 var httpsOptions;
 
@@ -20,5 +21,6 @@ module.exports = {
 	httpPort: process.env.port || 8002,
 	wsPort: 8007,
 	host: 'localhost',
-	httpsOptions: httpsOptions
+	httpsOptions: httpsOptions,
+	useGPIO: os.arch === 'arm'
 };
