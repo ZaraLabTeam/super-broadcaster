@@ -61,25 +61,28 @@ broadcaster.event.on('broadcast-ended', function() {
 });
 
 function lightShow() {
-	var white = colors.white,
-		black = reset;
+	var col1 = clone(colors.zaraGreen),
+		col2 = clone(colors.zaraGreen);
 
-	var delay1 = delay(setColor.bind(null, led1, white), COLOR_DURATION),
-		delay2 = delay(setColor.bind(null, led2, black), COLOR_DURATION);
+	col1.g = 0;
+	col2.g = 1;
+
+	var delay1 = delay(setColor.bind(null, led1, col1), COLOR_DURATION),
+		delay2 = delay(setColor.bind(null, led2, col2), COLOR_DURATION);
 
 	for (var i = 1; i <= COLOR_CHANGES; i++) {
 		delay1
 			.delay(setColor.bind(null, led1, {
-				r: white.r - COLOR_STEP * i,
-				g: white.g - COLOR_STEP * i,
-				b: white.b - COLOR_STEP * i
+				r: col1.r,
+				g: col1.g + COLOR_STEP * i,
+				b: col1.b
 			}), COLOR_DURATION);
 
 		delay2
 			.delay(setColor.bind(null, led2, {
-				r: black.r + COLOR_STEP * i,
-				g: black.g + COLOR_STEP * i,
-				b: black.b + COLOR_STEP * i
+				r: col2.r,
+				g: col2.g - COLOR_STEP * i,
+				b: col2.b
 			}), COLOR_DURATION);
 	}
 
