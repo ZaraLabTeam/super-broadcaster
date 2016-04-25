@@ -54,6 +54,40 @@
 						<button id="clear">Clear Log</button>
 						<span id="on-air" class="hidden">On Air<span>
 					</fieldset>
+
+					<fieldset id="color-picker">
+					<legend>Led Color Picker</legend>
+
+						<ul id="checkboxes">
+							<li>
+								<input type="checkbox"
+									id="cb-led1"
+									name="cb-led1" />
+								<label for="cb-led1">Led 1</label>
+							</li>
+							<li>
+								<input type="checkbox"
+									id="cb-led2"
+									name="cb-led2" />
+								<label for="cb-led2">Led 2</label>
+							</li>
+							
+						</ul>
+						<ul id="sliders">
+						<li>
+							<label>R</label>
+							<input type="range" id="slide-red" min="0" max="1" step="0.01" />
+						</li>
+						<li>
+							<label>G</label>
+							<input type="range" id="slide-green" min="0" max="1" step="0.01" />
+						</li>
+						<li>
+							<label>B</label>
+							<input type="range" id="slide-blue" min="0" max="1" step="0.01" />
+						</li>	
+						</ul>
+					</fieldset>
 					
 				</fieldset>
 			</form>
@@ -104,6 +138,7 @@
     <script src="/public/js/re-sampler.js"></script>
 	<script src="/public/js/socket-connection.js"></script>
 	<script src="/public/js/logger.js"></script>
+	<script src="/public/js/color-picker.js"></script>
 	<script src="/public/js/main.js"></script>
 	<script src="/public/js/video-preview.js"></script>
 	<script src="/public/js/audio-processing/streamMp3.js"></script>

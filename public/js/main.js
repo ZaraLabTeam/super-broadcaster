@@ -13,6 +13,7 @@
 		.then(setupSelectMenu)
 		.then(setPresetData)
 		.then(InitLogger.bind(window, socket))
+		.then(InitColorPicker.bind(window, socket))
 		.catch(function(err) {
 			alert(err.toString());
 			console.log(socket);

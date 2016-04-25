@@ -13,9 +13,9 @@ var audioHandler = require('../audio/audio-handler');
 var presetsManager = require('../presets/presets-manager');
 var logger = require('../logging/logger');
 var gpio = null;
-if (serverConfig.useGPIO) {
+//if (serverConfig.useGPIO) {
 	gpio = require('../gpio/pwm');
-}
+//}
 
 
 // ================================================================
@@ -31,6 +31,7 @@ function handleIO(io) {
 		.of(secret.serverPass)
 		.on('connection', function(socket) {
 
+			// Broadcast events
 			ss(socket).on('audio-stream', audioHandler.handle);
 
 			socket.on('broadcast-start', broadcaster.broadcast);
@@ -53,6 +54,7 @@ function handleIO(io) {
 				logger.log(err.toString(), 'danger');
 			});
 
+			// Logging events
 			logger.on('general-log', function(msg, style) {
 				socket.emit('general-log', msg, style);
 			});
@@ -69,6 +71,11 @@ function handleIO(io) {
 				socket.emit('memory-log', percentage);
 			});
 
+			//Gpio events
+			if (gpio) {
+				socket.on('gpio-setColor', gpio.setColor);
+			}
+			
 			function disconnect() {
 				logger.log('Client Disconnected', 'danger');
 			}

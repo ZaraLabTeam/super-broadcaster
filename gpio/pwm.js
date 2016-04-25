@@ -132,19 +132,20 @@ function resetPins() {
 }
 
 function setColor(led, color) {
-	if (isNumber(+led)) {
-		led = LED[led];	
-	}
-
-	console.log('{{name}}: {{r}}, {{g}}, {{b}}'.formatPV(color));
 
 	try {
+		if (isNumber(+led)) {
+			led = LEDS[led];
+		}
+
 		piblaster.setPwm(led.RED, color.r);
 		piblaster.setPwm(led.GREEN, color.g);
 		piblaster.setPwm(led.BLUE, color.b);
 	} catch (e) {
 		logger.log(e.toString(), 'danger');
 	}
+
+	console.log('{{name}}: {{r}}, {{g}}, {{b}}'.formatPV(color));
 }
 
 // ================================================================
@@ -209,6 +210,6 @@ init();
 
 module.exports = {
 	setColor: setColor,
-	LEDS: LEDS,
+	ledsCount: LEDS.count,
 	colors: colors
 };
