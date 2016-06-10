@@ -14,7 +14,7 @@ if you have the [libav](https://libav.org/avconv.html) package installed, you ca
 
 also `sudo apt-get install libasound2-dev`
 
-The other steps are easier just run `npm install` and `bower install` in the project root then create a file screts.json use this as example
+The other steps are easier just run `npm install` and `bower install` in the project root then create a file `scret.json` use this as example
 ```json
 {
 	"output": "{{youtube chanel}}/{{the key for you channel}}",
